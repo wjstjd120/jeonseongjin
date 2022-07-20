@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<body>
+   <div th:fragment="Admin_Menubar">
+      <div class="menubar_1">
+         <div class="member_menu">
+            <h3>회원 관리</h3>
+            <ul>
+               <li><a href="/Admin_Member_List">-회원 리스트</a></li>
+               <li><a href="/Admin_Bmember_List">-블랙 리스트</a></li>
+            </ul>
+            <h3>업체</h3>
+            <ul>
+               <li><a href="/Admin_Company_List">-업체 리스트</a></li>
+            </ul>
+            <h3>유지 보수</h3>
+            <ul>
+               <li><a href="/Admin_Notice_List">-공지 사항</a></li>
+               <li><a href="/Admin_Complaint_List">-QnA 관리</a></li>
+               <li><a href="/Admin_Event_List">-제주 행사관리</a></li>
+               <li><a href="/Admin_Spot_List">-제주 관광지관리</a></li>
+            </ul>
+         </div>
+      </div>
+   </div>
+</body>
+</html>

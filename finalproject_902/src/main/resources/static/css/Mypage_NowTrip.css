@@ -1,0 +1,338 @@
+@charset "UTF-8";
+
+/*공통 레이아웃*/
+*{
+    padding: 0%;
+    margin: 0%;
+   /*
+    border: 1px solid;
+    */
+}
+
+/* header 레이아웃 
+
+header{
+    text-align: center;
+    
+}
+
+.Header{
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
+}
+.Member{
+    height: 25px;
+    margin-top: 5px;
+}
+.Member>span{
+    float: right;
+    margin-right: 20px;
+    font-size: 13pt;
+}
+.Title{
+    height: 80px;
+    font-size: 40pt;
+    text-align: center;
+    width: 100%;
+}
+.Menu>span{
+    font-size: 20pt;
+    margin: 0 20px 0 20px;
+}
+*/
+
+.Pic_menu{
+    float: left;
+    /*width: 320px;*/
+    width: 16%;
+    height: 100%;
+/*    border: 1px solid;*/
+    box-sizing: border-box;
+    position: fixed;
+}
+
+/* 픽 메뉴의 내용*/
+/* 회원정보 div */
+.menu_div1{
+	width: 65%;
+	height: 300px;
+	float: right;
+	background-color: red;
+}
+
+.menu_title1{
+	width: 100%;
+	height: 50px;
+	margin-top: 50px;
+	text-align: left;
+	line-height: 50px;
+	background-color: lightyellow;
+}
+
+.menu_member{
+	width: 100%;
+	height: 40px;
+	text-align: left;
+	line-height: 40px;
+	float: left;
+	background-color: lightgreen;
+}
+
+.menu_div3{
+	width: 65%;
+	height: 400px;
+	float: right;
+	background-color: yellow;
+}
+
+.menu_title2{
+	width: 100%;
+	height: 50px;
+	text-align: left;
+	line-height: 50px;
+	background-color: lightyellow;
+}
+
+.menu_Travel{
+	width: 100%;
+	height: 40px;
+	text-align: left;
+	line-height: 40px;
+	float: left;
+	background-color: lightgreen;
+}
+
+/* 여기까지 복사 붙이기 실행! */
+
+.nowtrip{
+	float: left;
+	width: 84%;
+	margin-left: 16%;
+	background-color: skyblue;
+	text-align: center;
+}
+
+.nowtripDiv{
+	width: 1280px;
+	height: 783px;
+	background-color: blue;
+	display: inline-block;
+}
+ 	
+.nt_div{
+	width: 1250px;
+	height: 755px;
+	background-color: lightgreen;
+	margin: 14px auto;
+}
+
+.nt_profileDiv{
+	width: 925px;
+	height: 755px;
+	background-color: lightyellow;
+	float: left;
+}
+
+.nt_profile{
+	width: 925px;
+	height: 275px;
+	background-color: lightgreen;
+}
+
+.nt_img{
+	width: 220px;
+	height: 220px;
+	background-color: lightyellow;
+	float: left;
+	margin: 27.5px 0 27.5px 25px;
+}
+
+.nt_text1{
+	width: 630px;
+	height: 220px;
+	background-color: lightyellow;
+	float: left;
+	margin: 27.5px 0 27.5px 20px;
+}
+
+.nt_text1_div1{
+	width: 630px;
+	height: 55px;
+	background-color: yellow;
+	float: left;
+}
+
+.nt_t1_d1_text1{
+	width: 120px;
+	height: 55px;
+	float: left;
+	background-color: skyblue;
+	line-height: 55px;
+	text-align: left;
+}
+
+.nt_t1_d1_text2{
+	width: 20px;
+	height: 55px;
+	float: left;
+	background-color: lightyellow;
+	line-height: 55px;
+	text-align: left;
+}
+
+.nt_t1_d1_text3{
+	width: 490px;
+	height: 55px;
+	float: left;
+	background-color: skyblue;
+	line-height: 55px;
+	text-align: left;
+}
+
+.nt_t1_d1_text3-1{
+	width: 90px;
+	height: 55px;
+	float: left;
+	background-color: lightyellow;
+	line-height: 55px;
+	text-align: left;
+}
+
+.nt_t1_d1_text3-2{
+	width: 90px;
+	height: 55px;
+	float: left;
+	background-color: lightyellow;
+	line-height: 55px;
+	text-align: left;
+	margin-left: 10px;
+}
+
+.nt_t1_d1_text3-3{
+	width: 490px;
+	height: 55px;
+	float: left;
+	background-color: skyblue;
+	line-height: 55px;
+	text-align: left;
+}
+
+.nt_t1_d1_text4{
+	width: 100px;
+	height: 55px;
+	float: left;
+	background-color: skyblue;
+	line-height: 55px;
+	text-align: left;
+}
+
+.nt_t1_d1_btnDiv{
+	width: 390px;
+	height: 55px;
+	float: left;
+	background-color: lightyellow;
+}
+
+.nt_t1_d1_btnDiv1{
+	width: 360px;
+	height: 45px;
+	background-color: yellow;
+	margin: 5px 15px 5px 15px;
+}
+
+.nt_btn1_1{
+	width: 100px;
+	height: 45px;
+	background-color: lightgreen;
+	float: left;
+	margin-left: 20px;
+	line-height: 45px;
+}
+
+.nt_btn1_2{
+	width: 100px;
+	height: 45px;
+	background-color: lightgreen;
+	float: left;
+	margin-left: 20px;
+	line-height: 45px;
+}
+
+.nt_btn1_3{
+	width: 100px;
+	height: 45px;
+	background-color: lightgreen;
+	float: left;
+	margin-left: 20px;
+	line-height: 45px;
+}
+
+.nt_calendar{
+	width: 925px;
+	height: 480px;
+	background-color: red;
+}
+
+.nt_c_div{
+	width: 875px;
+	height: 480px;
+	background-color: lightyellow;
+	margin: 0 auto;
+}
+
+
+
+.nt_list {
+	width: 325px;
+	height: 755px;
+	background-color: yellow;
+	float: left;
+	overflow: scroll;
+	overflow-x: hidden;
+}
+
+.nt_list_div{
+	width: 300px;
+	height: 740px;
+	background-color: lightyellow;
+	margin: 7.5px 12.5px 7.5px 12.5px;
+	
+}
+
+ul, li {
+	list-style: none;
+}
+
+.nt_l_listDiv{
+	width: 300px;
+	height: 120px;
+	background-color: lightgreen;
+	border-bottom: 1px solid black;
+	box-sizing: border-box;
+	cursor: pointer;
+}
+
+.nt_list_blank{
+	width: 300px;
+	height: 20px;
+	background-color: black;
+}
+
+.nt_list_title{
+	width: 300px;
+	height: 50px;
+	background-color: skyblue;
+	line-height: 50px;
+	text-align: left;
+	
+}
+
+.nt_list_date1{
+	width: 90px;
+	height: 50px;
+	background-color: red;
+	line-height: 50px;
+	text-align: left;
+	float: left;
+}

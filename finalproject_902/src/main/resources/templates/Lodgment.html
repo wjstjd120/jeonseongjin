@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http:www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link th:href="@{/css/lodgment.css}" rel="stylesheet" />
+<title>page - Main 업체 정보</title>
+<script
+   src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<script th:inline="javascript">
+var mdto = null;
+var tdto = null;
+$(function(){
+   mdto = [[${session.user}]];
+   
+   $(".M4"). hide();
+   
+   mdto = [[${session.user}]];
+   tdto = [[${session.tdto}]];
+   
+   console.log(tdto);
+   
+   if(mdto != null){
+      $("#inLogin").show();
+      $("#outLogin").hide();
+      $(".M1").css("display","none");
+   }else{
+      $("#inLogin").hide();
+      $("#outLogin").show();
+      
+   }
+   
+   
+   
+   if(mdto.m_category == "사업자"){
+      $(".M4"). show();
+   }
+   
+   var msg = [[${msg}]];
+   
+   if(msg != null){
+      alert(msg);
+   }
+   
+});
+
+function favorite(j){
+   console.log(j);
+   if(confirm("찜하기에 등록하시겠습니까?")) {
+		var cnum = {"fa_fk_cnum" : j,"fa_fk_id" : [[${session.user.m_pk_id}]]};
+		console.log(cnum);
+		
+		$.ajax({
+			url : "favoritest",
+			type : "POST",
+			data : cnum,
+			dataType: "json",
+			sccess : function(resoult){
+				console.log(resoult.res);
+				if(resoult.res == "ok") {
+					alert("찜하기 완료");
+				}
+				else {
+					alert("찜하기 실패");
+				}
+			},
+			error : function(error){
+				console.log(error.res);
+			}
+		});
+	}
+	else {
+		
+	}
+}
+
+function clicker(j, cate){
+   cnum=j;
+   
+   $("#humanName").val("");
+   $("#humanNumber").val("");
+   $("#lodrvca").val("");
+   $("#lodti").val("");
+   
+   if(tdto == null){
+      alert("여행일정 생성 및 수정하기 버튼 클릭 후 이용해주세요.");
+      return;
+   }
+   
+      $("#popupDiv").css({
+         "top" : (($(window).height() - $("#popupDiv").outerHeight()) / 2 
+            + $(window).scrollTop())
+            + "px","left" : (($(window).width() - $("#popupDiv").outerWidth()) / 2
+            + $(window).scrollLeft())
+            + "px"
+            //팝업창을 가운데로 띄우기 위해 현재 화면의 가운데 값과 스크롤 값을 계산하여 팝업창 CSS 설정
+      });
+      $("#popup_mask").css("display","block"); //팝업 뒷배경 display block
+      $("#popupDiv").css("display","block"); //팝업창 display block
+      $("body").css("overflow", "hidden");//body 스크롤바 없애기
+      
+   var objdata = {"rnum" : j};
+   objdata.cate = cate;
+   $.ajax({
+      url : "getRoomDto",
+      type : "post",
+      data : objdata,
+      datatype : "json",
+      success : function(result) {
+         var cate = [[${cdto.c_category}]];
+         
+         switch(cate){
+         case "숙박":
+            var rdto = result.rdto;
+            var strarr = result.strarr;
+            var riList = result.riList;
+            
+            console.log(riList);
+         
+            count = riList.length;
+            var serverImg = "";
+            var text = "";
+            
+            for(var i = 0; i < strarr.length; i++){
+               if(i == strarr.length-1){
+                  text += strarr[i];
+                  continue;
+               }
+               text += strarr[i] + ", ";
+            }
+            
+            for(var i = 0; i<riList.length; i++){
+               serverImg +=
+                  "<li style='float : left;'><img style='height : 150px; width : 300px;' src='/upload/" + riList[i].ri_sysname + "'></li>"
+            }
+            
+            if(text != null){
+               $("#loption").html(text);
+            }
+            
+            $("#r_pk_num").val(rdto.r_pk_num);
+            $("#r_name").html(rdto.r_name);
+            $("#r_name1").val(rdto.r_name);
+            $("#r_contents").html(rdto.r_contents);
+            $("#r_price").val(rdto.r_price);
+            $(".slides").html(serverImg);
+         
+            if(riList != null){
+            
+            const slides = document.querySelector('.slides'); //전체 슬라이드 컨테이너
+            const slideImg = document.querySelectorAll('.slides li'); //모든 슬라이드들
+            let currentIdx = 0; //현재 슬라이드 index
+            const slideCount = riList.length; // 슬라이드 개수
+            const prev = document.querySelector('.prev'); //이전 버튼
+            const next = document.querySelector('.next'); //다음 버튼
+            const slideWidth = 300; //한개의 슬라이드 넓이
+            const slideMargin = 500; //슬라이드간의 margin 값
+            
+            //전체 슬라이드 컨테이너 넓이 설정
+            slides.style.width = (slideWidth + slideMargin) * slideCount + 'px';
+
+            function moveSlide(num) {
+              slides.style.left = -num * 350 + 'px';
+              currentIdx = num;
+            }
+
+            prev.addEventListener('click', function () {
+         
+
+              if (currentIdx !== 0) moveSlide(currentIdx - 1);
+            });
+
+            next.addEventListener('click', function () {
+      
+              if (currentIdx !== slideCount - 1) {
+                moveSlide(currentIdx + 1);
+              }
+            });
+            }
+            
+            break;
+         case "레저":
+            var atdto = result.atdto;
+            var strarr = result.strarr;
+            var aiList = result.aiList;
+            
+            console.log(aiList);
+            
+            count = aiList.length;
+            
+            var serverImg = "";
+            var text = "";
+            
+            for(var i = 0; i < strarr.length; i++){
+               if(i == strarr.length-1){
+                  text += strarr[i];
+                  continue;
+               }
+               text += strarr[i] + ", ";
+            }
+            
+            for(var i = 0; i<aiList.length; i++){
+               serverImg +=
+                  "<li style='float : left;'><img style='height : 150px; width : 300px;' src='/upload/" + aiList[i].ai_sysname + "'></li>"
+            }
+            
+            if(text != null){
+               
+               $("#loption").html(text);
+            }
+            
+            
+            
+            $("#r_pk_num").val(atdto.at_pk_num);
+            $("#r_name").html(atdto.at_name);
+            $("#r_name1").val(atdto.at_name);
+            $("#r_contents").html(atdto.at_contents);
+            $("#r_price").val(atdto.at_price);
+            $(".slides").html(serverImg);
+            
+            if(aiList != null){
+               
+               const slides = document.querySelector('.slides'); //전체 슬라이드 컨테이너
+               const slideImg = document.querySelectorAll('.slides li'); //모든 슬라이드들
+               let currentIdx = 0; //현재 슬라이드 index
+               const slideCount = aiList.length; // 슬라이드 개수
+               const prev = document.querySelector('.prev'); //이전 버튼
+               const next = document.querySelector('.next'); //다음 버튼
+               const slideWidth = 300; //한개의 슬라이드 넓이
+               const slideMargin = 500; //슬라이드간의 margin 값
+               
+               //전체 슬라이드 컨테이너 넓이 설정
+               slides.style.width = (slideWidth + slideMargin) * slideCount + 'px';
+
+               function moveSlide(num) {
+                 slides.style.left = -num * 350 + 'px';
+                 currentIdx = num;
+               }
+
+               prev.addEventListener('click', function () {
+            
+
+                 if (currentIdx !== 0) moveSlide(currentIdx - 1);
+               });
+
+               next.addEventListener('click', function () {
+         
+                 if (currentIdx !== slideCount - 1) {
+                   moveSlide(currentIdx + 1);
+                 }
+               });
+               }
+            
+            break;
+         }
+         
+         
+      },
+      error : function(error) {
+      }
+   });
+   
+   }
+   
+function goCompanyFrm(){
+   if(mdto == null){
+      var cc = confirm("로그인을 해주세요. 로그인하러 가시겠습니까?");
+      if(cc){
+         location.href="login";
+      }else{
+         location.href="/";
+      }
+   }else{
+      location.href="companyFrm";
+   }
+   
+}
+</script>
+</head>
+<style>
+.layerkd{
+   width: 200px;
+   height: 200px;
+}
+</style>
+<body>
+<body>
+   <header>
+      <div th:include="fragment/header :: header"></div>
+   </header>
+
+   <div class="top">
+      <div class="top1">
+         <div class="main_img">
+            <img th:src="@{/upload/} + ${cdto.c_img}"
+               style="width: 700px; height: 400px;">
+         </div>
+
+         <div class="top_text">
+            <div class="t_text1" style="position: relative;">
+            [[${cdto.c_name}]]
+               <button class="btn30" th:songjan="${cdto.c_pk_cnum}" th:onclick="favorite(this.getAttribute('songjan'))"></button>
+            </div>
+            <div class="t_text2" th:text="${cdto.c_addr}"></div>
+         </div>
+      </div>
+
+      <div class="top2">
+         <div th:each="cidto : ${cidto}">
+            <ul id="listimg">
+
+            </ul>
+         </div>
+      </div>
+   </div>
+   <div class="menu">
+      <div class="menu1">
+      
+         <th:block th:if="${#strings.equals(cdto.c_category,'숙박')}">
+            <div class="">객실정보 |</div>
+         </th:block>
+         
+         <th:block th:if="${#strings.equals(cdto.c_category,'레저')}">
+            <div class="">상품정보 |</div>
+         </th:block>
+         <div class="">
+            <a href="#caution">주의사항</a>
+         </div>
+         <span>|</span>
+         <div class="">
+            <a href="#m_review">리뷰</a>
+         </div>
+      </div>
+   </div>
+   <div class="room">
+      <ul>
+         <th:block th:if="${roomList != null}">
+            <th:block th:each="ro : ${roomList}">
+               <li>
+                  <div class="room2">
+                     <div class="room_img">
+                        <img th:src="@{/upload/} + ${ro.r_img}"
+                           style="width: 500px; height: 300px;" alt="숙소예약사진">
+                     </div>
+                     <div class="l_name" th:text="${ro.r_name}"></div>
+                     <div class="room_rv3">
+                        <div class="rv2_text1">숙박 예약</div>
+                        <div class="rv2_text2" th:text="|입실 시간 : ${ro.r_in}|"></div>
+                        <div class="rv2_text2" th:text="|퇴실 시간 : ${ro.r_out}|"></div>
+                        <div class="rv2_price" th:text="|숙박 금액 : ${ro.r_price}|"></div>
+                        <div id="rv2_btn">
+                           <input type="button" class="rv2_btn" th:songjan="${ro.r_pk_num}" th:cate="${cdto.c_category}" th:onclick="clicker(this.getAttribute('songjan'),this.getAttribute('cate'))"
+                              value="예약하기">
+                        </div>
+                     </div>
+                  </div>
+               </li>
+            </th:block>
+         </th:block>   
+         
+         <th:block th:if="${aactivityList != null}">
+            <th:block th:each="ao:${aactivityList}">
+               <li>
+                  <div class="room2">
+                     <div class="room_img">
+                        <img th:src="@{/upload/} + ${ao.at_img}"
+                           style="width: 500px; height: 300px;" alt="숙소예약사진">
+                     </div>
+                     <div class="l_name" th:text="${ao.at_name}"></div>
+                     <div class="room_rv3">
+                     
+                        <th:block th:if="${#strings.equals(ao.at_rtch,'1')}">
+                           <div class="rv2_text1">레저 예약</div>
+                           <div class="rv2_text2" th:text="|OpenTime : ${ao.at_in}|"></div>
+                           <div class="rv2_text2" th:text="|CloseTime : ${ao.at_out}|"></div>
+                           <div class="rv2_price" th:text="|상품 금액 : ${ao.at_price}|"></div>
+                        </th:block>
+                        <th:block th:if="${#strings.equals(ao.at_rtch,'0')}">
+                           <div class="rv2_text2" th:text="|주의 사항 : ${ao.at_contents}|"></div>
+                           <div class="rv2_price" th:text="|상품 금액 : ${ao.at_price}|"></div>
+                           <div class="rv2_price" style="height: 40px;">인원 수 : <input type="number" max="8" min="0" id="fbk_people" class="peopleNum"></div>
+                           <div class="rv2_price" style="height: 40px;">일정 날짜 : <input type="date" name="time" title="퇴실시간" id="aqDate" th:min="${session.tdto.tr_in}" th:max="${session.tdto.tr_out}"/></div>
+                        </th:block>
+                        
+                        <div id="rv2_btn">
+                        
+                        <th:block th:if="${#strings.equals(ao.at_rtch,'1')}">
+                           <input type="button" class="rv2_btn" th:songjan="${ao.at_pk_num}" th:cate="${cdto.c_category}" th:onclick="clicker(this.getAttribute('songjan'), this.getAttribute('cate'))" value="예약하기">
+                        </th:block>      
+                        
+                        <th:block th:if="${#strings.equals(ao.at_rtch,'0')}">
+                           <input type="button" class="rv2_btn" th:bk_fk_num="${ao.at_pk_num}" th:bk_goods="${ao.at_name}" th:bk_price="${ao.at_price}"
+                           th:onclick="getplan(this.getAttribute('bk_fk_num'),this.getAttribute('bk_goods'),this.getAttribute('bk_price'))" value="일정담기">
+                        </th:block>
+                        
+                        
+                        </div>
+                        
+                  </div>
+               </li>
+            </th:block>
+         </th:block>
+      </ul>
+         <input type="hidden" id="bk_people">
+         <input type="hidden" id="reDate">
+   </div>
+   <div class="caution">
+      <p>
+         <a name="caution">주의 사항</a>
+      </p>
+         <div class="caution1" th:text="${cdto.c_contents}"></div>
+   </div>
+   <div class="m_review">
+      <p>
+         <a name="m_review">리뷰</a>
+      </p>
+      <form action="reviewInsert" method="post" enctype="multipart/form-data" >
+         <ul>
+            <li>
+               <div style="width: 1100px; border: 1px solid; margin: 0 auto;">
+                  1 점 : <input type="radio" name="rv_star" value="1">
+                  2 점 : <input type="radio" name="rv_star" value="2">
+                  3 점 : <input type="radio" name="rv_star" value="3">
+                  4 점 : <input type="radio" name="rv_star" value="4">
+                  5 점 : <input type="radio" name="rv_star" value="5">
+                  <input type="hidden" title="별점" id="rv_star" >
+               </div>
+            </li>
+            <li>
+               <div style="width: 1100px; border: 1px solid; margin: 0 auto;">
+                  <textarea title="내용" name="rv_contents" style="font-size: 20px; resize:none; width: 96%; height: 100px; border: 1px solid lightgray; padding: 20px;"></textarea>
+               </div>
+            </li>   
+            <li>
+               <div style="width: 1100px; border: 1px solid; margin: 0 auto;" id="imageS">
+                  
+               </div>
+            </li>
+            <li>
+               <div style="width: 1100px; border: 1px solid; margin: 0 auto;">
+                  <input type="file" name="r_img" id="fileTag" onchange="solImg(event)">
+                  <div  style="width :1100px; height: 60px; margin: 0 auto; border: 1px solid;"><label style="line-height: 60px; font-size: 50px;" for="fileTag">사진 추가 +</label></div>
+               </div>
+               
+            </li>
+            <li>
+               <div style="width: 1100px; border: 1px solid; margin: 0 auto;">
+                  <input type="hidden" name="rv_fk_cnum" th:value="${cdto.c_pk_cnum}">
+                  <input type="submit" style="width: 100%; height: 40px;" value="추가하기">               
+               </div>
+            </li>
+         </ul>
+         <input type="hidden" name="filecheck" id="filecheck" value=0>
+      </form>
+      <br>
+      <hr style="margin: 0 auto; width: 1100px;">
+      <br>
+      <ul>
+         <th:block th:if="${rvList != null}">
+            <th:block th:each="data:${rvList}">
+               <th:block th:if="${not #strings.isEmpty(data.rv_img)}">
+                  <li>
+                     <div class="m_review1">
+                        <div class="m_star">별점 : [[${data.rv_star}]]</div>
+                        <div class="m_info">
+                           <div class="m_id">아이디 : [[${data.rv_fk_id}]]</div>
+                           <div class="m_date">작성일자 : [[${data.rv_date}]]</div>
+                        </div>
+                        <div class="m_rv">
+                           <div class="m_rv_img">
+                              <img th:src="@{/upload/} + ${data.rv_img}" style="width: 100%; height: 100%;" alt="리뷰이미지 사진">
+                           </div>
+                           <div class="m_rv_text">[[${data.rv_contents}]]</div>
+                        </div>
+                     </div>
+                  </li>
+                  <th:block th:if="${not #strings.isEmpty(data.rv_answer)}">
+                     <li>
+                        <div>리뷰 답글 : [[${data.rv_answer}]]</div>
+                     </li>
+                  </th:block>
+               </th:block>
+               <th:block th:if="${#strings.isEmpty(data.rv_img)}">   
+                  <li>
+                     <div class="m_review2">
+                        <div class="m_star">별점 : [[${data.rv_star}]]</div>
+                        <div class="m_info">
+                           <div class="m_id">아이디 : [[${data.rv_fk_id}]]</div>
+                           <div class="m_date">작성일자 : [[${data.rv_date}]]</div>
+                        </div>
+                        <div class="m_rv1">[[${data.rv_contents}]]</div>
+                     </div>
+                  </li>
+                  <th:block th:if="${not #strings.isEmpty(data.rv_answer)}">
+                     <li>
+                        <div>리뷰 답글 : [[${data.rv_answer}]]</div>
+                     </li>
+                  </th:block>
+               </th:block>
+            </th:block>
+         </th:block>
+         <th:block th:if="${#lists.isEmpty(rvList)}">
+            <li>
+               <div class="m_review2">
+                  등록된 리뷰가 없습니다!
+               </div>
+            </li>
+         </th:block>
+      </ul>
+   </div>
+   <div class="index_btn">
+      <button class="index_btn1" id="index_btn1">목록</button>
+      <th:block th:if="${#strings.equals(cdto.c_category,'식당')}">
+         <button type="button" class="index_btn1" onclick="getFplan()">담기</button>
+      </th:block>
+   </div>
+
+   <footer>
+      <div class="Footer">
+            <div class="Foter1">
+               <div class="Footer_text1">혼저옵쩨주</div>
+               <div class="Footer_text2">WELECOME TO JEJU</div>
+            </div>
+            <div class="Footer_text3">본격 제주여행 사이트   |   TEL. 032)432-7373 / E-mail. Hellgate@naver.com<br>
+               COPYRIGHT ⓒ 2022 JEJU JJEJUTRP. ALL HAPPY TRIP.</div>
+               <div class="Footer_menu"> 
+                  <div class="Solo">개인정보 처리 방침</div>
+                  <div class="Terms">| 이용약관</div>
+                  <div class="Store" onclick="goCompanyFrm()">| 업체신청</div>
+                  <div class="Admin">| 관리자</div>
+               </div>
+         </div>
+   </footer>
+   
+   <div id="popupDiv">
+      <div id="c_contents" th:include="fragment/Lodgment_Rv :: lodd"></div>
+   </div>
+   <div id="popup_mask"></div>
+</body>
+
+<script th:inline="javascript">
+$("#fileTag").hide();
+
+$("#fileTag").on("change",function(){
+   var files = $("#fileTag")[0].files;
+   console.log(files)
+      
+   if(files.length == 0){
+      $("#file-upload").html("선택된 사진이 없습니다.");
+      return;
+   }
+   
+   var sfilename = files[0].name;
+   
+   console.log("파일이름 : " + sfilename);
+   $("#file-upload").html(sfilename);
+   
+   $("#filecheck").val(1);
+   console.log($("#filecheck").val());
+   
+   
+   //fileCheck 부분 변경
+   if(sfilename == ""){//파일 취소 시
+      $("#filecheck").val(0);
+      $("#multifile-upload").val("파일선택");
+   }
+   else {//파일 선택 시
+      $("#filecheck").val(1);
+   }
+   console.log($("#filecheck").val());
+   
+});
+
+function solImg(event){ // 단독 이미지 미리보기
+   $("#imageS").html("");
+   
+   var reader = new FileReader();
+   reader.onload = function(event) {
+    var solimg = document.createElement("img");
+    solimg.setAttribute("src", event.target.result);
+    solimg.setAttribute("onclick", "deletesolimg()");
+    solimg.setAttribute("id", "solImg");
+    solimg.setAttribute("class", "layerkd");
+     
+    document.querySelector("#imageS").appendChild(solimg);
+    src = event.target.result;
+   };
+   
+   reader.readAsDataURL(event.target.files[0]);
+}
+
+function getFplan(){
+   console.log("식당담기");
+   
+   var cnum = [[${cdto.c_pk_cnum}]];
+   
+   
+   var obj = {"bk_fk_cnum" : cnum};
+   obj.bk_fk_tnum = [[${session.tdto.tr_pk_num}]];
+   obj.bk_fk_id = [[${session.user.m_pk_id}]];
+   
+   $.ajax({
+      url : "getFplan",
+      type: "post",
+      data : obj,
+      datatype: "json",
+      success: function(result){
+         alert(result.msg);
+         location.href="Lodgment_List?cate=" + "'" +[[${cdto.c_category}]] + "'";
+      },
+      error : function(result){
+         
+      }
+   });
+   
+}
+
+function getplan(bk_fk_num, bk_goods, bk_price){
+   
+   var datDate = $("#aqDate").val();
+   var bk_pNum = $("#fbk_people").val();
+   
+   
+   $("#bk_people").val(bk_pNum);
+   $("#reDate").val(datDate);
+   
+   console.log($("#bk_people").val());
+   console.log($("#reDate").val());
+   
+   var cnum = [[${cdto.c_pk_cnum}]];
+   
+   var obj = {"bk_fk_cnum" : cnum};
+   obj.bk_fk_tnum = [[${session.tdto.tr_pk_num}]];
+   obj.bk_fk_id= [[${session.user.m_pk_id}]];
+   obj.bk_fk_num = bk_fk_num;
+   obj.bk_goods = bk_goods;
+   obj.bk_price = bk_price;
+   obj.bk_people = $("#bk_people").val();
+   obj.todayDate = $("#reDate").val();
+   
+   console.log(obj);
+   
+   $.ajax({
+      url : "getAplan",
+      type : "post",
+      data : obj,
+      datatype : "json",
+      success: function(result){
+         alert(result.msg);
+         location.href="Lodgment_List?cate=" + "'" +[[${cdto.c_category}]] + "'";
+      },
+      error: function(result){
+         
+      }
+   });
+}
+
+function joincheck(){  // 빈칸 체크
+      console.log($("#r_pk_num").val());
+      console.log($("#humanName").val());
+      console.log($("#humanNumber").val());
+      console.log($("#lodrvca").val());
+      
+      //form 태그의 내용 전부 가져오기
+      var frm = document.cjoinFrm;
+      console.log(frm);
+      
+      var length = frm.length;//submit 버튼 제외
+      console.log(length);
+      
+      for(var i = 0; i < length; i++){
+         if(frm[i].value == "" || frm[i].value == null){
+            alert(frm[i].title + "을(를) 채워주세요");
+            frm[i].focus();
+            return false;
+         }
+      }
+      return true;//모든 칸이 다 채워졌고, 중복 체크도 한 상태
+   }
+   
+function addReservation(cate){
+   console.log(cate);
+}
+
+
+
+
+
+$('#index_btn1').click(function(e){
+   history.back();
+   e.preventDefault();
+});
+
+var roomList = [[${roomList}]];
+console.log(roomList);
+var rimgList = [[${rimgMap}]];
+console.log(rimgList);
+var cidto = [[${cidto}]];
+console.log(cidto);
+
+var listtag = "";
+
+for(var i = 0; i<cidto.length; i++){
+   listtag+=
+      "<li class='t_img1'><img src='/upload/"+cidto[i].ci_sysname +"' class='viewimg'></li>"
+      + "</li>"   
+      }
+$("#listimg").html(listtag);
+
+
+
+
+
+$("#lodrvname").keyup(function () {
+   var val = $("#lodrvname").val();
+   $("#humanName").val(val);
+});
+
+$("#lodrvnumber").keyup(function(){
+   var val = $("#lodrvnumber").val();
+   $("#humanNumber").val(val);
+});
+
+function getCar(event){
+    var res = event.target.value;
+    $("#lodrvca").val(res);
+}
+
+$("#aqDate").change(function(){
+   $("#lodti").val($("#aqDate").val());
+   $("#lodtit").val($("#aqDate").val());
+   console.log($("#lodti").val());
+   console.log($("#lodtit").val());
+   
+});
+
+$("#inDate").change(function(){
+   $("#lodti").val($("#inDate").val());
+});
+
+$("#outDate").change(function(){
+   $("#lodtit").val($("#outDate").val());
+});
+
+$("#peopleNum").change(function(){
+   $("#peopleNum1").val($("#peopleNum").val());
+});
+
+$("#peopleNum").keyup(function () {
+   var val = $("#peopleNum").val();
+   $("#peopleNum1").val(val);
+});
+
+
+function reset(){
+   var obj=document.getElementsById('lodrvpop');
+
+   for(var i=0; i<obj.length; i++){
+       obj[i].checked = false;
+   }   
+   }
+   $(".lodrvcancel").click(function(event) {
+      $("#popup_mask").css("display", "none"); //팝업창 뒷배경 display none
+      $("#popupDiv").css("display", "none"); //팝업창 display none
+      $("body").css("overflow", "auto");//body 스크롤바 생성
+      $("#lodrvname").val("");
+      $("#humanName").html("");
+      $("#lodrvnumber").val("");
+      $("#humanNumber").html("");
+      $("#lodrvca").html("");
+      $("#lodti").html("");
+      $("input:radio[name=time]").prop('checked',false);
+      $("input:radio[name=car]").prop('checked',false);
+   });
+</script>
+</html>

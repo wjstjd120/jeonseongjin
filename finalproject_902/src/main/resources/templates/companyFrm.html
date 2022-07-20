@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http:www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>page - 업체 등록 페이지</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<style type="text/css">
+*{
+	padding: 0;
+	margin: 0;
+}
+.joinFrm{
+	width: 550px;
+	height : 680px;
+	margin : 0 auto;
+	margin-top: 120px;
+	float: left;
+}
+
+table{
+	text-align : center;
+	width : 100%;
+}
+
+
+input[type=text],input[type=password],input[type=email]{
+	width: 100%;
+	height: 40px;
+	border : 1px solid lightgray;
+	border-radius: 20px;
+	padding-left: 20px;
+	margin-bottom: 20px;
+}
+input[type=button]{
+	width: 70%;
+	height: 40px;
+	border : 1px solid lightgray;
+	border-radius: 20px;
+	margin-left: 70px;
+	margin-bottom: 20px;
+	background-color: white;
+}
+input[type=button]:hover{
+	background-color: #dcdcdc;
+}
+input[type=button]:active{
+    box-shadow: 1px 1px 0 rgb(0,0,0,0.5);
+    position: relative;
+    top:2px;
+}
+
+button{
+	width: 120px;
+	height: 40px;
+	border : 1px solid lightgray;
+	border-radius: 20px;
+	margin-left: 70px;
+	margin-bottom: 20px;
+	background-color: white;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+button:hover{
+	background-color: #dcdcdc;
+}
+button:active{
+	box-shadow: 1px 1px 0 rgb(0,0,0,0.5);
+    position: relative;
+    top:2px;
+}
+
+.clickImg{
+	border: 1px solid lightgray;
+	border-radius: 20px;
+	width: 100px;
+	height: 40px;
+	line-height: 40px;
+	margin-bottom: 20px;
+}
+.clickImg:hover{
+	background-color: #dcdcdc;
+}
+.clickImg:active{
+    box-shadow: 1px 1px 0 rgb(0,0,0,0.5);
+    position: relative;
+    top:2px;
+}
+/* CSS */
+.button-48 {
+  appearance: none;
+  background-color: #FFFFFF;
+  border-width: 0;
+  box-sizing: border-box;
+  color: #000000;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Clarkson,Helvetica,sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1em;
+  opacity: 1;
+  outline: 0;
+  padding: 1.5em 2.2em;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  text-rendering: geometricprecision;
+  text-transform: uppercase;
+  transition: opacity 300ms cubic-bezier(.694, 0, 0.335, 1),background-color 100ms cubic-bezier(.694, 0, 0.335, 1),color 100ms cubic-bezier(.694, 0, 0.335, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  white-space: nowrap;
+  width: 200px;
+  margin-left: 175px;
+  margin-top: 20px;
+  
+  
+}
+
+.button-48:before {
+  animation: opacityFallbackOut .5s step-end forwards;
+  backface-visibility: hidden;
+  background-color: #EBEBEB;
+  clip-path: polygon(-1% 0, 0 0, -25% 100%, -1% 100%);
+  content: "";
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  transform: translateZ(0);
+  transition: clip-path .5s cubic-bezier(.165, 0.84, 0.44, 1), -webkit-clip-path .5s cubic-bezier(.165, 0.84, 0.44, 1);
+  width: 100%;
+}
+
+.button-48:hover:before {
+  animation: opacityFallbackIn 0s step-start forwards;
+  clip-path: polygon(0 0, 101% 0, 101% 101%, 0 101%);
+}
+
+.button-48:after {
+  background-color: #FFFFFF;
+}
+
+.button-48 span {
+  z-index: 1;
+  position: relative;
+}
+#file-upload , #multifile-upload{
+	background: #C8FFFF;
+}
+
+.short{
+	width: 20%;
+}
+.long{
+	width: 100%;
+}
+.ctd{
+	margin-bottom: 20px;
+}
+
+
+.box2{
+	border: 1px solid lightgray;
+	border-radius: 20px;
+	width: 120px;
+	height: 40px;
+	line-height: 40px;
+	margin-bottom: 20px;
+	margin-left: 19px;
+}
+
+.box3{
+	border: 1px solid lightgray;
+	border-radius: 20px;
+	width: 100px;
+	height: 40px;
+	line-height: 40px;
+	margin-bottom: 20px;
+	margin-right: 19px;
+}
+
+.box4{
+	width: 100%;
+	height: 40px;
+	background-color: lightgray;
+	margin-bottom: 20px;
+	border: 1px solid lightgray;
+	border-radius: 20px;
+	margin-left: 10px;
+	padding-left: 10px;
+	line-height: 40px;
+}
+.imgbox{
+	width: 400px; 
+	height: 500px; 
+	margin: 0 auto; 
+	margin-top: 30px;
+	padding: 20px;
+}
+.layerkd{
+	width: 200px;
+	height: 200px;
+}
+</style>
+</head>
+<body>
+<div style="margin: 0 auto; width: 1656px;">
+<div class="joinFrm">
+	<div class="imgbox">
+		<h2 style="text-align: center;">대문 사진</h2>
+		<div id="cimg_sol" style="height:300px; overflow: auto; margin-left: 40px">
+			
+		</div>
+	</div>
+</div>
+<div class="joinFrm">
+<form th:action="@{companyInsert}" method="post" enctype="multipart/form-data" name="cjoinFrm" onsubmit="return joincheck()">
+<table>
+	<tr>
+		<td colspan="2"><h2>쩨주옵서예</h2></td>
+	</tr>
+	<tr>
+		<td colspan="2"><span>WELCOME TO JEJU - COMPANY</span></td>
+	</tr>
+	<tr>
+		<td class="long"><input type="text" class="frm" id="c_pk_cnum" title="사업자번호" name="c_pk_cnum" autofocus placeholder="사업자번호"></td>
+		<td class="short"><input type="button" onclick="cnumCheck()" value="사업자번호 확인"></td>
+	</tr>
+	<tr>
+		<td colspan="2"><input type="text" class="frm" id="m_nickname" title="아이디" name="c_fk_id" readonly="readonly" th:value="${session.user.m_pk_id}" placeholder="회원아이디"></td>
+	</tr>
+	<tr>
+		<td colspan="2"><input type="text" class="frm" id="c_name" title="업체명" name="c_name" placeholder="업체명"></td>
+	</tr>
+	<tr>
+		<td colspan="2"><input type="text" class="frm" id="c_type" title="업체특징" name="c_type" placeholder="업체특징"></td>
+	</tr>
+	<tr>
+		<td colspan="2"><input type="text" class="frm" id="c_phone" title="업체전화번호" name="c_phone" placeholder="업체전화번호"></td>
+	</tr>
+	</table>
+	<table>
+	<tr>
+		<td style="width: 30%;" class="ctd"><div class="box3">영업종류</div></td>
+		<td style="width: 70%;" class="ctd"><!-- <input type="text" class="frm" id="c_category" title="c_category" name="c_category" placeholder="업체종류">  -->
+		 <div class="box2" style="width: 100%;">
+			<input type="radio" name="c_category" title="영업종류" value="숙박"> 숙박
+			<input type="radio" name="c_category" title="영업종류" value="레저"> 레저
+			<input type="radio" name="c_category" title="영업종류" value="식당"> 식당
+		 </div>
+		</td>
+		
+	</tr>
+	<tr>
+		<td colspan="2"><input type="text" class="frm" id="c_addr" title="주소" name="c_addr" placeholder="업체주소"></td>
+	</tr>
+	<tr>
+		<td class="short">
+		<input type="file" class="frm" id="c_img" name="c_img" placeholder="사진받기" onchange="solImg(event)">
+		<div class="clickImg"><label for="c_img">사진선택</label></div>
+		<input type="hidden" id="fileCheck" name="fileCheck" value="0">
+		</td>
+		<td class="long"><div id="file-upload" class="box4">선택된 사진이 없습니다.</div></td>
+	</tr>
+	<tr>
+		<td class="short">
+		<input type="file" class="frm" title="업체대문사진" id="c_multiimg" name="c_multiimg" placeholder="사진받기" onchange="multiImg(event)" multiple="multiple">
+		<div class="clickImg"><label for="c_multiimg">사진선택</label></div>
+		<input type="hidden" id="multifileCheck" title="업체사진" name="multifileCheck" value="0">
+		</td>
+		<td class="long"><div id="multifile-upload" class="box4">선택된 사진이 없습니다.</div></td>
+	</tr>
+</table>
+<button class="button-48" role="button"><span class="text"> Join </span></button>
+</form>
+</div>
+<div class="joinFrm">
+	<div class="imgbox">
+		<h2 style="text-align: center;">업체 사진</h2>
+		<div id="cimg_legend" style="height:300px; overflow: auto; margin-left: 40px">
+		
+		</div>
+	</div>
+</div>
+</div>
+</body>
+<script th:inline="javascript">
+$("input[type=file]").hide();
+var ckOk = false;
+
+
+$("#c_img").on("change",function(){
+	var files = $("#c_img")[0].files;
+	console.log(files)
+		
+	if(files.length == 0){
+		$("#file-upload").html("선택된 사진이 없습니다.");
+		return;
+	}
+	
+	var sfilename = files[0].name;
+	
+	console.log("파일이름 : " + sfilename);
+	$("#file-upload").html(sfilename);
+	
+	$("#fileCheck").val(1);
+	console.log($("#fileCheck").val());
+	
+	
+	//fileCheck 부분 변경
+	if(sfilename == ""){//파일 취소 시
+		$("#filecheck").val(0);
+		$("#multifile-upload").val("파일선택");
+	}
+	else {//파일 선택 시
+		$("#filecheck").val(1);
+	}
+	console.log($("#filecheck").val());
+	
+});
+
+
+
+
+$("#c_multiimg").on("change", function(){
+	//파일 입력창에서 선택한 파일 목록 가져오기
+	var files = $("#c_multiimg")[0].files;
+	console.log($("#c_multiimg"));
+	console.log(files);
+	
+	var fileName = "";
+	
+	if(files.length > 1){//하나 이상의 파일 선택 시
+		fileName = files[0].name + " 외 "
+			+ (files.length - 1) + "개"
+	}
+	else if(files.length == 1){
+		fileName = files[0].name;
+	}
+	
+	$("#multifile-upload").html(fileName);
+	
+	//fileCheck 부분 변경
+	if(fileName == ""){//파일 취소 시
+		$("#multifileCheck").val(0);
+		$("#multifile-upload").html("선택된 사진이 없습니다");
+	}
+	else {//파일 선택 시
+		$("#multifileCheck").val(1);
+	}
+	console.log($("#multifileCheck").val());
+	
+});
+
+function solImg(event){ // 단독 이미지 미리보기
+	$("#cimg_sol").html("");
+	
+	 var reader = new FileReader();
+	 reader.onload = function(event) {
+    var solimg = document.createElement("img");
+    solimg.setAttribute("src", event.target.result);
+    solimg.setAttribute("onclick", "deletesolimg()");
+    solimg.setAttribute("id", "solImg");
+    solimg.setAttribute("class", "layerkd");
+     
+    document.querySelector("#cimg_sol").appendChild(solimg);
+    src = event.target.result;
+   };
+   
+   reader.readAsDataURL(event.target.files[0]);
+}
+
+
+function multiImg(event) { // 여러개 이미지 미리보기
+	$("#cimg_legend").html("");
+   for (var image of event.target.files) {
+     
+	   var reader = new FileReader();
+       reader.onload = function(event) {
+       var img = document.createElement("img");
+       img.setAttribute("src", event.target.result);
+       img.setAttribute("class", "layerkd");
+       document.querySelector("#cimg_legend").appendChild(img);
+     };
+     reader.readAsDataURL(image);
+   }
+ }
+
+function joincheck(){  // 빈칸 체크
+	
+	if(ckOk == false){
+		alert("사업자번호를 확인해주세요");
+		return false;//submit 실행 막기
+	}
+
+	
+	//form 태그의 내용 전부 가져오기
+	var frm = document.cjoinFrm;
+	console.log(frm);
+	
+	var length = frm.length - 1;//submit 버튼 제외
+	console.log(length);
+	
+	for(var i = 0; i < length; i++){
+		if(frm[i].value == "" || frm[i].value == null){
+			alert(frm[i].title + "을(를) 채워주세요");
+			frm[i].focus();
+			return false;
+		}
+	}
+	return true;//모든 칸이 다 채워졌고, 중복 체크도 한 상태
+}
+
+
+
+function cnumCheck(){
+        var datas = document.getElementById("c_pk_cnum").value; 
+        
+        var data = {"b_no": [datas]}; // 사업자번호 "xxxxxxx" 로 조회 시,
+        var obj = {"b_no" : datas};
+        var check = false;
+        
+        $.ajax({
+        	url: "cnumDeduplication", 
+            type: "POST",
+            data: obj, // json 을 string으로 변환하여 전송
+            dataType: "JSON",
+            success: function(result) {
+                   var msg = result.msg;
+                   
+                   if(msg == "no"){
+                	   alert("기존에 있는 사업자 번호 입니다. 다시 확인해주세요");
+                	   ckOk = false;
+                   }
+                   else{
+                	   cnumCheck2(data);
+                   }
+  				       
+            },
+            error: function(result) {
+               console.log(result);
+            }
+        });
+}
+
+function cnumCheck2(ds){
+	$.ajax({
+        url: "https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=nncudzgLg4qcJ5hIsIPMDizFbOefy2CdS6HALm8B%2BHEeymmgKZ6cI8w5c2qKnElE%2F2ZIYQf6EJUB0OF7d3c3AQ%3D%3D",  
+        type: "POST",
+        data: JSON.stringify(ds), // json 을 string으로 변환하여 전송
+        dataType: "JSON",
+        contentType: "application/json",
+        accept: "application/json",
+        success: function(result) {
+               if(result.match_cnt==1){
+                       alert("확인 되었습니다");
+                       ckOk = true;
+               	
+               }else {
+                               alert("등록되지 않은 사업장 입니다."); 
+                       }
+				                   
+               },
+        error: function(result) {
+            console.log(result.responseText); //responseText의 에러메세지 확인
+        }
+      });
+}
+</script>
+</html>

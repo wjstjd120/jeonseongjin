@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Review_Activiry</title>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script th:inline="javascript">
+$(function () {
+	
+	var msg = [[${msg}]];
+	
+	if(msg != null){
+		alert(msg);
+	}
+	
+	$(".M4"). hide();
+		
+	mdto = [[${session.user}]];
+	
+	if(mdto != null){
+		$("#inLogin").show();
+		$("#outLogin").hide();
+		$(".M1").css("display","none");
+	}else{
+		$("#inLogin").hide();
+		$("#outLogin").show();
+		
+	}
+	
+	
+	
+	if(mdto.m_category == "사업자"){
+		$(".M4"). show();
+	}
+		
+});
+
+
+$(function(){
+	$('.logout').click(function(){
+		session.invalidate();
+		console.log([[${session.id}]]);
+	//	location.href = "/login";
+	});
+
+});
+
+</script>
+<link rel="stylesheet" href="css/Review_Lodgment.css">
+</head>
+<body>
+
+<!-- header 영역 -->
+<header>
+        <div th:include="fragment/header :: header"></div>
+</header>
+
+    <div class="Pic_menu">
+    	<div class="menu_div1">
+    		<div class="menu_title1"><h2>회원</h2></div>
+    		<div class="menu_member"><a th:href = @{mypage}><h4>-내정보</h4></a></div>	
+    		<div class="menu_member"><a th:href = @{Mypage_DealList}><h4>-거래내역</h4></a></div>	
+    	</div>
+    	<div class="menu_div2"></div>
+    	<div class="menu_div3">
+    		<div class="menu_title2"><h2>여행</h2></div>
+    		<div class="menu_Travel"><a th:href = @{Mypage_NowTrip}><h4>-진행중인 여행</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Mypage_PastTrip}><h4>-지난여행</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Favorites_Lodgment}><h4>-즐겨찾기</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Mypage_Plan}><h4>-게시글</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Review_Lodgment}><h4>-리뷰관리</h4></a></div>
+    	</div>
+    </div>
+
+<div class="review">    
+	<div class="review_div">
+		<div class="review_d_div">
+			<div class="r_div1">
+				<div class="r_div1_overflow">
+				
+					<th:block th:each = "rList : ${rList}">
+					
+						<th:block th:if="${rList.rv_img != null}">
+						
+							<div class="r_div1_1" style="cursor: pointer;" th:rvnum="${rList.rv_pk_num}" th:rvcnum="${rList.rv_fk_cnum}"  th:onclick="goLodgment(this.getAttribute('rvnum'),('rvcnum'))">
+								<div class="r_1_img">
+									<div class="r_img" th:text="${rList.rv_img}"></div>
+								</div>
+								<div class="r_1_title">
+									<div class="r_title">
+										<div class="r_t1" th:text="${rList.c_name}"></div>
+										<div class="r_t2" th:text="${rList.rv_date}"></div>
+										<div class="r_btn"><input type="button" th:songjan="${rList.rv_pk_num}" th:onclick="reviewDelete(this.getAttribute('songjan'))" value="삭제"></div>
+									</div>
+								</div>
+							
+								<div class="r_1_text">
+									<div class="r_text" th:text="${rList.rv_contents}"></div>
+								</div>
+							</div>
+							
+						</th:block>
+							
+						<th:block th:if="${rList.rv_img == null}">
+							
+								<div class="r_div1_2" style="cursor: pointer;" th:rvnum="${rList.rv_pk_num}" th:rvcnum="${rList.rv_fk_cnum}"  th:onclick="goLodgment(this.getAttribute('rvnum'),('rvcnum'))">
+									<div class="r_1_blank"></div>
+									<div class="r_1_div">
+									
+										<div class="r_1_2_title1" th:text="${rList.c_name}"></div>
+										<div class="r_1_2_title2" th:text="${rList.rv_date}"></div>
+										<div class="r_btn2"><input type="button" th:songjan="${rList.rv_pk_num}" th:onclick="reviewDelete(this.getAttribute('songjan'))" value="삭제"></div>
+									</div>
+									<div class="r_1_2_text">
+										<div class="r_1_2_t1" th:text="${rList.rv_contents}"></div>
+									</div>
+								</div>
+							
+						</th:block>	
+					</th:block>
+				</div>
+							
+					<!-- 
+					<form th:action="">
+						<div class="r_div1_2" th:each = "revList : ${revList}">
+							<div class="r_1_blank"></div>
+							<div class="r_1_div">
+								<div class="r_1_2_title1" >업체이름2</div>
+								<div class="r_1_2_title2" th:text="${revList.rv_date}">작성날짜2</div>
+								<div class="r_btn2">삭제2</div>
+							</div>
+							<div class="r_1_2_text">
+								<div class="r_1_2_t1" th:text="${revList.rv_contents}">작성한 리뷰 내용2</div>
+							</div>
+						</div>
+					</form>
+					 -->
+				<!-- 	
+					<div class="r_div1_3">
+						<div class="r_div1_3_blank"></div>
+						<div class="r_div1_3_title">
+							<div class="r_div1_3_t1">작성한 리뷰 내용3</div>
+							<div class="r_div1_3_btn1">삭제3</div>
+						</div>
+						<div class="r_div1_3_text">
+							<div class="r_div1_3_text1">작성한 리뷰 내용3</div>
+						</div>
+					</div>
+				 -->
+				 
+			</div>
+			
+			<div class="r_div2">
+				<div class="r_d2_1">
+					<div class="r_d2_1_btndiv">
+					
+					<!-- 
+						<div class="r_d2_1_btn1">
+							<div class="r_d2_1_btn2">
+							 <input type="button" id="c_type0" value="전체"> 
+							
+							</div>
+						</div>
+					 -->
+					 
+						<div class="r_d2_1_btn1">
+							<div class="r_d2_1_btn2">
+							<!-- <input type="button"  id="c_type1" value="숙박"> -->
+							<a th:href=@{Review_Lodgment}>숙박</a>
+							</div>
+						</div>
+						<div class="r_d2_1_btn1">
+							<div class="r_d2_1_btn2">
+							<!-- <input type="button" id="c_type2" value="레저"> -->
+							<a th:href=@{Review_Activiry}>레저</a>
+							</div>
+						</div>
+						<div class="r_d2_1_btn1">
+							<div class="r_d2_1_btn2">
+							<!-- <input type="button" id="c_type3" value="식당"> -->
+							<a th:href=@{Review_Food}>식당</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+<script th:inline="javascript">
+/*
+function gomypage(){
+	$("#gomypage").click(function(){
+		location.href="./mypage";
+	})
+}
+*/
+
+function goLodgment(num){
+	var rvnum = {"rv_pk_num" : num};
+	var rvcnum = {"rv_fk_cnum" : num};
+	
+	console.log(rvnum);
+	console.log(rvcnum);
+	
+//	location.href = "Lodgment";
+}
+
+
+function reviewDelete(num){
+	var vnum = {"rv_pk_num" : num};
+	console.log(vnum);
+	
+	$.ajax({
+		url : "delereview",
+		type : "post",
+		data : vnum,
+		dataType : "JSON",
+		success : function(result){
+			console.log(result.res);
+			if(result.res == "ok"){
+				alert("삭제 되었습니다.");
+				location.href="Review_Activiry";
+			}
+			else{
+				alert("삭제 실패");
+			}
+		},
+		error : function(error){
+			console.log(error.res);
+			alert("통신 실패");
+		}
+	});
+}
+
+/*
+$("#c_type0").click(function(){
+	
+	location.href="./Review_Lodgment"
+});
+
+$("#c_type1").click(function(){
+	var c_category = $(this).val();
+	
+	location.href="./Review_Lodgment?c_category=" + c_category;
+});
+
+$("#c_type2").click(function(){
+	var c_category = $(this).val();
+	
+	location.href="./Review_Lodgment?c_category=" + c_category;
+});
+
+$("#c_type3").click(function(){
+	var c_category = $(this).val();
+	
+	location.href="./Review_Lodgment?c_category=" + c_category;
+});
+*/
+</script>
+
+</html>

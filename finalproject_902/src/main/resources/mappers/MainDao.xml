@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.openai.jeju.dao.MainDao">
+   
+<select id="cateSelectCompany"
+parameterType="String"
+resultType="CompanyDto">
+         select * from company where c_category = ${cate}
+</select>
+
+<insert id="BasketInsert"
+parameterType="HashMap">
+<if test='cate.equals("숙박")'>
+      insert into basket value(null,#{basdto.bk_fk_tnum},#{basdto.bk_fk_cnum},#{basdto.bk_fk_id},#{basdto.bk_fk_num},#{basdto.bk_goods},#{basdto.bk_price},#{basdto.bk_in},#{basdto.bk_out},#{basdto.bk_name},#{basdto.bk_number},#{basdto.bk_carch},0,null,null)
+   </if>
+   <if test='cate.equals("레저")'>
+      <if test='at_rtch.equals("1")'>
+         insert into basket value(null,#{basdto.bk_fk_tnum},#{basdto.bk_fk_cnum},#{basdto.bk_fk_id},#{basdto.bk_fk_num},#{basdto.bk_goods},#{basdto.bk_price},#{basdto.bk_in},#{basdto.bk_out},#{basdto.bk_name},#{basdto.bk_number},#{basdto.bk_carch},0,null,#{basdto.bk_people})
+      </if>
+      <if test='at_rtch.equals("0")'>
+         insert into basket value(null,#{basdto.bk_fk_tnum},#{basdto.bk_fk_cnum},#{basdto.bk_fk_id},#{basdto.bk_fk_num},#{basdto.bk_goods},#{basdto.bk_price},#{basdto.bk_in},#{basdto.bk_out},null,null,null,0,null,#{basdto.bk_people})
+      </if>
+   </if>
+   <if test='cate.equals("식당")'>
+      insert into basket value(null,#{basdto.bk_fk_tnum},#{basdto.bk_fk_cnum},#{basdto.bk_fk_id},null,null,null,null,null,null,null,null,null,null,null)
+   </if>
+</insert>
+
+<select id="getTrdto"
+parameterType="String"
+resultType="TravelrouteDto">
+select * from travelroute where tr_pk_num = #{trnum}
+</select>
+
+<select id="selectLodCompany"
+parameterType="String"
+resultType="BasketDto">
+select b.bk_pk_num, b.bk_fk_tnum, b.bk_fk_cnum, b.bk_fk_id, b.bk_fk_num, b.bk_goods, b.bk_price, b.bk_in, bk_out, b.bk_name, b.bk_number, b.bk_carch, b.bk_paych, b.bk_paytime, b.bk_people, c_name 
+from basket as b inner join company as c on b.bk_fk_cnum = c.c_pk_cnum where c.c_category='숙박' and b.bk_fk_tnum =#{trnum} 
+</select>
+
+<select id="selectActCompany"
+parameterType="String"
+resultType="BasketDto">
+select b.bk_pk_num, b.bk_fk_tnum, b.bk_fk_cnum, b.bk_fk_id, b.bk_fk_num, b.bk_goods, b.bk_price, b.bk_in, bk_out, b.bk_name, b.bk_number, b.bk_carch, b.bk_paych, b.bk_paytime, b.bk_people, c_name 
+from basket as b inner join company as c on b.bk_fk_cnum = c.c_pk_cnum where c.c_category='레저' and b.bk_fk_tnum =#{trnum}
+</select>
+
+<select id="selectFoodCompany"
+parameterType="String"
+resultType="BasketDto">
+select b.bk_pk_num, b.bk_fk_tnum, b.bk_fk_cnum, b.bk_fk_id, b.bk_fk_num, b.bk_goods, b.bk_price, b.bk_in, bk_out, b.bk_name, b.bk_number, b.bk_carch, b.bk_paych, b.bk_paytime, b.bk_people, c_name 
+from basket as b inner join company as c on b.bk_fk_cnum = c.c_pk_cnum where c.c_category='식당' and b.bk_fk_tnum =#{trnum}
+</select>
+
+<delete id="delBasket"
+parameterType="String">
+delete from basket where bk_pk_num = #{bk_pk_num}
+</delete>
+
+<update id="payUpdate"
+parameterType="BasketDto">
+update basket set bk_paych = #{bk_paych}, bk_paytime = #{bk_paytime} where bk_pk_num = #{bk_pk_num}
+</update>
+
+<select id="loptionCheck"
+parameterType="LoptionDto"
+resultType="String">
+select l_fk_cnum from loption 
+<trim prefix="where" suffixOverrides="and">
+   <if test='l_cityview.equals("1")'>
+   l_cityview = ${l_cityview} and
+   </if>
+   <if test='l_seeview.equals("1")'>
+   l_seeview = ${l_seeview} and
+   </if>
+   <if test='l_skyview.equals("1")'>
+   l_skyview = ${l_skyview} and
+   </if>
+   <if test='l_outdoor.equals("1")'>
+   l_outdoor = ${l_outdoor} and
+   </if>
+   <if test='l_petok.equals("1")'>
+   l_petok = ${l_petok} and
+   </if>
+   <if test='l_bbq.equals("1")'>
+   l_bbq = ${l_bbq} and
+   </if>
+   <if test='l_cooking.equals("1")'>
+   l_cooking = ${l_cooking} and
+   </if>
+   <if test='l_pool.equals("1")'>
+   l_pool = ${l_pool} and
+   </if>
+   <if test='l_wallpool.equals("1")'>
+   l_wallpool = ${l_wallpool} and
+   </if>
+   <if test='l_spa.equals("1")'>
+   l_spa = ${l_spa} and
+   </if>
+   <if test='l_garaoke.equals("1")'>
+   l_garaoke = ${l_garaoke} and
+   </if>
+</trim>
+</select>
+
+<select id="aoptionCheck"
+parameterType="AoptionDto"
+resultType="String">
+select a_fk_cnum from aoption 
+<trim prefix="where" suffixOverrides="and">
+   <if test='a_waterpark.equals("1")'>
+   a_waterpark = ${a_waterpark} and
+   </if>
+   <if test='a_spa.equals("1")'>
+   a_spa = ${a_spa} and
+   </if>
+   <if test='a_surfing.equals("1")'>
+   a_surfing = ${a_surfing} and
+   </if>
+   <if test='a_rafting.equals("1")'>
+   a_rafting = ${a_rafting} and
+   </if>
+   <if test='a_aquarium.equals("1")'>
+   a_aquarium = ${a_aquarium} and
+   </if>
+   <if test='a_flowers.equals("1")'>
+   a_flowers = ${a_flowers} and
+   </if>
+   <if test='a_zoo.equals("1")'>
+   a_zoo = ${a_zoo} and
+   </if>
+   <if test='a_shooting.equals("1")'>
+   a_shooting = ${a_shooting} and
+   </if>
+   <if test='a_horse.equals("1")'>
+   a_horse = ${a_horse} and
+   </if>
+   <if test='a_paragliding.equals("1")'>
+   a_paragliding = ${a_paragliding} and
+   </if>
+   <if test='a_zipline.equals("1")'>
+   a_zipline = ${a_zipline} and
+   </if>
+   <if test='a_bike.equals("1")'>
+   a_bike = ${a_bike} and
+   </if>
+   <if test='a_cart.equals("1")'>
+   a_cart = ${a_cart} and
+   </if>
+   <if test='a_atv.equals("1")'>
+   a_atv = ${a_atv} and
+   </if>
+   <if test='a_tourpass.equals("1")'>
+   a_tourpass = ${a_tourpass} and
+   </if>
+   <if test='a_yort.equals("1")'>
+   a_yort = ${a_yort} and
+   </if>
+   <if test='a_shipfishing.equals("1")'>
+   a_shipfishing = ${a_shipfishing} and
+   </if>
+   <if test='a_cablecar.equals("1")'>
+   a_cablecar = ${a_cablecar} and
+   </if>
+   <if test='a_showpainting.equals("1")'>
+   a_showpainting = ${a_showpainting} and
+   </if>
+   <if test='a_fishinglounge.equals("1")'>
+   a_fishinglounge = ${a_fishinglounge} and
+   </if>
+   <if test='a_show.equals("1")'>
+   a_show = ${a_show} and
+   </if>
+</trim>
+</select>
+
+<insert id="reviewInsert"
+parameterType="ReviewDto"
+useGeneratedKeys="true" keyProperty="r_pk_num">
+<selectKey keyProperty="rv_pk_num" resultType="Integer"
+         order="AFTER">
+         SELECT LAST_INSERT_ID()
+</selectKey>
+insert into review values(null, #{rv_fk_cnum},#{rv_fk_id},null, now(),#{rv_contents},#{rv_star},null,null,null)
+</insert>
+
+<update id="ReviewR_imgU"
+parameterType="HashMap">
+update review set rv_img = #{sysname} where rv_pk_num=#{rv_pk_num}
+</update>
+
+<select id="homeqaListSelect" resultType="ComplaintDto">
+SELECT co_pk_conum,co_title,co_date FROM complaint ORDER BY co_pk_conum DESC LIMIT 5;
+</select>
+	
+<select id="homenoticeListSelect" resultType="NoticeDto">
+SELECT n_pk_num,n_title,n_date FROM notice ORDER BY n_pk_num DESC LIMIT 5;
+</select>
+	
+<select id="homeeventListSelect" resultType="EventDto">	
+SELECT e_img,e_pk_enum FROM event ORDER BY RAND() DESC LIMIT 1;
+</select>
+	
+<select id="homecompanyList" resultType="CompanyDto">
+SELECT * FROM company WHERE c_category="숙박" ORDER BY RAND() LIMIT 0,3
+</select>
+	
+<select id="homemdcompanyList" resultType="CompanyDto">
+SELECT * FROM company WHERE c_category="숙박" ORDER BY RAND() LIMIT 0,1
+</select>
+	
+<select id="homeactiveList" resultType="CompanyDto">
+SELECT * FROM company WHERE c_category="레저" ORDER BY RAND() LIMIT 0,3
+</select>
+	
+<select id="homemdactiveList" resultType="CompanyDto">
+SELECT * FROM company WHERE c_category="레저" ORDER BY RAND() LIMIT 0,1
+</select>
+
+<select id="spotbigList" resultType="SpotDto">
+SELECT * FROM spot ORDER BY RAND() LIMIT 0,1
+</select>
+	
+<select id="spotList" resultType="SpotDto">
+SELECT * FROM spot ORDER BY RAND() LIMIT 0,2
+</select>
+
+<insert id="favoritesInsert" parameterType="FavoritesDto">
+INSERT INTO favorites VALUES (NULL,#{fa_fk_id},#{fa_fk_cnum})
+</insert>
+
+
+
+</mapper>

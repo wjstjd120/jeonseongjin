@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http:www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>page - 사업자 회원탈퇴</title>
+<link th:href="@{/css/companyheader.css}" rel="stylesheet" />
+<style type="text/css">
+.terms{
+	width: 1000px;
+	height: 400px;
+	border-top : 1px solid;
+	border-bottom : 1px solid;
+	margin: 0 auto;
+	margin-top: 30px;
+	padding-left: 30px;
+	padding-right: 30px;
+	padding-top : 15px;
+	font-size: 20px;
+	overflow: auto;
+}
+
+.box2{
+	margin: 0 auto;
+	margin-top: 100px;
+}
+.btn1{
+	width: 300px;
+	height: 50px;
+	margin-right: 10px;
+	margin-left: 10px;
+	border: 1px solid lightgray;
+	border-radius: 30px;
+	background-color: white;
+}
+.btn1:hover{
+	background-color: #dcdcdc;
+}
+.btn1:active{
+    box-shadow: 1px 1px 0 rgb(0,0,0,0.5);
+    position: relative;
+    top:2px;
+}
+.div1{
+	width: 80%;
+	height: 60px;
+	font-size: 20px;
+	margin: 0 auto;
+	margin-left : 30px;
+	margin-bottom: 20px;
+	padding-left: 30px;
+	padding-right: 30px;
+	text-align: center;
+}
+</style>
+</head>
+<body>
+	<header>
+		<div th:include="fragment/companyHeader :: cheader"></div>
+	</header>
+   
+  	<div class="terms">
+   		[회원탈퇴 약관]<br><br>
+
+회원탈퇴 신청 전 안내 사항을 확인 해 주세요.<br>
+회원탈퇴를 신청하시면 현재 로그인 된 아이디는 사용하실 수 없습니다.<br>
+회원탈퇴를 하더라도, 서비스 약관 및 개인정보 취급방침 동의하에 따라 일정 기간동안 회원 개인정보를 보관합니다.<br><br>
+
+- 업체 정보<br>
+- 상품 및 대금 결제에 관한 기록<br>
+- 상품 배송에 관한 기록<br>
+- 소비자 불만 또는 처리 과정에 관한 기록<br>
+- 게시판 작성 및 사용후기에 관한 기록<br><br>
+
+※ 상세한 내용은 사이트 내 개인정보 취급방침을 참고 해 주세요.<br>
+   	
+
+ 	</div>
+ 	
+ 	<!-- 
+ 	<div class="box1">
+ 		<input type="text" id="m_pk_id"><br>
+ 		<button>탈퇴하기</button>
+ 	</div> 	
+ 	 -->
+ 	
+ 	<table class="box2">
+ 		<tr style="margin-bottom: 10px;">
+ 			<td colspan="2"><div class="div1">[[${session.user.m_pk_id}]]님 정말 탈퇴하시겠습니까?</div></td>
+ 		</tr>
+ 		<tr>
+ 			<td><button class="btn1" onclick="solmem()">개인회원 전환</button></td>
+ 			<td><button class="btn1" onclick="memdelete()">회원 탈퇴</button></td>
+ 		</tr>
+ 	</table>
+</body>
+<script th:inline="javascript">
+function solmem(){
+	var id = [[${session.user.m_pk_id}]];
+	var check = confirm("진행하시려면 '확인'을 눌러주세요");
+	
+	if(check){
+		location.href="solMemChange?m_pk_id="+id;
+	}
+}
+
+function memdelete(){
+	var id = [[${session.user.m_pk_id}]];
+	console.log(id);
+	
+	var check = confirm("진행하시려면 '확인'을 눌러주세요");
+	
+	if(check){
+		location.href="memdelete?m_pk_id=" + id;
+	}
+}
+</script>
+</html>
+	

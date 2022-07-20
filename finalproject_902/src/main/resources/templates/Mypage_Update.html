@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Mypage_Update</title>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script th:inline="javascript">
+$(function(){
+	var msg = [[${msg}]];
+	
+	if(msg != null){
+		alert(msg);
+	}
+	
+	//session에 'id'가 없으면 첫 페이지로 강제 이동
+	var logid = [[${session.user}]];   
+	if(logid == null){
+		location.href = "./login";
+	}
+	else{
+		$(".M3").css('display','block');
+		$(".M1").css('display','none');
+	}
+	
+});
+
+$(function(){
+	$('.logout').click(function(){
+		session.invalidate();
+		console.log([[${session.id}]]);
+	//	location.href = "/login";
+	})
+});
+
+</script>
+<link rel="stylesheet" href="css/Mypage_Update.css">
+</head>
+<body>
+<!-- header 영역 -->
+<header>
+        <div class="Header">
+            <div class="Member">
+                <span class="M2">고객센터</span>
+                <span class="M1"><a th:href="@{login}">로그인</a></span>
+                <span class="M1"><a th:href="@{join}">회원가입</a></span>
+                <span class="M3" style="display: none"><a th:href="@{login}" class="logout">로그아웃</a></span>
+            </div>
+            <div class="Title">제주옵서예</div>
+            <div class="Menu">
+                <span>숙박</span>
+                <span>레져</span>
+                <span>식당</span>
+                <span>여행정보</span>
+                <span>나의여행</span>
+            </div>
+        </div>
+</header>
+    <div class="Pic_menu">
+    	<div class="menu_div1">
+    		<div class="menu_title1"><h2>회원</h2></div>
+    		<div class="menu_member"><a th:href = @{mypage}><h4>-내정보</h4></a></div>	
+    		<div class="menu_member"><a th:href = @{Mypage_DealList}><h4>-거래내역</h4></a></div>	
+    	</div>
+    	<div class="menu_div2"></div>
+    	<div class="menu_div3">
+    		<div class="menu_title2"><h2>여행</h2></div>
+    		<div class="menu_Travel"><a th:href = @{Mypage_NowTrip}><h4>-진행중인 여행</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Mypage_PastTrip}><h4>-지난여행</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Favorites_Lodgment}><h4>-즐겨찾기</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Mypage_Plan}><h4>-게시글</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Review_Lodgment}><h4>-리뷰관리</h4></a></div>
+    	</div>
+    </div>
+    
+<div class="mypage_update">
+	<div class="mypagediv">
+		<div class="m_update">
+			<div class="m_u_title"><h3>회원정보 수정</h3></div>
+			<div class="m_u_frm">
+				
+					<div class="m_frm1"><input type="button" id="m_update" value="개인정보 수정"></div>
+					<div class="m_frm2"><a th:href="@{Mypage_PwdUpdate}">비밀번호 수정</a></div>
+				
+				
+				<form th:action="@{memberUpdate}" method="post">
+					<div class="m_frm_div">
+						<div class="m_info">
+							<div class="m_frm_img"></div>
+							<div class="m_frm_m">
+								<div class="m_1">
+									<div class="m_1_1">ID</div>
+									<div class="m_1_2">:</div>
+									<div class="m_1_3">
+										<input type="text" class="update" readonly="readonly" name="m_pk_id" th:value="${session.user.m_pk_id}">
+										<div class="minfo">[[${session.user.m_pk_id}]]</div>
+										<span id="same"></span>
+									</div>
+								</div>
+								<div class="m_1">	
+									<div class="m_1_1">생년월일</div>
+									<div class="m_1_2">:</div> 	
+									<div class="m_1_3">
+										<input type="text" class="update" id="m_birth" name="m_birth" th:value="${session.user.m_birth}">
+										<div class="minfo">[[${session.user.m_birth}]]</div>
+										<span id="same1"></span>
+									</div>
+								</div>
+								<div class="m_1">
+									<div class="m_1_1">핸드폰번호</div>
+									<div class="m_1_2">:</div>
+									<div class="m_1_3">
+										<input type="text" class="update" readonly="readonly" name="m_phone" th:value="${session.user.m_phone}">
+										<div class="minfo">[[${session.user.m_phone}]]</div>
+										<span id="same2"></span>
+									</div>
+								</div>
+								<div class="m_1">
+									<div class="m_1_1">E-Mail</div>
+									<div class="m_1_2">:</div>
+									<div class="m_1_3">
+										<input type="text" class="update" id="m_email" name="m_email" th:value="${session.user.m_email}">
+										<div class="minfo">[[${session.user.m_email}]]</div>
+										<span id="same3"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="agreement_div">
+							<div class="agreement_title"><h4>광고정보 수신동의</h4></div>
+							<div class="agreement_text"><p>*고객이 수집 및 이용에 동의한 개인정보를 활용하여 전자적 전송매체(SMS, LMS, 네이버 알림, 앱 푸시 등 다양한 전송매체)를 통해, 아이템매니아 및 제 3자의 상품 또는 서비스에 대한 개인 맞춤형 광고 정보를 전송 할 수 있습니다.</p></div>
+							
+							
+							
+							<div class="agreement_menu">
+								<div class="a_menu"><input class="c_box" type="checkbox" name="chk">SMS <input class="c_box" type="checkbox" name="chk">이메일 <input class="c_box" type="checkbox" name="chk">챗봇 <br><br><br></div>
+							</div>
+							<div class="agreement_btn">
+								<div class="a_box1">
+									<div class="a_0"></div>
+									<div class="a_btn1"><input type="checkbox" id="dAll" class="disagree-btn" name="alldisagree">전체거부</div>
+								</div>
+								<div class="a_box2">
+									<div class="a_0"></div>
+									<div class="a_btn2"><input type="checkbox" id="checkAll" class="agree-btn" name="allagree" >전체동의</div>
+								</div>
+							</div>
+							
+							
+						
+						</div>
+					</div>
+					<div class="m_frm_btn">
+						<div class="m_btn1">
+							<div class="m_btn01">
+								<div class="m_btn1_lo"><input type="submit" disabled="disabled" id="memberupdate" value="수정"></div>
+							</div>
+			
+						</div>
+						<div class="m_btn2">
+							<div class="m_btn02">
+								<div class="m_btn2_lo"><input type="button" id="backbtn" value="되돌리기"></div>
+							</div>
+						</div>
+					</div>
+				</form>
+				
+				
+			</div>
+		</div>
+	</div>
+</div>
+
+<script th:inline="javascript">
+
+
+$(function(){
+	
+	$(".update").hide();
+	
+	$('#m_update').click(function(){
+		$(".update").show();
+		$(".minfo").hide();
+		document.getElementById('same').innerHTML='수정 불가능한 정보';
+		document.getElementById('same').style.color='red';
+		document.getElementById('same1').innerHTML='수정 가능한 정보';
+		document.getElementById('same1').style.color='blue';
+		document.getElementById('same2').innerHTML='수정 불가능한 정보';
+		document.getElementById('same2').style.color='red';
+		document.getElementById('same3').innerHTML='수정 가능한 정보';
+		document.getElementById('same3').style.color='blue';
+		const target = document.getElementById('memberupdate');
+		target.disabled = false;  // 입력한 새로운 비밀번호 일치시 수정 버튼 활성화
+	})
+	
+});
+
+
+ 
+$(function(){
+	// 1. #checkAll 클릭
+	$("#checkAll").click(function(){
+		//2. #checkAll이 체크되었을 떄,
+		//chk라는 name 을 가진 input 태그를 찾아 checked를 true로 정의
+		if ($("#checkAll").prop("checked")){
+			$("input[name=chk]").prop("checked",true)
+			$("input[name=alldisagree]").prop("checked",false)
+			//3 #checkAll이 체크되지 않았을 떄,
+			//chk라는 name을 가진 input 태그를 찾아 checked를 false로 정의
+		}else{
+			$("input[name=chk]"),prop("checked",false)
+		}
+	})
+	
+	// 1. #dAll 클릭
+	$("#dAll").click(function(){
+		//2. #dAll이 체크되었을 떄,
+		//chk라는 name 을 가진 input 태그를 찾아 checked를 false로 정의
+		if ($("#dAll").prop("checked")){
+			$("input[name=chk]").prop("checked",false)
+			$("input[name=allagree]").prop("checked",false)
+			//3 #dAll이 체크되지 않았을 떄,
+			//chk라는 name을 가진 input 태그를 찾아 checked를 true로 정의
+		}else{
+			$("input[name=chk]"),prop("checked",true)
+		}
+	})
+	
+	$("#backbtn").click(function(){
+		alert("새로고침");
+		location.reload();
+	})
+	
+	
+	
+});
+
+/*
+$('#checkPwd').click(function(){
+	var pwd = $('#m_pass').val();
+	if(session.getAttribute("m_pass").equals(pwd)){
+		document.all.new_pwd.style.display="none";
+	}else{
+		document.all.new_pwd.style.display="";
+	}
+}
+*/
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>page - header</title>
+<style type="text/css">
+</style>
+</head>
+<body>
+<!-- companyHeader -->
+<div th:fragment="cheader">
+<div class="head">
+<h2 style="margin-left: 40px;"><a href="company">업체페이지</a></h2></div>
+	<ul>
+		<li><a href="logout">로그아웃</a></li>
+		<li><a href="/">메인페이지</a></li>
+	</ul>
+</div>
+
+<!-- companySection -->
+
+<div th:fragment="csection">
+	<div class="sectionTitle">
+	<h2>내 업체 관리</h2>	
+	</div>
+	<div class="sectionList">
+		<h3 style="margin-bottom: 10px; text-align: left;">서비스</h3>
+		<p class="list"><a href="companyFrm"> - 업체 추가 신청</a></p>
+		<p class="list"><a href="companyOutFrm"> -  개인회원 전환 / 회원 탈퇴</a></p>
+	</div>
+</div>
+
+<div th:fragment="contentsLayer">
+	<div class="layerbox">
+		<h2>업체정보</h2>
+		<hr>
+		<div class="layerImg"></div>
+		<span class="layerInfo"></span><br>
+		<br>
+		<h4>방목록</h4>
+		<hr>
+		<div class="roomDiv">
+			<table class="roomtable">
+				
+			</table>
+		</div>
+		<input type="button" id="popCloseBtn" value="나가기">
+		<input type="button" onclick="addGoods()" value="추가">
+		<input type="button" onclick="showContents()" value="삭제">
+		<input type="button" value="수정">
+	</div>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.openai.jeju.dao.SvcenterDao">
+
+	<select id="noticeSelect" resultType="NoticeDto"
+		parameterType="ListDto">
+		SELECT * FROM notice ORDER BY n_pk_num DESC LIMIT
+		${pageNum}, ${listCnt}
+	</select>
+
+	<select id="noticeCntSelect" resultType="int"
+		parameterType="ListDto">
+		SELECT count(*) FROM notice
+	</select>
+
+	<select id="NoticeList" parameterType="Integer"
+		resultType="NoticeDto">
+		SELECT * FROM notice WHERE n_pk_num=#{n_pk_num}
+	</select>
+
+	<update id="viewUpdate" parameterType="Integer">
+		UPDATE notice SET n_views
+		= n_views + 1 WHERE n_pk_num=#{n_pk_num}
+	</update>
+
+	<select id="qaListSelect" resultType="ComplaintDto"
+		parameterType="ListDto">
+		SELECT * FROM complaint ORDER BY co_pk_conum DESC LIMIT
+		${pageNum},
+		${listCnt}
+	</select>
+
+	<insert id="qaInsert" parameterType="ComplaintDto">
+		INSERT INTO complaint VALUES
+		(null,#{co_fk_id},#{co_title},#{co_contents},now(),DEFAULT,NUll,DEFAULT)
+	</insert>
+
+	<select id="MyQaListSelect" resultType="ComplaintDto"
+		parameterType="ListDto">
+		SELECT * FROM complaint WHERE co_fk_id=#{id} ORDER BY co_date DESC LIMIT
+		${pageNum}, ${listCnt}
+	</select>
+
+	<select id="qaList" parameterType="Integer"
+		resultType="ComplaintDto">
+		SELECT * FROM complaint WHERE co_pk_conum=#{co_pk_conum}
+	</select>
+
+	<delete id="qaDelect" parameterType="Integer">
+		DELETE FROM complaint WHERE co_pk_conum=${co_pk_conum}
+	</delete>
+
+
+</mapper>

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link href='css/jejucss.css' rel='stylesheet'>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="js/jquery.serializeObject.js"></script>
+<title>메인페이지</title>
+<style>
+  .member_listtable {
+    border-collapse: collapse;
+  }
+  .member_listtable>thead tr {
+    background-color: #1e96ff;
+    color: #ffffff;
+  }
+  .member_listtable>tbody tr:nth-child(2n) {
+    background-color: #bbdefb;
+  }
+  .member_listtable>tbody tr:nth-child(2n+1) {
+    background-color: #e3f2fd;
+  }
+</style>
+</head>
+<body>
+<header>   
+   <div th:replace="fragment/Header :: Admin_Header"></div>
+</header>
+
+<section>
+   <div th:replace="fragment/Menubar :: Admin_Menubar"></div>
+   <div class="contents_holder">   
+      <div class="member_searchbar">
+         <div class="member_title"><h3>게시글 검색</h3></div>
+         <form th:action="@{Admin_Notice_List}" method="get">
+         <div class="member_searchtag">
+            <div class="searchMark">
+               <input type="image" src="image/mark2.png" alt="제출버튼" style="width: 35px; height: 35px;">
+            </div>
+            <div class="searchbar_Minputbox">
+               <div class="searchbar_Mselect">
+                  <select name="colname">
+                     <option value="n_title" selected>제목</option>
+                     <option value="n_contents">내용</option>
+                  </select>
+               </div>
+               <div class="searchbar_Minput">
+                  <input type="text" name="keyword">
+                  <span>작성일 : </span>
+                  <input class="ageinput" type="date" name="sage"> -
+                  <input class="ageinput" type="date" name="eage">
+               </div>
+            </div>
+         </div>
+         </form>
+      </div>
+      <div class="member_listbar">
+         <div>
+         </div>
+         <div>
+            <table class="member_listtable">
+               <thead>   
+                  <tr>
+                     <td style="width: 10%">번호</td>
+                     <td style="width: 20%">제목</td>
+                     <td style="width: 15%">작성일</td>
+                     <td style="width: 5%">조회수</td>
+                     <td style="width: 10%">관리</td>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr th:each="notice : ${nList}">
+                     <td th:text="${notice.n_pk_num}"></td>
+                     <td th:text="${notice.n_title}"></td>
+                     <td th:text="${notice.n_date}"></td>
+                     <td th:text="${notice.n_views}"></td>
+                     <td><input type="button" class="adminBtn" th:npknum="${notice.n_pk_num}" th:onclick="popupOpen(this.getAttribute('npknum'))" value="관리"></td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+   <div class="paging" th:utext="${paging}"></div>
+   <button type="button" th:onclick='insertpopup()' style="margin-top: 40px;" class="button-65">글쓰기</button>
+</div>
+   
+   
+<div id ="popup_mask" ></div> <!-- 팝업 배경 DIV -->
+
+<div id="NoticePopupDiv"> <!-- 팝업창 -->
+         <div>
+            <img src="image/closebtn.gif" class="popup_closebtn" th:onclick='popupClose()'>
+            <h1 class="popuptitle">공지사항 관리</h1>
+         </div>
+   <div id="Admin_Notice_info" style="overflow: auto;">
+         <div>
+            <table>
+               <tbody>
+                  <tr>
+                     <td style="width: 100px; padding: 5px;">제목 : </td>
+                     <td colspan="3" id="n_titleFrm" style="width: 900px;"></td>
+                  </tr>
+                  <tr>
+                     <td style="padding: 5px;">조회수 : </td>
+                     <td id="n_viewsFrm" style="width: 300px;"></td>
+                     <td style="padding: 5px;">등록날짜 : </td>
+                     <td id="n_dateFrm"></td>
+                  </tr>
+                  <tr>
+                     <td colspan="4" style="padding-top: 20px;">글 내용</td>
+                  </tr>
+                  <tr>
+                     <td colspan="4">
+                        <div id="n_contentsFrm" style="min-height: 200px; border: 1px solid black; box-sizing: border-box; border-radius: 4px; padding: 5px; background-color: white;"></div>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>         
+         <div style="margin-top: 40px;">
+            <button th:onclick="Updatepopup()" class="button-65">공지정보 수정</button>
+            <button type="button" th:onclick="popupClose()" class="button-65">닫기</button>
+         </div>   
+   </div>
+      <div id="Admin_Notice_updateFrm" style="overflow: auto;">
+         <div>
+         <form id="Admin_Notice_Update_Frm" method="post">
+         <input type="hidden" id="npknumhid" name="n_pk_num">
+            <table style="box-sizing: border-box;">
+               <tbody>
+                  <tr>
+                     <td style="width: 100px; padding: 5px;">제목 : </td>
+                     <td colspan="3" style="width: 890px;"><input name="n_title" id="n_title" type="text"></td>
+                  </tr>
+                  <tr>
+                     <td style="padding: 5px;">조회수 : </td>
+                     <td id="n_views" style="width: 300px;"></td>
+                     <td style="padding: 5px;">등록날짜 : </td>
+                     <td id="n_date"></td>
+                  </tr>
+                  <tr>
+                     <td colspan="4" style="padding-top: 20px;">글 내용</td>
+                  </tr>
+                  <tr>
+                     <td colspan="4"><textarea id="n_contents" name="n_contents" style="resize: none; width: 890px; height: 400px; padding: 5px; box-sizing: border-box;"></textarea></td>
+                  </tr>
+               </tbody>
+            </table>
+         </form>
+         </div>         
+         <div>
+            <button th:onclick="AdminNoticeUpdate()" class="button-65">수정</button>
+            <button type="button" th:onclick="AdminNoticeDelete()" class="button-65">게시글 삭제</button>
+            <button type="button" th:onclick="newpopupClose()" class="button-65">닫기</button>
+         </div>   
+   </div>
+   
+   <div id="Admin_Notice_insertFrm" style="overflow: auto;">
+         <div>
+         <form id="Admin_Notice_Insert_Frm" method="post">
+            <table>
+               <tbody>
+                  <tr>
+                     <td style="width: 45px;">제목 : </td>
+                     <td colspan="3" style="width: 900px;">
+                        <input hidden="hidden">
+                        <input name="n_title" type="text" style="width: 400px;">
+                     </td>
+                  </tr>
+                  <tr>
+                     <td colspan="4" style="padding-top: 20px;">글 내용</td>
+                  </tr>
+                  <tr>
+                     <td colspan="4"><textarea name="n_contents" style="resize: none; width: 890px; height: 400px;"></textarea></td>
+                  </tr>
+               </tbody>
+            </table>
+         </form>
+         </div>         
+         <div>
+            <button type="button" th:onclick="AdminNoticeInsert()" class="button-65">작성</button>
+            <button type="button" th:onclick="insertpopupClose()" class="button-65">닫기</button>
+         </div>   
+   </div>
+</div>
+
+</section>
+</body>
+<script th:inline="javascript">
+$(function(){
+   var msg = [[${msg}]];
+   
+   if(msg != null){
+      alert(msg);
+   }
+   
+});
+
+var pkid;
+
+/* history.replaceState({}, null, location.pathname); */
+function popupOpen(num){
+   nnum = num;
+   
+   console.log(num);
+   $("#NoticePopupDiv").css({
+        "top": (($(window).height()-$("#NoticePopupDiv").outerHeight())/2+$(window).scrollTop())+"px",
+        "left": (($(window).width()-$("#NoticePopupDiv").outerWidth())/2+$(window).scrollLeft())+"px"
+   });   
+        //팝업창을 가운데로 띄우기 위해 현재 화면의 가운데 값과 스크롤 값을 계산하여 팝업창 CSS 설정
+    $("#popup_mask").css("display","block"); //팝업 뒷배경 display block
+    $("#NoticePopupDiv").css("display","block"); //팝업창 display block
+    $("#Admin_Notice_info").css("display","block"); //팝업창 display block
+        
+    $("body").css("overflow","hidden");//body 스크롤바 없애기 
+    
+    var n_num = {"nnum" : nnum};
+    $.ajax({
+      url: "NoticeNnumSelect",
+      type: "post", //json 객체는 post 사용!
+      data: n_num,
+      dataType: "json",
+      success: function(result){
+         var notice = result.notice;
+         
+         $("#n_titleFrm").html(notice.n_title); // index가 끝날때까지 
+         $("#n_viewsFrm").html(notice.n_views);
+         $("#n_contentsFrm").html(notice.n_contents);
+         $("#n_dateFrm").html(notice.n_date);
+      
+      },
+      error: function(error){
+         alert("전송실패");
+         console.log(error);
+      }
+   });
+      
+}
+
+function Updatepopup(){
+   
+   $("#Admin_Notice_info").css("display","none"); //팝업창 display block
+    $("#Admin_Notice_updateFrm").css("display","block"); //팝업창 display block
+    
+    var n_num = {"nnum" : nnum};
+    $.ajax({
+      url: "NoticeNnumSelect",
+      type: "post", //json 객체는 post 사용!
+      data: n_num,
+      dataType: "json",
+      success: function(result){
+         var notice = result.notice;
+         $("#npknumhid").val(notice.n_pk_num);
+         $("#n_title").val(notice.n_title); // index가 끝날때까지 
+         $("#n_views").html(notice.n_views);
+         $("#n_contents").val(notice.n_contents);
+         $("#n_date").html(notice.n_date);
+      
+      },
+      error: function(error){
+         alert("전송실패");
+         console.log(error);
+      }
+   });
+      
+}
+
+function AdminNoticeUpdate(){
+    
+   var nDto = $("#Admin_Notice_Update_Frm").serializeObject();
+   console.log(nDto);
+    $.ajax({
+      url: "Admin_Notice_Update",
+      type: "post", //json 객체는 post 사용!
+      data: nDto,
+      dataType: "json",
+      success: function(result){
+         
+         console.log(result.res);
+         
+         if(result.res == "ok"){
+            alert("수정성공");
+         } else {
+            alert("수정실패");
+         }
+         
+         location.href = "/Admin_Notice_List";
+         
+      },
+      error: function(error){
+         alert("전송실패");
+         console.log(error);
+      }
+   });
+    
+}
+
+function AdminNoticeDelete(){
+   if (confirm("게시글을 삭제하시겠습니까???")) {
+   
+   var n_num = {"nnum" : nnum};
+    $.ajax({
+      url: "Admin_Notice_Delete",
+      type: "post", //json 객체는 post 사용!
+      data: n_num,
+      dataType: "json",
+      success: function(result){
+         
+         console.log(result.res);
+         
+             if(result.res == "ok"){
+                alert("삭제 되었습니다.");
+             } else {
+                alert("삭제 실패");
+             }
+         
+         location.href = "/Admin_Notice_List";
+      },
+      error: function(error){
+         alert("전송실패");
+         console.log(error);
+      }
+   });
+   } else {
+      
+   }   
+    
+}
+
+function AdminNoticeInsert(){
+    
+   var nDto = $("#Admin_Notice_Insert_Frm").serializeObject();
+   console.log(nDto);
+    $.ajax({
+      url: "Admin_Notice_Insert",
+      type: "post", //json 객체는 post 사용!
+      data: nDto,
+      dataType: "json",
+      success: function(result){
+         
+         console.log(result.res);
+         
+         if(result.res == "ok"){
+            alert("작성성공");
+         } else {
+            alert("작성실패");
+         }
+         
+         location.href = "/Admin_Notice_List";
+         
+      },
+      error: function(error){
+         alert("전송실패");
+         console.log(error);
+      }
+   });
+    
+}
+
+function AdminNoticeDelete(){
+   if (confirm("게시글을 삭제하시겠습니까???")) {
+   
+   var n_num = {"nnum" : nnum};
+    $.ajax({
+      url: "Admin_Notice_Delete",
+      type: "post", //json 객체는 post 사용!
+      data: n_num,
+      dataType: "json",
+      success: function(result){
+         
+         console.log(result.res);
+         
+             if(result.res == "ok"){
+                alert("삭제 되었습니다.");
+             } else {
+                alert("삭제 실패");
+             }
+         
+         location.href = "/Admin_Notice_List";
+      },
+      error: function(error){
+         alert("전송실패");
+         console.log(error);
+      }
+   });
+   } else {
+      
+   }   
+    
+}
+   
+
+   
+   
+function popupClose() {
+     $("#popup_mask").css("display","none"); //팝업창 뒷배경 display none
+     $("#NoticePopupDiv").css("display","none"); //팝업창 display none
+     $("#Admin_Notice_info").css("display","none");
+     $("body").css("overflow","auto");//body 스크롤바 생성
+}
+
+function newpopupClose() {
+    $("#Admin_Notice_info").css("display","block"); //팝업창 display block
+    $("#Admin_Notice_updateFrm").css("display","none"); //팝업창 display block
+}
+
+function insertpopupClose() {
+   $("#popup_mask").css("display","none"); //팝업창 뒷배경 display none
+    $("#NoticePopupDiv").css("display","none");
+    $("#Admin_Notice_insertFrm").css("display","none"); //팝업창 display block
+}
+
+function insertpopup() {
+   $("#NoticePopupDiv").css({
+        "top": (($(window).height()-$("#NoticePopupDiv").outerHeight())/2+$(window).scrollTop())+"px",
+        "left": (($(window).width()-$("#NoticePopupDiv").outerWidth())/2+$(window).scrollLeft())+"px"
+   });   
+        //팝업창을 가운데로 띄우기 위해 현재 화면의 가운데 값과 스크롤 값을 계산하여 팝업창 CSS 설정
+    $("#popup_mask").css("display","block"); //팝업 뒷배경 display block
+    $("#NoticePopupDiv").css("display","block"); //팝업창 display block
+    $("#Admin_Notice_insertFrm").css("display","block"); //팝업창 display block
+        
+    $("body").css("overflow","hidden");//body 스크롤바 없애기 
+    
+}
+
+</script>
+</html>

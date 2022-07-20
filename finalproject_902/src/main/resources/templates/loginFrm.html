@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http:www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>page - 로그인</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script th:inline="javascript">
+$(function () {
+	var msg = [[${msg}]];
+	
+	if(msg != null){
+		alert(msg);
+	}
+});
+
+</script>
+<style type="text/css">
+*{
+	padding: 0;
+	margin: 0;
+}
+a{
+   text-decoration: none;
+}
+
+a:visited{
+   color: black;
+   
+}
+.joinFrm{
+	width: 20%;
+	margin : 0 auto;
+	margin-top: 250px;
+}
+
+table{
+	margin: 0 auto;
+	text-align : center;
+	width: 250px;
+}
+
+.frm{
+	width: 400px;;
+	height: 45px;
+	border: 1px solid;
+	border-radius: 10px;
+	margin-bottom: 10px;
+	font-size: 20px;
+	
+}
+.check{
+	border: 1px solid;
+}
+label{
+	border: 1px solid;
+	border-radius: 5px;
+}
+button{
+	width: 190px;
+	margin: auto;
+	display: block;
+	height: 40px;
+	margin-bottom: 15px;
+	border: 1px solid white;
+	background-color: lightgray;
+	border-radius: 10px;
+	
+}
+button:hover{
+	background-color: #A297BD;
+}
+.short{
+	width: 20%;
+}
+.long{
+	width: 100%;
+}
+
+</style>
+</head>
+<body>
+
+<div class="joinFrm">
+<form th:action="@{loginProc}" method="post">
+<table>
+	<tr>
+		<td colspan="2"><h2><a href="/">쩨주옵서예</a></h2></td>
+	</tr>
+	<tr>
+		<td colspan="2"><span>WELCOME TO JEJU - LOGIN</span></td>
+	</tr>
+	<tr>
+		<td colspan="2"><input type="text" class="frm" title="사업자번호" name="m_pk_id" autofocus placeholder="아이디"></td>
+	</tr>
+	<tr>
+		<td colspan="2"><input type="password" class="frm" title="아이디" name="m_pass" placeholder="비밀번호"></td>
+	</tr>
+	<tr>
+		<td><button style="display: inline;">로그인</button></td>
+		<td><button type="button" onclick="joinFrm()">회원가입</button></td>
+	</tr>	
+</table>
+</form>
+
+<button type="button">아이디찾기</button>
+</div>
+</body>
+<script th:inline="javascript">
+
+function joinFrm(){
+	location.href="joinFrm";
+}
+ 
+</script>
+</html>

@@ -1,0 +1,277 @@
+@charset "UTF-8";
+
+/*공통 레이아웃*/
+*{
+    padding: 0%;
+    margin: 0%;
+   /*
+    border: 1px solid;
+    */
+}
+
+/* header 레이아웃 */
+
+header{
+    text-align: center;
+    
+}
+
+.Header{
+    width: 100%;
+    height: 150px;
+/*    border: 1px solid;*/
+    overflow: hidden;
+}
+.Member{
+    height: 25px;
+    margin-top: 5px;
+}
+.Member>span{
+    float: right;
+    margin-right: 20px;
+    font-size: 13pt;
+}
+.Title{
+    height: 80px;
+    font-size: 40pt;
+    text-align: center;
+    width: 100%;
+}
+.Menu>span{
+    font-size: 20pt;
+    margin: 0 20px 0 20px;
+}
+
+.Pic_menu{
+    float: left;
+    /*width: 320px;*/
+    width: 16%;
+    height: 100%;
+/*    border: 1px solid;*/
+    box-sizing: border-box;
+    position: fixed;
+}
+
+/* 픽 메뉴의 내용*/
+/* 회원정보 div */
+.menu_div1{
+	width: 65%;
+	height: 300px;
+	float: right;
+	background-color: red;
+}
+
+.menu_title1{
+	width: 100%;
+	height: 50px;
+	margin-top: 50px;
+	text-align: left;
+	line-height: 50px;
+	background-color: lightyellow;
+}
+
+.menu_member{
+	width: 100%;
+	height: 40px;
+	text-align: left;
+	line-height: 40px;
+	float: left;
+	background-color: lightgreen;
+}
+
+.menu_div3{
+	width: 65%;
+	height: 400px;
+	float: right;
+	background-color: yellow;
+}
+
+.menu_title2{
+	width: 100%;
+	height: 50px;
+	text-align: left;
+	line-height: 50px;
+	background-color: lightyellow;
+}
+
+.menu_Travel{
+	width: 100%;
+	height: 40px;
+	text-align: left;
+	line-height: 40px;
+	float: left;
+	background-color: lightgreen;
+}
+
+.mypage_resign {
+	float: left;
+	width: 84%;
+	margin-left: 16%;
+	background-color: skyblue;
+	text-align: center;
+}
+
+.mypage_res_div {
+	width: 1280px;
+	height: 783px;
+	background-color: yellow;
+	display: inline-block;
+}
+
+.res_frm {
+	width: 1280px;
+	height: 743px;
+	margin-top: 20px;
+	background-color: lightgreen;
+}
+
+.res_text1 {
+	width: 1280px;
+	height: 45px;
+	background-color: lightyellow;
+	border-bottom: 2px solid black;
+	box-sizing: border-box;
+	text-align: left;
+	line-height: 45px;
+}
+
+.res_text_frm {
+	width: 1280px;
+	height: 400px;
+	background-color: skyblue;
+}
+
+.res_text2 {
+	width: 1280px;
+	height: 70px;
+	background-color: yellow;
+	text-align: left;
+	line-height: 70px;
+}
+
+.res_text3 {
+	width: 1280px;
+	height: 330px;
+	background-color: lightyellow;
+	text-align: left;
+	border-bottom: 2px solid black;
+	box-sizing: border-box;
+}
+
+.res_pass_frm {
+	width: 1280px;
+	height: 298px;
+	background-color: blue;
+}
+
+.res_p0 {
+	width: 1280px;
+	height: 200px;
+	background-color: white;
+}
+
+.res_pass {
+	width: 200px;
+	height: 98px;
+	background-color: lightgreen;
+	margin: 0 auto;
+	text-align: center;
+	line-height: 98px;
+}
+
+    #popup_mask { /* 팝업 배경 css */
+        position: fixed;
+        width: 100%;
+        height: 1000px;
+        top: 0px;
+        left: 0px;
+         display: none; 
+         background-color:#000;
+         opacity: 0.8;
+    }
+
+    #popupDiv {  /* 팝업창 css */
+    top : 0px;
+    position: absolute;
+    background:White;
+    width: 750px;
+    height: 700px;
+    display: none; 
+    border: 1px solid black;
+    }
+    
+    .pop_frm {
+    	width: 700px;
+    	height: 650px;
+    	background-color: lightyellow;
+    	margin: 0 auto;
+    }
+    
+    .pop_frm0 {
+    	width: 700px;
+    	height: 200px;
+    	background-color: lightgreen;
+    }
+    
+	.pass_text {
+		width: 700px;
+		height: 100px;
+		background-color: yellow;
+		line-height: 75px;
+	}
+	
+	.pass_insert {
+		width: 700px;
+		height: 200px;
+		background-color: skyblue;
+	}
+	
+	.result {
+		width: 700px;
+		height: 50px;
+		background-color: white;
+		text-align: center;
+	}
+	
+	.pop_btn_div {
+		width: 700px;
+		height: 100px;
+		background-color: lightgreen;
+	}
+	
+	.pop_btn1 {
+		width: 350px;
+		height: 100px;
+		background-color: lightyellow;
+		float: left;
+	}
+	
+	.btn1_text {
+		width: 150px;
+		height: 80px;
+		background-color: lightgreen;
+		float: right;
+		margin: 10px 10px 10px 0;
+		text-align: center;
+		line-height: 80px;
+	}
+	
+	.pop_btn2 {
+		width: 350px;
+		height: 100px;
+		background-color: lightblue;
+		float: right;
+	}
+	
+	.btn2_text {
+		width: 150px;
+		height: 80px;
+		background-color: lightyellow;
+		float: left;
+		margin: 10px 0 10px 10px;
+		text-align: center;
+		line-height: 80px;
+	}
+    
+
+	

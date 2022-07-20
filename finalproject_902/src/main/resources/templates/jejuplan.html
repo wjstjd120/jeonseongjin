@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http:www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link th:href="@{/css/jejuplan.css}" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<style type="text/css">
+.m_review{
+    text-align: center;
+}
+.m_review>P{
+    width: 1300px;
+    display: inline-block;
+    font-size: 20pt;
+    font-weight: 600;
+    margin: 0 10px 20px 10px;
+    text-align: left;
+    border-bottom: 3px solid;
+    background-color: aqua;
+}
+.m_review1, .m_review2{
+    display: inline-block;
+    width: 1100px;
+    height: 315px;
+    margin-bottom: 20px;
+    background-color: aqua;;
+}
+.m_star{
+    width: 300px;
+    height: 40px;
+    text-align: left;
+    background-color: red;
+}
+.m_id{
+    width: 150px;
+    height: 30px;
+    float: left;
+    margin-top: 5px;
+    text-align: left;
+    background-color: red;
+}
+.m_room{
+    width: 200px;
+    height: 30px;
+    float: left;
+    margin-top: 5px;
+    margin-left: 5px;
+    text-align: left;
+    background-color: red;
+}
+.m_date{
+    width: 200px;
+    height: 30px;
+    float: left;
+    margin-top: 5px;
+    margin-left: 5px;
+    text-align: left;
+    background-color: red;
+}
+.m_info{
+    width: 1100px;
+    height: 30px;
+    display: inline-block;
+}
+.m_rv{
+    width: 1100px;
+    height: 220px;
+}
+.m_rv_img{
+    width: 400px;
+    height: 240px;
+    float: left;
+    background-color: aquamarine;
+}
+.m_rv_text{
+    margin-left: 20px;
+    width: 680px;
+    height: 240px;
+    float: left;
+    text-align: left;
+    background-color: aquamarine;
+}
+.m_rv1{
+    width: 1100px;
+    height: 240px;
+    text-align: left;
+    background-color: aquamarine;
+}</style>
+<title>Document</title>
+</head>
+<body>
+	<header>
+		<div class="header">
+			<div class="member">
+				<span class="m1">고객센터</span> <span class="m1">로그인</span> <span
+					class="m1">회원가입</span>
+			</div>
+			<div class="title">제주옵서예</div>
+			<div class="menu">
+				<span>숙박</span> <span>레져</span> <span>식당</span> <span>여행정보</span> <span>나의여행</span>
+			</div>
+		</div>
+	</header>
+	<div class="plan_menu"><br><br><hr>
+        <span class="pm1" onclick="location.href='jejuplanList'">후기게시판</span><hr>
+        <span class="pm2" onclick="location.href='jejuEventList'">제주행사</span><hr>
+        <span class="pm3" onclick="location.href='jejutourList'">제주관광지</span><hr>
+    </div> 
+	<div id="frm" th:each="jList:${jList}">
+		<div class="write" th:text="${jList.b_fk_id}"></div>
+		<div class="date" th:text="${#dates.format(jList.b_date, 'yyyy-MM-dd')}"></div>
+	</div>
+	<div id="con">
+		<div class="conimg" th:each="jList:${jList}">
+			<img class="img1" img th:src="@{/upload/} + ${jList.b_img}"
+				style="width: 100%; height: 100%;">
+			<input type="hidden" value="" id="b_pk_num">
+
+			<div class="con1" th:text="${jList.b_title}"></div>
+			<div class="con2" th:text="${jList.b_cost}"></div>
+			<div class="con3"></div>
+		</div>
+	</div>
+	<div id="map"></div>
+	<div id="hotelimg">
+		<img class="img1" src="image/jeju.jpeg"
+			style="width: 100%; height: 100%;" alt="">
+</div>
+		<div th:each="jList:${jList}">
+			<div id="content" th:text="${jList.b_contents}"></div>
+		</div>
+					
+					<!-- 댓글 목록 보기 -->
+					<table style="width: 100%">
+						<!-- 제목 테이블 -->
+						<tr bgcolor="pink" align="center" height="30">
+							<td width="20%">WRITER</td>
+							<td width="50%">CONTENTS</td>
+							<td width="30%">DATE</td>
+						
+						</tr>
+					</table>
+					<table id="rtable" style="width: 100%">
+						<!-- 목록 테이블 -->
+						<!-- 데이터가 변경되면 새롭게 데이터 베이스를 변경해서 뿌려주기 때문에
+						위에 고정들이 날라갈 수 있기 때문에 목록부분만 덮어쓰기 위해 나눠놓은거임(위에ㅔ랑) -->
+						<tr th:each="reply :${rList}">
+							
+								<td width="20%"th:text="${reply.br_fk_id}"></td>
+								<td width="50%"th:text="${reply.br_contents}"></td>
+								<td width="30%" th:text="${#dates.format(reply.br_date, 'yyyy-MM-dd')}"></td>
+							</tr>
+					</table>
+					<!-- 댓글 작성 양식 -->
+					<form id="rFrm">
+						<textarea rows="5"style="width: 100%;" class="write-input ta" 
+							id="comment" name="br_contents"placeholder="댓글을 적어주세요"></textarea>
+						<input type="button" value="댓글 전송" class="btn-write"
+						th:onclick='replyInsert([[${jnum}]])' style="width: 100%; margin-bottom: 30px;">
+						<input type="hidden" name="br_fk_num">
+						<input type="hidden" name="br_fk_id">
+					</form>
+
+		<button class="list" onclick="href=location.href='jejuplanList'">목록</button>
+</body>
+<script th:inline="javascript">
+//var jList = [[${jList}]];
+var rList= [[${rList}]];
+var jnum = "[[${jnum}]]";
+function replyInsert() {
+$ .ajax({
+		url:"./replyIns",
+		type:"post",
+		data: jnum,
+		dataType: "json",
+		success: function (result) {
+			console.log(result);
+			var listStr = "";
+			var rlist = result.rList;//json 객체에서 rList 꺼내기.
+			console.log(rlist);
+			
+			//목록 반복 처리
+			for(var i = 0; i< rlist.length; i++){
+				listStr += "<tr>"
+					+"<td width='20%'>" + rlist[i].br_fk_id + "</td>"
+					+"<td width='50%'>" + rlist[i].br_contents + "</td>"
+					+"<td width='30%'>" + rlist[i].br_date + "</td>"
+					+"</tr>";
+			}
+			$("#rtable").html(listStr);
+			$("#comment").val("");
+		},
+		error: function (error) {
+			console.log(error);
+			alert("댓글 입력 실패");
+		}
+	});
+}
+
+			
+				
+</script>
+</html>

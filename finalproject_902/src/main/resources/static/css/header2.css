@@ -1,0 +1,36 @@
+@charset "UTF-8";
+
+header, .Header {
+    height: 120px;
+    width: 1920px;
+}
+
+.Title {
+    float: left;
+    font-size: 50pt;
+    font-weight: 800;
+    margin-left: 40px;
+    margin-top: 20px;
+}
+
+.Member {
+    float: right;
+    margin-top: 20px;
+    margin-right: 10px;
+    font-weight: 800;
+}
+.M2, .M1, .M3 ,.M4{
+    float: left;
+    padding-right: 10px;
+}
+
+.Menu {
+    float: left;
+    margin-left: 50px;
+    margin-top: 70px;
+}
+.Menu>span {
+    font-size: 20pt;
+    font-weight: 700;
+    margin-left: 20px;
+}

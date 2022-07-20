@@ -1,0 +1,87 @@
+*{
+    padding: 0%;
+    margin: 0%;
+   /*
+    border: 1px solid;
+    */
+}
+a{
+   text-decoration: none;
+}
+
+a:visited{
+   color: black;
+   
+}
+header{
+    text-align: center;
+}
+
+.Header{
+    width: 100%;
+    height: 150px;
+    border: 1px solid;
+    overflow: hidden;
+}
+.Member{
+    height: 25px;
+    margin-top: 5px;
+}
+.Member>span{
+    float: right;
+    margin-right: 20px;
+    font-size: 13pt;
+}
+.Title{
+    height: 80px;
+    font-size: 40pt;
+    text-align: center;
+    width: 100%;
+}
+.Menu>span{
+    font-size: 20pt;
+    margin: 0 20px 0 20px;
+}
+.Pic_menu{
+      float: left;
+    /*width: 320px;*/
+    width: 250px;
+    height: 1200px;
+    border: 1px solid;
+}
+.center{
+   font-size: 40px;
+   margin-left: 20px;
+   font-weight : bold;
+}
+hr{
+    margin: 15PX 15PX 0 15px;
+}
+.m2{
+    font-size: 20px;
+    font-weight: 800;
+    margin-left: 20px;
+}
+.m3{
+    font-size: 20px;
+    font-weight: 800;
+    margin-left: 20px;
+}
+.m4{
+    font-size: 20px;
+    font-weight: 800;
+    margin-left: 20px;
+}
+.m5{
+    font-size: 20px;
+    font-weight: 800;
+    
+   cursor: pointer;
+}
+.m6{
+	font-size: 20px;
+    font-weight: 800;
+    margin-left: 20px;
+	margin-top: 10px;
+	
+}

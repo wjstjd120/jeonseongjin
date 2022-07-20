@@ -1,0 +1,282 @@
+@charset "UTF-8";
+
+
+/*공통 레이아웃*/
+*{
+    padding: 0%;
+    margin: 0%;
+   /*
+    border: 1px solid;
+    */
+}
+
+/* header 레이아웃 */
+
+header{
+    text-align: center;
+    
+}
+
+.Header{
+    width: 100%;
+    height: 150px;
+/*    border: 1px solid;*/
+    overflow: hidden;
+}
+.Member{
+    height: 25px;
+    margin-top: 5px;
+}
+.Member>span{
+    float: right;
+    margin-right: 20px;
+    font-size: 13pt;
+}
+.Title{
+    height: 80px;
+    font-size: 40pt;
+    text-align: center;
+    width: 100%;
+}
+.Menu>span{
+    font-size: 20pt;
+    margin: 0 20px 0 20px;
+}
+
+.Pic_menu{
+    float: left;
+    /*width: 320px;*/
+    width: 16%;
+    height: 100%;
+/*    border: 1px solid;*/
+    box-sizing: border-box;
+    position: fixed;
+}
+
+/* 픽 메뉴의 내용*/
+/* 회원정보 div */
+.menu_div1{
+	width: 65%;
+	height: 300px;
+	float: right;
+	background-color: red;
+}
+
+.menu_title1{
+	width: 100%;
+	height: 50px;
+	margin-top: 50px;
+	text-align: left;
+	line-height: 50px;
+	background-color: lightyellow;
+}
+
+.menu_member{
+	width: 100%;
+	height: 40px;
+	text-align: left;
+	line-height: 40px;
+	float: left;
+	background-color: lightgreen;
+}
+
+.menu_div3{
+	width: 65%;
+	height: 400px;
+	float: right;
+	background-color: yellow;
+}
+
+.menu_title2{
+	width: 100%;
+	height: 50px;
+	text-align: left;
+	line-height: 50px;
+	background-color: lightyellow;
+}
+
+.menu_Travel{
+	width: 100%;
+	height: 40px;
+	text-align: left;
+	line-height: 40px;
+	float: left;
+	background-color: lightgreen;
+}
+
+.mypage_update {
+	float: left;
+	width: 84%;
+	margin-left:16%;
+	background-color: skyblue;
+	text-align: center;
+/*
+	border: 1px solid green;
+	box-sizing: border-box;
+*/
+}
+
+.mypagediv {
+	width: 1280px;
+	height: 783px;  /*화면에 보이는 높이*/ 
+	background-color: yellow;
+	display: inline-block;
+}
+
+.m_update {
+	width: 1230px;
+	height: 750px;
+	background-color: lightgreen;
+	margin: 20px auto;
+}
+
+.m_u_title {
+	width: 1230px;
+	height: 35px;
+	background-color: red;
+	text-align: left;
+	line-height: 35px;
+}
+
+.m_u_frm {
+	width: 1150px;
+	height: 700px;
+	background-color: lightyellow;
+	margin: 0 auto;
+}
+
+.m_frm1 {
+	width: 575px;
+	height: 45px;
+	background-color: yellow;
+	float: left;
+	line-height: 45px;
+}
+
+.m_frm2 {
+	width: 575px;
+	height: 45px;
+	background-color: lightblue;
+	float: left;
+	line-height: 45px;
+}
+
+.m_frm_div {
+	width: 900px;
+	height: 525px;
+	margin: 0 auto;
+	background-color: red;
+}
+
+.m_d0 {
+	width: 900px;
+	height: 150px;
+	background-color: white;
+}
+
+.m_d1 {
+	width: 900px;
+	height: 50px;
+	background-color: lightgreen;
+	text-align: left;
+	line-height: 50px;
+	border-bottom: 2px solid black;
+	box-sizing: border-box;
+}
+
+.m_d2 {
+	width: 900px;
+	height: 80px;
+	background-color: skyblue;
+}
+
+.m_d2_text1 {
+	width: 700px;
+	height: 80px;
+	background-color: gray;
+	line-height: 80px;
+	text-align: left;
+	float: left;
+}
+
+.m_check_d {
+	width: 200px;
+	height: 80px;
+	background-color: blue;
+	float: left;
+}
+
+.m_d2_check {
+	width: 170px;
+	height: 60px;
+	background-color: lightgreen;
+	margin: 10px 15px 10px 15px;
+	line-height: 60px;
+}
+
+.m_d3 {
+	width: 900px;
+	height: 80px;
+	background-color: skyblue;
+	line-height: 80px;
+	text-align: left;
+}
+
+.m_d4 {
+	width: 900px;
+	height: 80px;
+	background-color: yellow;
+	line-height: 80px;
+	text-align: left;
+}
+
+.m_frm_btn {
+	width: 900px;
+	height: 100px;
+	background-color: skyblue;
+	margin: 0 auto;
+}
+
+.m_btn1 {
+	width: 450px;
+	height: 100px;
+	background-color: lightgreen;
+	float: left;
+}
+
+.m_btn01 {
+	width: 150px;
+	height: 100px;
+	background-color: yellow;
+	float: right;
+}
+
+.m_btn1_lo {
+	width: 130px;
+	height: 80px;
+	margin: 10px 10px 10px 10px;
+	background-color: blue;
+	line-height: 80px;
+}
+
+.m_btn2 {
+	width: 450px;
+	height: 100px;
+	background-color: lightgreen;
+	float: left;
+}
+
+.m_btn02 {
+	width: 150px;
+	height: 100px;
+	background-color: yellow;
+	float: left;
+}
+
+.m_btn2_lo {
+	width: 130px;
+	height: 80px;
+	margin: 10px 10px 10px 10px;
+	background-color: blue;
+	line-height: 80px;
+}

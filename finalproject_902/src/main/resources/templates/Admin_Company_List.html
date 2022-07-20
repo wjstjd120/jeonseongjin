@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link href='css/jejucss.css' rel='stylesheet'>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="js/jquery.serializeObject.js"></script>
+<title>관리자페이지</title>
+<style>
+  .member_listtable {
+    border-collapse: collapse;
+  }
+  .member_listtable>thead tr {
+    background-color: #1e96ff;
+    color: #ffffff;
+  }
+  .member_listtable>tbody tr:nth-child(2n) {
+    background-color: #bbdefb;
+  }
+  .member_listtable>tbody tr:nth-child(2n+1) {
+    background-color: #e3f2fd;
+  }
+</style>
+</head>
+<body>
+<header>   
+   <div th:replace="fragment/Header :: Admin_Header"></div>
+</header>
+
+<section>
+   <div th:replace="fragment/Menubar :: Admin_Menubar"></div>
+   <div class="contents_holder">   
+      <div class="member_searchbar">
+         <div class="member_title"><h3>업체 검색</h3></div>
+         <form th:action="@{Admin_Company_List}" method="get">
+         <div class="member_searchtag">
+            <div class="searchbar_Ctags">
+               <span class="cssnot">업체 종류 : </span>
+               <span><input type="checkbox" name="lod" value="숙박">숙박</span>
+               <span><input type="checkbox" name="at" value="레저">레저</span>
+               <span><input type="checkbox" name="fo" value="식당">식당</span>
+               <span style="margin-left: 30px;">영업상태 : </span>
+               <span><input type="checkbox" name="conditionOn" value="영업중">영업중</span>
+               <span><input type="checkbox" name="conditionOff" value="영업준비중">영업준비중</span>
+            </div>
+            <div class="searchMark">
+               <input type="image" src="image/mark2.png" alt="제출버튼" style="width: 70px; height: 70px;">
+            </div>
+            <div class="searchbar_Cinputbox">
+               <div class="searchbar_Cselect">
+                  <select name="colname">
+                     <option value="c_fk_id" selected>아이디</option>
+                     <option value="c_name">업체이름</option>
+                     <option value="c_pk_cnum">사업자번호</option>
+                  </select>
+               </div>
+               <span class="searchbar_Cinput">
+                  <input type="text" name="keyword">
+               <span class="searchbar_Ctags2">
+                  <span class="cssnot">승인상태 : </span>
+                  <span><input type="checkbox" name="checkOn" value="승인">승인</span>
+                  <span><input type="checkbox" name="checkOff" value="미승인">미승인</span>
+               </span>
+               </span>
+            </div>
+         </div>
+         </form>
+      </div>
+      <div class="member_listbar">
+         <div>
+         </div>
+         <div>
+            <table class="member_listtable">
+               <thead>   
+                  <tr>
+                     <td style="width: 15%">사업자번호</td>
+                     <td style="width: 10%">아이디</td>
+                     <td style="width: 15%">업체명</td>
+                     <td style="width: 15%">전화번호</td>
+                     <td style="width: 5%">종류</td>
+                     <td style="width: 10%">영업상태</td>
+                     <td style="width: 10%">승인</td>
+                     <td style="width: 10%">관리</td>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr th:each="company : ${cList}">
+                     <td th:text="${company.c_pk_cnum}"></td>
+                     <td th:text="${company.c_fk_id}"></td>
+                     <td th:text="${company.c_name}"></td>
+                     <td th:text="${company.c_phone}"></td>
+                     <td th:text="${company.c_category}"></td>
+                     <td th:text="${company.c_condition}"></td>
+                     <td th:text="${company.c_check}"></td>
+                     <td><input type="button" class="adminBtn" th:songjan="${company.c_pk_cnum}" th:onclick="popupOpen(this.getAttribute('songjan'))" value="관리"/></td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+      <div class="paging" th:utext="${paging}"></div>
+   </div>
+   
+   
+<div id ="popup_mask" ></div> <!-- 팝업 배경 DIV -->
+
+<div id="CompanyPopupDiv"> <!-- 팝업창 -->
+   <div>
+      <img src="image/closebtn.gif" class="popup_closebtn" th:onclick='popupClose()'>
+      <h1 class="popuptitle">업체 관리</h1>
+   </div>
+   <div id="Admin_company_info">
+      <div>
+      <table style="width: 1000px;">
+         <tbody>
+              <tr>
+                <td rowspan="7" style="width: 305px; height: 260px; padding: 1%">
+                   <div class="img_title_box"><img id="preview-image" style="width: 250px; height: 250px;" src=""></div>
+               </td>
+                <td style="padding-left: 50px; width: 100px;"><strong>-사업자 정보-</strong></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td style="padding-left: 50px; text-align: center; padding: 5px;">아이디 : </td>
+                <td id="cid"></td>
+              </tr>
+              <tr>
+                <td style="padding-left: 50px; text-align: center; padding: 5px;">이름 : </td>
+                <td id="cmname"></td>
+              </tr>
+              <tr>
+                <td style="padding-left: 50px; text-align: center; padding: 5px;">전화번호 : </td>
+                <td id="cmphone"></td>
+              </tr>
+              <tr>
+                <td style="padding-left: 50px; text-align: center; padding: 5px;">이메일 : </td>
+                <td id="cemail"></td>
+              </tr>
+              <tr>
+                <td style="padding-left: 50px; text-align: center; padding: 5px;">회원종류 : </td>
+                <td id="cmcategory"></td>
+              </tr>
+              <tr>
+                <td style="height: 30px;"></td>
+                <td></td>
+              </tr>
+            </tbody>
+         </table>
+         <table>
+            <tbody>
+                 <tr>
+                   <td style="width:100px; height: 35px; text-align: center; padding-left: 100px;"><strong>-업체정보-</strong></td>
+                   <td style="width: 500px;"></td>
+                   <td style="width: 100px;"></td>
+                   <td></td>
+                 </tr>
+                 <tr>
+                  <td style="height: 35px; padding-left: 100px; text-align: center; padding: 5px;">사업자번호 : </td>
+                   <td id="cnum"></td>
+                   <td><strong>-상태-</strong></td>
+                   <td></td>
+                 </tr>
+                 <tr>
+                   <td style="height: 35px; text-align: center; padding-left: 100px; padding: 5px;">업체이름 : </td>
+                   <td id="cname"></td>
+                   <td style="">영업상태 : </td>
+                   <td id="ccondition"></td>
+                 </tr>
+                 <tr>
+                   <td style="height: 35px; text-align: center; padding-left: 100px; padding: 5px;">주소 : </td>
+                   <td id="caddr"></td>
+                   <td style="">승인상태 : </td>
+                   <td id="ccheck"></td>
+                 </tr>
+                 <tr>
+                   <td style="height: 35px; text-align: center; padding-left: 100px; padding: 5px;">업체전화번호 : </td>
+                   <td id="cphone"></td>
+                   <td></td>
+                   <td></td>
+                 </tr>
+            </tbody>
+         </table>
+         </div>
+         <div style="padding-top: 40px;">
+            <button th:onclick="Updatepopup()" class="button-65">업체정보 수정</button>
+            <button type="button" th:onclick="popupClose()" class="button-65">닫기</button>
+         </div>
+   </div>
+   <div id="Admin_company_updateFrm">
+      <div>
+         <form id="Admin_Company_file_Update_Frm" method="post">
+         <input id="hidcnum1" type="hidden" name="c_pk_cnum">
+         <input id="c_imghid" type="hidden" name="c_img">
+         <table style="width: 1000px;">
+            <tbody>
+              <tr>
+                <td rowspan="7" style="width: 305px; height: 260px; padding: 1%">
+                   <div class="img_title_box"><img id="preview-imageFrm" style="width: 250px; height: 250px;" src=""></div>
+                   <button type="button" onclick="AdminCompanyFileUpdate()" style="display: inline;">변경</button>
+                   <input style="display: inline;" type="file" id="input-image" name="cimg_title">
+               </td>
+                <td style="padding-left: 50px; width: 100px;"><strong>-사업자 정보-</strong></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td style="padding-left: 50px; text-align: center;">아이디 : </td>
+                <td id="cid_1"></td>
+              </tr>
+              <tr>
+                <td style="padding-left: 50px; text-align: center;">이름 : </td>
+                <td id="cmname_1"></td>
+              </tr>
+              <tr>
+                <td style="padding-left: 50px; text-align: center;">전화번호 : </td>
+                <td id="cmphone_1"></td>
+              </tr>
+              <tr>
+                <td style="padding-left: 50px; text-align: center;">이메일 : </td>
+                <td id="cemail_1"></td>
+              </tr>
+              <tr>
+                <td style="padding-left: 50px; text-align: center;">회원종류 : </td>
+                <td id="cmcategory_1"></td>
+              </tr>
+              <tr>
+                <td style="height: 30px;"></td>
+                <td></td>
+              </tr>
+              
+            </tbody>
+         </table>
+         </form>
+         <form id="Admin_Company_Update_Frm" method="post">
+         <input id="hidcnum" type="hidden" name="c_pk_cnum">
+         <table>
+            <tbody>
+                 <tr>
+                   <td style="width:100px; height: 35px; text-align: center; padding-left: 100px;"><strong>-업체정보-</strong></td>
+                   <td style="width: 500px;"></td>
+                   <td style="width: 100px;"></td>
+                   <td></td>
+                 </tr>
+                 <tr>
+                  <td style="height: 35px; padding-left: 100px; text-align: center;">사업자번호 : </td>
+                   <td id="cnum_1"></td>
+                   <td><strong>-상태-</strong></td>
+                   <td></td>
+                 </tr>
+                 <tr>
+                   <td style="height: 35px; text-align: center; padding-left: 100px;">업체이름 : </td>
+                   <td><input type="text" id="cname_1" name="c_name"></td>
+                   <td style="">영업상태 : </td>
+                   <td>
+                      <select id="ccondition_sel" name="c_condition">
+                         <option value="1">영업중</option>
+                         <option value="0">영업준비중</option>
+                        </select>
+                   </td>
+                 </tr>
+                 <tr>
+                   <td style="height: 35px; text-align: center; padding-left: 100px;">주소 : </td>
+                   <td><input type="text" id="caddr_1" name="c_addr"></td>
+                   <td style="">승인상태 : </td>
+                   <td>
+                      <select id="ccheck_sel" name="c_check">
+                         <option value="1">승인</option>
+                         <option value="0">미승인</option>
+                        </select>
+                     </td>
+                 </tr>
+                 <tr>
+                   <td style="height: 35px; text-align: center; padding-left: 100px;">업체전화번호 : </td>
+                   <td><input type="text" id="cphone_1" name="c_phone"></td>
+                   <td></td>
+                   <td></td>
+                 </tr>
+            </tbody>
+         </table>
+         </form>
+         </div>
+         <div style="padding-top: 40px;">
+            <button th:onclick="AdminCompanyUpdate()" class="button-65">수정</button>
+            <button type="button" th:onclick="AdminCompanyDelete()" class="button-65">업체정보 삭제</button>
+            <button type="button" th:onclick="newpopupClose()" class="button-65">이전</button>
+         </div>
+   </div>
+</div>
+
+</section>
+</body>
+<script th:inline="javascript">
+$(function(){
+   var msg = [[${msg}]];
+   
+   if(msg != null){
+      alert(msg);
+   }
+});
+/* history.replaceState({}, null, location.pathname); */
+
+function readImage(input) {
+    // 인풋 태그에 파일이 있는 경우
+    if(input.files && input.files[0]) {
+        // 이미지 파일인지 검사 (생략)
+        // FileReader 인스턴스 생성
+        const reader = new FileReader()
+        // 이미지가 로드가 된 경우
+        reader.onload = e => {
+            const previewImage = document.getElementById("preview-imageFrm")
+            previewImage.src = e.target.result;
+        }
+        // reader가 이미지 읽도록 하기
+        reader.readAsDataURL(input.files[0])
+    }
+}
+// input file에 change 이벤트 부여
+const inputImage = document.getElementById("input-image")
+inputImage.addEventListener("change", e => {
+    readImage(e.target)
+});
+
+var cnum;
+
+function popupOpen(num){
+   cnum = num;
+   
+   console.log(num);
+   $("#CompanyPopupDiv").css({
+        "top": (($(window).height()-$("#CompanyPopupDiv").outerHeight())/2+$(window).scrollTop())+"px",
+        "left": (($(window).width()-$("#CompanyPopupDiv").outerWidth())/2+$(window).scrollLeft())+"px"
+   });   
+        //팝업창을 가운데로 띄우기 위해 현재 화면의 가운데 값과 스크롤 값을 계산하여 팝업창 CSS 설정
+    $("#popup_mask").css("display","block"); //팝업 뒷배경 display block
+    $("#CompanyPopupDiv").css("display","block"); //팝업창 display block
+    $("#Admin_company_info").css("display","block"); //팝업창 display block
+        
+    $("body").css("overflow","hidden");//body 스크롤바 없애기 
+    
+    var c_num = {"cnum" : cnum};
+    $.ajax({
+      url: "CompanyCnumSelect",
+      type: "post", //json 객체는 post 사용!
+      data: c_num,
+      dataType: "json",
+      success: function(result){
+         var company = result.company;
+         var member = result.member;
+         
+         console.log(company);
+         
+         $("#cid").html(company.c_fk_id); // index가 끝날때까지 
+         $("#cname").html(company.c_name);
+         $("#ccondition").html(company.c_condition);
+         $("#caddr").html(company.c_addr);
+         $("#ccheck").html(company.c_check);
+         $("#cphone").html(company.c_phone);
+         $("#cnum").html(company.c_pk_cnum);
+         
+         $("#cmname").html(member.m_name);
+         $("#cmphone").html(member.m_phone);
+         $("#cemail").html(member.m_email);
+         $("#cmcategory").html(member.m_category);
+         
+         document.getElementById("preview-image").src="./upload/" + company.c_img;
+      
+      },
+      error: function(error){
+         alert("전송실패");
+         console.log(error);
+      }
+   });
+      
+}
+
+function Updatepopup(){
+    $("#Admin_company_info").css("display","none"); //팝업창 display block
+    $("#Admin_company_updateFrm").css("display","block"); //팝업창 display block
+    
+    var c_num = {"cnum" : cnum};
+    $.ajax({
+      url: "CompanyCnumSelect",
+      type: "post", //json 객체는 post 사용!
+      data: c_num,
+      dataType: "json",
+      success: function(result){
+         var company = result.company;
+         var member = result.member;
+         
+         console.log(company);
+         
+         $("#hidcnum").val(company.c_pk_cnum);
+         $("#hidcnum1").val(company.c_pk_cnum);
+         $("#c_imghid").val(company.c_img);
+         $("#cid_1").html(company.c_fk_id); // index가 끝날때까지 
+         $("#cname_1").val(company.c_name);
+         if(company.c_check == "승인"){
+            $("#ccheck_sel").val("1").prop("seleced",true);
+         } else {
+            $("#ccheck_sel").val("0").prop("seleced",true);
+         }
+         $("#caddr_1").val(company.c_addr);
+         if(company.c_condition == "영업중"){
+            $("#ccondition_sel").val("1").prop("seleced",true);
+         } else {
+            $("#ccondition_sel").val("0").prop("seleced",true);
+         }
+         $("#cphone_1").val(company.c_phone);
+         $("#cnum_1").html(company.c_pk_cnum);
+         
+         $("#cmname_1").html(member.m_name);
+         $("#cmphone_1").html(member.m_phone);
+         $("#cemail_1").html(member.m_email);
+         $("#cmcategory_1").html(member.m_category);
+         
+         document.getElementById("preview-imageFrm").src="./upload/" + company.c_img;
+         
+      
+      },
+      error: function(error){
+         alert("전송실패");
+         console.log(error);
+      }
+      
+    });
+      
+}
+
+function AdminCompanyUpdate(){
+    
+   var cDto = $("#Admin_Company_Update_Frm").serializeObject();
+     console.log(cDto);
+    $.ajax({
+      url: "Admin_Company_Update",
+      type: "post", //json 객체는 post 사용!
+      data: cDto,
+      dataType: "json",
+      success: function(result){
+         
+         console.log(result.res);
+         
+         if(result.res == "ok"){
+            alert("수정성공");
+         } else {
+            alert("수정실패");
+         }
+         
+         location.href = "/Admin_Company_List";
+         
+      },
+      error: function(error){
+         alert("전송실패");
+         console.log(error);
+      }
+   });
+    
+}
+
+function AdminCompanyFileUpdate(){
+    
+   var data = new FormData($('#Admin_Company_file_Update_Frm')[0]);
+   
+     console.log(data);
+    $.ajax({
+       type: "POST",
+        enctype: 'multipart/form-data',
+        url: "Admin_Company_file_Update",
+        data: data,
+        processData: false,
+        contentType: false,
+        cache: false,
+        success: function (result) { 
+            var company = result.company;
+            $("#c_imghid").val(company.c_img);
+         
+            document.getElementById("preview-image").src="./upload/" + company.c_img;
+         $("#preview-image").src="./upload/" + company.c_img;
+         
+         alert("성공");
+         document.getElementById("input-image").value = "";
+        },
+        error: function (e) {
+            console.log("ERROR : ", e);
+            alert("fail");
+         }
+   });
+    
+}
+
+function AdminCompanyDelete(){
+   if (confirm("게시글을 삭제하시겠습니까???")) {
+   
+   var c_num = {"cnum" : cnum};
+    $.ajax({
+      url: "Admin_Company_Delete",
+      type: "post", //json 객체는 post 사용!
+      data: c_num,
+      dataType: "json",
+      success: function(result){
+         
+         console.log(result.res);
+         
+             if(result.res == "ok"){
+                alert("삭제 되었습니다.");
+             } else {
+                alert("삭제 실패");
+             }
+         
+         location.href = "/Admin_Company_List";
+      },
+      error: function(error){
+         alert("전송실패");
+         console.log(error);
+      }
+   });
+   } else {
+      
+   }   
+    
+}
+
+function popupClose() {
+    $("#popup_mask").css("display","none"); //팝업창 뒷배경 display none
+    $("#CompanyPopupDiv").css("display","none"); //팝업창 display none
+    $("#Admin_company_info").css("display","none"); //팝업창 display block
+    $("#Admin_company_updateFrm").css("display","none"); //팝업창 display block
+    $("body").css("overflow","auto");//body 스크롤바 생성
+    document.getElementById("input-image").value = "";
+}
+
+function newpopupClose() {
+    $("#Admin_company_info").css("display","block"); //팝업창 display block
+    $("#Admin_company_updateFrm").css("display","none"); //팝업창 display block
+    document.getElementById("input-image").value = "";
+}
+
+</script>
+</html>

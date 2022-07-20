@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http:www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Mypage_NowTrip</title>
+<link rel="stylesheet" href="css/Mypage_NowTrip.css">
+<link href='css/main.css' rel='stylesheet'/>
+ <link rel="stylesheet" type="text/css" href="css/header2.css">
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src='js/main.js'></script>
+<style type="text/css">
+#calendar{
+   widows: 400px;
+   height: auto;
+}
+</style>
+
+<script th:inline="javascript">
+$(function(){
+	var msg = [[${msg}]];
+	
+	if(msg != null){
+		alert(msg);
+	}
+	
+	//session에 'id'가 없으면 첫 페이지로 강제 이동
+	 var logid = [[${session.user}]];   
+	if(logid == null){
+		location.href = "./login";
+	}
+	else{
+		$(".M3").css('display','block');
+		$(".M1").css('display','none');
+	} 
+	
+});
+
+
+$(function(){
+	$('.logout').click(function(){
+		session.invalidate();
+		console.log([[${session.id}]]);
+	//	location.href = "/login";
+	});
+
+});
+
+
+
+
+</script>
+</head>
+<body>
+<!-- header 영역 -->
+<header>
+        <div th:include="fragment/header :: header"></div>
+</header>
+    <div class="Pic_menu">
+    	<div class="menu_div1">
+    		<div class="menu_title1"><h2>회원</h2></div>
+    		<div class="menu_member"><a th:href = @{mypage}><h4>-내정보</h4></a></div>	
+    		<div class="menu_member"><a th:href = @{Mypage_DealList}><h4>-거래내역</h4></a></div>	
+    	</div>
+    	<div class="menu_div2"></div>
+    	<div class="menu_div3">
+    		<div class="menu_title2"><h2>여행</h2></div>
+    		<div class="menu_Travel"><a th:href = @{Mypage_NowTrip}><h4>-진행중인 여행</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Mypage_PastTrip}><h4>-지난여행</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Favorites_Lodgment}><h4>-즐겨찾기</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Mypage_Plan}><h4>-게시글</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Review_Lodgment}><h4>-리뷰관리</h4></a></div>
+    	</div>
+    </div>
+    <div class="nowtrip" >
+	    <div class="nowtripDiv" >
+	    	<div class="nt_div">
+		    	<div class="nt_profileDiv"  >
+		    		<div class="nt_profile" >
+		    			<div class="nt_img"></div>
+		    			<div class="nt_text1"> 
+		    				<div class="nt_text1_div1">
+			    				<div class="nt_t1_d1_text1"><h3>제목</h3></div>
+			    				<div class="nt_t1_d1_text2"><h3>:</h3></div>
+			    				<div class="nt_t1_d1_text3"></div>
+		    				</div>
+		    				<div class="nt_text1_div1">
+			    				<div class="nt_t1_d1_text1"><h3>일자</h3></div>
+			    				<div class="nt_t1_d1_text2"><h3>:</h3></div>
+			    				<div class="nt_t1_d1_text3-1"></div>
+			    				<div class="nt_t1_d1_text3-2"></div>
+		    				</div>
+		    				<div class="nt_text1_div1">
+			    				<div class="nt_t1_d1_text1"><h3>예상경비</h3></div>
+			    				<div class="nt_t1_d1_text2"><h3>:</h3></div>
+			    				<div class="nt_t1_d1_text3-3"></div>
+		    				</div>
+		    				<div class="nt_text1_div1">
+			    				<div class="nt_t1_d1_text1"><h3>인원</h3></div>
+			    				<div class="nt_t1_d1_text2"><h3>:</h3></div>
+			    				<div class="nt_t1_d1_text4"></div>
+			    				<div class="nt_t1_d1_btnDiv">
+			    					<div class="nt_t1_d1_btnDiv1">
+			    						<div class="nt_btn1_1"></div>
+			    						<div class="nt_btn1_2"></div>
+			    						<div class="nt_btn1_3"></div>
+			    					</div>
+			    				</div>
+		    				</div>
+		    			</div>
+		    		</div>
+		    		<div class="nt_calendar">
+		    			<div class="nt_c_div" style="overflow: auto;"><div id='calendar'></div></div>
+		    		</div>
+		    	</div>
+		    	<div class="nt_list" >
+		    		<div class="nt_list_div">
+		    			<ul>
+		    				<li>
+		    					<th:block th:each = "nList : ${nList}">
+			    					<div class="nt_l_listDiv" th:tnum="${nList.tr_pk_num}"  th:onclick="nowtrip(this.getAttribute('tnum'))">
+			    						<div class="nt_list_blank"></div>
+			    						<div class="nt_list_title" th:text="${nList.tr_title}"></div>
+			    						<div class="nt_list_date1" th:text="${nList.tr_in}"></div>
+			    						<div class="nt_list_date1" th:text="${nList.tr_out}"></div>
+			    					</div>
+		    					</th:block>
+		    				</li>
+		    			</ul>
+		    		</div>
+		    	</div>
+	    	</div>
+	    </div>
+    </div>
+    
+<script th:inline="javascript">
+$(function () {
+	
+	var msg = [[${msg}]];
+	
+	if(msg != null){
+		alert(msg);
+	}
+	
+	$(".M4"). hide();
+		
+	mdto = [[${session.user}]];
+	
+	if(mdto != null){
+		$("#inLogin").show();
+		$("#outLogin").hide();
+		$(".M1").css("display","none");
+	}else{
+		$("#inLogin").hide();
+		$("#outLogin").show();
+		
+	}
+	
+	
+	
+	if(mdto.m_category == "사업자"){
+		$(".M4"). show();
+	}
+		
+});
+
+//달력 API
+document.addEventListener('DOMContentLoaded', function() {
+	
+	/*<![CATA[*/
+	/*]]*/
+	
+	var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+    	editable: true,
+    	selectable: true,
+    	
+		/* select: function(info) {
+    		console.log(info.startStr + "," + info.endStr);
+    	},
+    	
+    	dateClick: function() {
+    	    alert('a day has been clicked!');
+    	  }, */
+    
+    	initialView: 'dayGridMonth'
+    });
+    
+    calendar.on('dateClick', function(info) {
+    	  console.log(info.dateStr);
+    	});
+
+    calendar.render();
+  });
+//달력 API END
+
+function nowtripCheck(c){
+	console.log(c);
+	var tnum = {"tr_pk_num" : c};
+	
+	$.ajax({
+		url : "nowtripCheck",
+		type : "post",
+		data : tnum,
+		dataType : "JSON",
+		success : function(result){
+			console.log(result.res);
+			if(result.res == "ok"){
+				alert("1");
+				location.href="Mypage_NowTrip";
+				
+			}
+			else {
+				alert("2");
+			}
+		},
+		error : function(error){
+			console.log(error.res);
+			alert("3");
+		}
+	});
+}
+
+
+function nowtripDelete(d){
+	console.log(d);
+	var tnum = {"tr_pk_num" : d};
+	
+	$.ajax({
+		url : "nowtripDelete",
+		type : "post",
+		data : tnum,
+		dataType : "JSON",
+		success : function(result){
+			console.log(result.res);
+			if(result.res == "ok"){
+				alert("1");
+				location.href="Mypage_NowTrip";
+			}
+			else {
+				alert("2");
+			}
+		},
+		error : function(error){
+			console.log(error.res);
+			alert("3");
+		}
+	});
+}
+
+
+function nowtripUpdate(u){
+	var trnum = u;
+	
+	console.log (trnum);
+	
+	location.href="/nowTripUpdate?trnum=" + trnum;
+}
+
+
+function nowtrip(num){
+	var tnum = {"tr_pk_num" : num};
+	
+	console.log(tnum);
+	
+	$.ajax({
+		url : "nowtripinfo",
+		type : "post",
+		data : tnum,
+		dataType : "JSON",
+		success : function(result){
+			
+			var ntinfo = result.ntinfo;
+			var price = result.price;
+			
+			var caldata = result.eList;
+			
+			var deleteTag = 
+				'<input type="button" value="삭제" onclick="nowtripDelete(' + ntinfo.tr_pk_num + ')">';
+			
+			var updateTag = 
+				'<input type="button" value="수정" onclick="nowtripUpdate(' + ntinfo.tr_pk_num + ')">';
+				
+			var tripcheck = 
+				'<input type="button" value="여행완료" onclick="nowtripCheck(' + ntinfo.tr_pk_num + ')">';
+				
+				
+			$(".nt_t1_d1_text3").html(ntinfo.tr_title);
+			$(".nt_t1_d1_text3-1").html(ntinfo.tr_in);
+			$(".nt_t1_d1_text3-2").html(ntinfo.tr_out);
+			$(".nt_t1_d1_text3-3").html(price);
+			$(".nt_t1_d1_text4").html(ntinfo.tr_relationship);
+			$(".nt_img").html(ntinfo.b_img);
+			
+			$(".nt_btn1_3").html(deleteTag);
+			$(".nt_btn1_2").html(updateTag);
+			$(".nt_btn1_1").html(tripcheck);
+			
+			var calendarEl = document.getElementById('calendar');
+		    var calendar = new FullCalendar.Calendar(calendarEl, {
+		    	editable: true,
+		    	selectable: true,
+		    	
+				/* select: function(info) {
+		    		console.log(info.startStr + "," + info.endStr);
+		    	},
+		    	
+		    	dateClick: function() {
+		    	    alert('a day has been clicked!');
+		    	  }, */
+		    
+		    	initialView: 'dayGridMonth',
+		    	
+		    	events: caldata
+		    });
+		    
+		    calendar.on('dateClick', function(info) {
+		    	  console.log(info.dateStr);
+		    	});
+
+		    calendar.render();
+		
+		console.log(result.ntinfo);
+			
+		},
+		error : function(error){
+			console.log(error.res);
+			alert("3");
+		}
+	});
+}
+
+</script>    
+    
+</body>
+</html>

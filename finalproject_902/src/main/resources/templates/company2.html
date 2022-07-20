@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head profile="http://www.w3.org/2005/10/profile">
+<meta charset="UTF-8">
+<title>page - 업체페이지</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<link th:href="@{/css/companyheader.css}" rel="stylesheet" />
+<script th:inline="javascript">
+$(function () {
+   var msg = [[${msg}]];
+   
+   if(msg != null){
+      alert(msg);
+   }
+});
+</script>
+
+<style type="text/css">
+
+.section2 {
+   width: 1600px;
+   margin-left: 300px;
+}
+
+.container {
+   width: 90%;
+   margin: 0 auto;
+   margin-top: 40px;
+   height: 750px;
+   border: 1px solid;
+   padding-right: 50px;
+   padding-left: 50px;
+   padding-top: 30px;
+   font-size: 20px;
+   line-height: 50px;
+}
+
+.rap {
+   width: 100%;
+}
+
+.rightpass {
+   margin-right: 50px;
+}
+
+.srimg {
+   float: right;
+   margin-top: 25px;
+}
+select{
+   width: 100px;
+   height: 40px;
+}
+.search{
+   width: 400px;
+   height: 35px;
+}
+.topSection{
+   margin-bottom: 15px; 
+}
+.fontd{
+   font-size: 15px;
+}
+table{
+   width: 100%;
+}
+ 
+th:nth-child(1) {width: 15%;}
+th:nth-child(2) {width: 15%;}
+th:nth-child(3) {width: 35%;}
+th:nth-child(4) {width: 15%;}
+th:nth-child(5) {width: 20%;}
+
+.paging{
+   margin: 0 auto;
+}
+td{
+   text-align: center;
+}
+
+#popupDiv { /* 팝업창 css */
+   top: 0px;
+   position: absolute;
+   background-color: #FAEBD7;
+   width: 900px;
+   height: 700px;
+   display: none;
+   border: 1px solid black;
+   z-index: 10;
+}
+
+#popup_mask { /* 팝업 배경 css */
+   position: fixed;
+   width: 100%;
+   height: 1000px;
+   top: 0px;
+   left: 0px;
+   display: none;
+   background-color: #000;
+   opacity: 0.6;
+}
+#search{
+   cursor: pointer;
+}
+.cbtn{
+   border: 1px solid lightgray;
+   width: 90px;
+   height: 40px;
+   border-radius : 10px;
+   margin-right: 5px;
+   margin-left: 5px;
+   
+}
+.cbtn:hover{
+   background-color: lightgray;
+}
+.cbtn:active{
+    box-shadow: 1px 1px 0 rgb(0,0,0,0.5);
+    position: relative;
+    top:2px;
+}
+</style>
+</head>
+
+<body>
+
+
+   <header>
+      <div th:include="fragment/companyHeader :: cheader"></div>
+   </header>
+   <section>
+      <div th:include="fragment/companyHeader :: csection"></div>
+   </section>
+   <div class="section2">
+   
+      <div class="container"  style="overflow: auto;">
+         <div class="rap">
+            업체관리
+            <hr>
+            <div class="topSection">
+               <div class="srimg">
+                  <img onclick="searchF()" src="/image/검색.png" id="search">
+               </div>
+               업체종류 : <input type="checkbox" id="lod" name="lod" value="숙박">숙박
+               <input type="checkbox" id="act" name="act" value="레저">레저 
+               <input type="checkbox" id="dir" name="dir" value="식당">
+               <span class="rightpass">식당</span>
+               영업상태 :
+               <input type="radio" name="c_check" value="전체" checked="checked">전체
+               <input type="radio" name="c_check" value="1">영업중 
+               <input type="radio" name="c_check" value="0">영업준비중 
+               <br>
+               <select id="sel">
+                  <option value="c_pk_cnum">사업자번호</option>
+                  <option value="c_name">업체명</option>
+               </select>
+               <input type="text" id="keyword" name="searchData" class="search">
+            </div>
+            <hr>
+            <div>
+            <p class="fontd">검색결과 : 총 <span id="Lcount">[[${Lcount}]]</span>개의 검색결과가 있습니다.</p>
+            <table id="searchResult">
+               <tr>
+                  <th>사업자 번호</th>
+                  <th>업체종류</th>
+                  <th>업체명</th>
+                  <th>영업상태</th>
+                  <th>관리</th>
+               </tr>
+               <th:block th:if ="${cList != null}">
+                  <th:block th:each="data:${cList}">
+                     <tr>
+                        <td><span th:text="${data.c_pk_cnum}"></span></td>
+                        <td><span th:text="${data.c_category}"></span></td>
+                        <td><span th:text="${data.c_name}"></span></td>
+                        <td><span th:text="${data.c_condition}"></span></td>
+                        <td><input type="button" class="cbtn" th:songjan="${data.c_pk_cnum}" th:onclick="clicker(this.getAttribute('songjan'))" value="상세수정">
+                        
+                        <th:block th:if ="${#strings.equals(data.c_condition,'영업 준비중')}">
+                           <input type="button" id="c_condition" class="cbtn" th:cnum="${data.c_pk_cnum}" th:onclick="updateCondition(this.getAttribute('cnum'))" value="영업중">
+                        </th:block>
+                        <th:block th:if ="${#strings.equals(data.c_condition,'영업 중')}">
+                           <input type="button" id="c_condition" class="cbtn" th:cnum="${data.c_pk_cnum}" th:onclick="updateCondition(this.getAttribute('cnum'))" value="영업 준비중">
+                        </th:block>
+                        
+                        </td>
+                     </tr>
+                  </th:block>
+               </th:block>
+            </table>
+            </div>
+         </div>
+      </div>
+   </div>
+   
+       
+</body>
+<script th:inline="javascript">
+function tets(){
+   console.log('\'경도\'');
+}
+
+
+function updateCondition(cnum){
+   var conCheck = confirm($("#c_condition").val() + " 상태를 바꾸시겠습니까?");
+   console.log(cnum);
+   
+   if(conCheck){
+      location.href="conCheck?cnum="+cnum;
+   }
+   
+}
+
+function searchF(){
+   var colname = $("#sel").val();
+   var keyword = $("#keyword").val();
+   var dir;
+   var lod;
+   var act;
+   var c_check = $("input:radio[name='c_check']:checked").val();
+   
+   var data = {"keyword" : keyword};
+   data.colname = colname;
+   data.c_check = c_check;
+   
+   
+   if($("input:checkbox[id='dir']").prop("checked")){
+      dir = $("#dir").val();
+      data.dir = dir;
+   }else if(!($("input:checkbox[id='dir']").prop("checked"))){
+      dir;
+   }
+   if($("input:checkbox[id='lod']").prop("checked")){
+      lod = $("#lod").val();
+      data.lod = lod;
+   }else if(!($("input:checkbox[id='lod']").prop("checked"))){
+      dir;
+   }
+   if($("input:checkbox[id='act']").prop("checked")){
+      act = $("#act").val();
+      data.act = act;
+      
+   }else if(!($("input:checkbox[id='dir']").prop("checked"))){
+      dir;
+   }
+   
+   
+   console.log(data);
+   
+   $.ajax({
+      url : "searchCompany",
+      type : "post",
+      data : data,
+      datatype : "json",
+      success : function(result) {
+         var cList = result.cList;
+         var count = result.count;
+         
+         var clisttag = "<tr>"
+            +"<th>사업자 번호</th>"
+            +"<th>업체종류</th>"
+            +"<th>업체명</th>"
+            +"<th>영업상태</th>"
+            +"<th>관리</th>"
+            +"</tr>";
+         
+         for(var i = 0; i<cList.length; i++){
+            
+            
+            
+            clisttag+=
+               "<tr>"
+               +"<td>"+cList[i].c_pk_cnum+"</td>"
+               +"<td>"+cList[i].c_category+"</td>"
+               +"<td>"+cList[i].c_name+"</td>"
+               +"<td>"+cList[i].c_condition+"</td>";
+               
+            if(cList[i].c_condition == "영업 준비중"){
+               cList[i].c_condition = "영업 중"
+            }else if(cList[i].c_condition == "영업 중"){
+               cList[i].c_condition = "영업 준비중"
+            }
+            clisttag+= 
+               "<td><input class='cbtn' type='button' onclick='clicker(" + cList[i].c_pk_cnum + ")' value='상세수정'> "
+               + "<input class='cbtn' id='c_condition' onclick='updateCondition(" + cList[i].c_pk_cnum + ")' type='button' value='" + cList[i].c_condition + "'></td>"
+               + "</tr>";
+         }
+         $("#searchResult").html(clisttag);
+         $("#Lcount").html(count);
+         
+      },
+      error : function(error) {
+         console.log(error);
+      }
+   });
+   
+}
+
+function clicker(j){
+   console.log(j);
+   location.href="company_contents?cnum="+j;
+}
+
+
+</script>
+
+
+</html>

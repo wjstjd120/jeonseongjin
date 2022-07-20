@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Mypage_Resign</title>
+<link rel="stylesheet" href="css/Mypage_Resign.css">
+<script src="js/jquery-3.6.0.min.js"></script>
+<script th:inline="javascript">
+$(function(){
+	var msg = [[${msg}]];
+	
+	if(msg != null){
+		alert(msg);
+	}
+	
+	//session에 'id'가 없으면 첫 페이지로 강제 이동
+	var logid = [[${session.user}]];   
+	if(logid == null){
+		location.href = "./login";
+	}
+	else{
+		$(".M3").css('display','block');
+		$(".M1").css('display','none');
+	}
+	
+});
+
+$(function(){
+	$('.logout').click(function(){
+		session.invalidate();
+		console.log([[${session.id}]]);
+	//	location.href = "/login";
+	})
+});
+
+</script>
+</head>
+<body>
+<!-- header 영역 -->
+<header>
+        <div class="Header">
+            <div class="Member">
+                <span class="M2">고객센터</span>
+                <span class="M1"><a th:href="@{/}">메인페이지</a></span>
+                <span class="M1"><a th:href="@{login}">로그인</a></span>
+                <span class="M1"><a th:href="@{join}">회원가입</a></span>
+                <span class="M3" style="display: none"><a th:href="@{login}" class="logout">로그아웃</a></span>
+            </div>
+            <div class="Title">제주옵서예</div>
+            <div class="Menu">
+                <span>숙박</span>
+                <span>레져</span>
+                <span>식당</span>
+                <span>여행정보</span>
+                <span>나의여행</span>
+            </div>
+        </div>
+</header>
+    <div class="Pic_menu">
+    	<div class="menu_div1">
+    		<div class="menu_title1"><h2>회원</h2></div>
+    		<div class="menu_member"><a th:href = @{mypage}><h4>-내정보</h4></a></div>	
+    		<div class="menu_member"><a th:href = @{Mypage_DealList}><h4>-거래내역</h4></a></div>	
+    	</div>
+    	<div class="menu_div2"></div>
+    	<div class="menu_div3">
+    		<div class="menu_title2"><h2>여행</h2></div>
+    		<div class="menu_Travel"><a th:href = @{Mypage_NowTrip}><h4>-진행중인 여행</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Mypage_PastTrip}><h4>-지난여행</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Favorites_Lodgment}><h4>-즐겨찾기</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Mypage_Plan}><h4>-게시글</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Review_Lodgment}><h4>-리뷰관리</h4></a></div>
+    	</div>
+    </div>
+
+<div class="mypage_resign">
+	<div class="mypage_res_div">
+		<div class="res_frm">
+			<div class="res_text1">탈퇴시 유의사항</div>
+			<div class="res_text_frm">
+				<div class="res_text2"><h4>약관 및 주의사항 기재</h4></div>
+				<div class="res_text3"></div>
+			</div>
+			<div class="res_pass_frm">
+				<div class="res_p0"></div>
+				<div class="res_pass" id="popOpenBtn"><button>비밀번호 입력</button></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+    <div id ="popup_mask" ></div> <!-- 팝업 배경 DIV -->
+    
+    <div id="popupDiv"> <!-- 팝업창 -->
+    	<div class="pop_frm">
+    		<div class="pop_frm0"></div>
+    		<div class="pass_text">비밀번호 입력</div>
+	       	<div class="pass_insert">
+	       	비밀번호 : <input type="password" id="m_pass" onkeyup="printName()" placeholder="비밀번호 입력">
+	       <input type="button" value="비밀번호 확인" id="checkPwd">
+	       	</div>
+	       	<div  class="result" id="result">
+	       		<span class="p1" style="display: block;">비밀번호 확인 바람</span>
+	       		<span class="p2" style="display: none; color: blue;">비밀번호 확인 완료. 계정 삭제 가능</span>
+	       		<span class="p3" style="display: none; color: red;" >비밀번호 미확인. 계정 삭제 불가능</span>
+	       	</div>
+	        <div class="pop_frm1"></div>
+	        <div class="pop_btn_div">
+	        	<div class="pop_btn1">
+	        		<div class="btn1_text">
+	        			<input type="submit" id="popCheckBtn" disabled="disabled" value="확인" > <!-- 비밀번호 일치한지 확인해야함 -->
+	        		</div>
+	        	</div>
+	        	<div class="pop_btn2">
+	        		<div class="btn2_text">
+	        			<input type="button" id="popCloseBtn" onclick="popCloseBtn()" value="취소">
+	        		</div>
+	        	</div>
+	        </div>
+	        
+			
+	        
+
+	         
+         </div>
+    </div>
+    
+<script th:inline="javascript">
+
+function popCloseBtn(){
+	$("#popCloseBtn").click(function(){
+		if(confirm("계정삭제를 취소하겠습니까?") == true){
+			//true 는 확인을 눌렀을때
+			console.log("true");
+			location.href = "/";  //mapge.html로 이동하기
+		}
+		else {
+			console.log("false");
+			//false 는 취소를 눌렀을때
+		}
+	})
+}
+    
+    function printName(){
+    	var t1 = document.getElementById('m_pass').value;  
+    	
+ //   	document.getElementById("result").innerText = "입력하신 비밀번호 = " + t1 + " 입니다. " ;   //이친구는 입력한 값이 innertext 되어서 회면에 출력!
+    		
+    }
+    
+    $(document).ready(function(){
+        
+        $("#popOpenBtn").click(function(event){  //팝업창 보기 버튼 클릭 시 
+ 
+             $("#popupDiv").css({
+                "top": (($(window).height()-$("#popupDiv").outerHeight())/2+$(window).scrollTop())+"px",
+                "left": (($(window).width()-$("#popupDiv").outerWidth())/2+$(window).scrollLeft())+"px"
+                //팝업창을 가운데로 띄우기 위해 현재 화면의 가운데 값과 스크롤 값을 계산하여 팝업창 CSS 설정
+             
+             }); 
+            
+            $("#popup_mask").css("display","block"); //팝업 뒷배경 display block
+            $("#popupDiv").css("display","block"); //팝업창 display block
+            
+            $("body").css("overflow","hidden");//body 스크롤바 없애기
+        });
+           
+        $("#popCloseBtn").click(function(event){
+            $("#popup_mask").css("display","none"); //팝업창 뒷배경 display none
+            $("#popupDiv").css("display","none"); //팝업창 display none
+//            $("#newpopupDiv").css("display","none"); //새로운 팝업창 display none
+            $("body").css("overflow","auto");//body 스크롤바 생성
+        });
+        
+    });
+    
+$(function(){
+	$('#checkPwd').on("click",function(){
+		var checkPassword = $('#m_pass').val();
+		var pwd = [[${session.user.m_pass}]]
+		
+		if(!checkPassword || checkPassword.trim() === ""){
+			alert("비밀번호를 입력하세요");
+		}
+		var objdata = {"pw":checkPassword};
+		
+	$.ajax({
+		url:"pwCheck",//맵핑 밸류값
+		type:"post",
+		data:objdata,
+		success:function(result){
+			console.log(result);
+			
+			if(result = "ok"){
+				alert("성공");
+				const target = document.getElementById('popCheckBtn');
+				target.disabled = false;  // 입력한 새로운 비밀번호 일치시 수정 버튼 활성화
+				$(".p2").css('display','block');
+				$(".p1").css('display','none')
+				$(".p3").css('display','none')
+				
+			}else{
+				alert("실패");
+				$(".p3").css('display','block');
+				$(".p2").css('display','none');
+				$(".p1").css('display','none')
+			}
+		},
+		error: function(error){
+			alert("전송실패");
+			console.log(error);
+		}
+	});
+	});
+});
+
+$(function(){
+	$("#popCheckBtn").on("click",function(){
+		
+		var id = [[${session.user.m_pk_id}]]
+		var objdata = {"id":id};
+ 		
+		$.ajax({
+			url:"memberDelete", //맵핑 밸류값
+			type:"get",
+			data:objdata,
+			success:function(result){
+				console.log("CCCCCCCCCCCCCCCCCCCCCCC");
+				console.log(result);
+				
+				if(result = "ok"){
+					alert("삭제성공");
+					location.href = "/";
+				}else{
+					alert("삭제실패");
+				}
+			},
+			error: function(error){
+				alert("전송실패!!!!");
+				console.log(error);
+			}
+			
+		});
+	});
+});
+
+</script>
+
+</body>
+</html>

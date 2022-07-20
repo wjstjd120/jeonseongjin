@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" th:href="@{css/header2.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{css/Question_List.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<title>page - 고객센터</title>
+<style type="text/css">
+a{
+   text-decoration: none;
+}
+
+a:visited{
+   color: black;
+   
+}
+</style>
+<script th:inline="javascript">
+var mdto;
+$(function () {
+   
+   var msg = [[${msg}]];
+   
+   if(msg != null){
+      alert(msg);
+   }
+   
+   $(".M4"). hide();
+      
+   mdto = [[${session.user}]];
+   
+   if(mdto != null){
+      $("#inLogin").show();
+      $("#outLogin").hide();
+      $(".M1").css("display","none");
+   }else{
+      $("#inLogin").hide();
+      $("#outLogin").show();
+      $(".m6").hide();
+      
+   }
+   
+   
+   
+   if(mdto.m_category == "사업자"){
+      $(".M4").show();
+   }
+   
+   $(".noticeli").on("click",function(){
+         location.href = "/Notice_List"
+   });
+      
+});
+
+
+</script>
+</head>
+<body>
+   <header>
+      <div th:include="fragment/header::header"></div>
+    </header>
+    
+   <div class="main_container1">
+         <div class="main_container">
+               <div class="Pic_menu">
+                  <!--     
+                   <div   class="center"><a th:href="@{Question_List}" class="rara" style="text-decoration: none; color: black;">고객센터</a></div>
+      -->
+                   <div  class="m2"><a  th:href="@{Question_List}"  class="rara" style="text-decoration: none;">자주하는 질문</a></div>
+                   <div  class="m3"><a  href="/Notice_List"  class="rara" style="text-decoration: none;">공지사항</a></div>
+                   <div class="m4"><a  th:href="@{QA_List}"  class="rara" style="text-decoration: none;">Q & A</a></div>
+                   <div  class="m5"><a th:href="@{Myqa_List}"  class="rara hidrara"  style="text-decoration: none;">내가 한 질문 답변</a></div>
+                </div>
+               <div class="container">
+                     <p class="manyqa">자주묻는 질문</p>
+                  
+                     <div class="questions-container">
+                        <div class="question">
+                           <button>
+                              <div class="qa_q">Q. 결제는 어떻게 하나요?</div>       
+                           </button>
+                           <div class="qa_a">A. 장바구니에 담아두신 상품을 [결제하기] 버튼을 클릭하여 결제 진행해주시면됩니다. </div>
+                        </div>
+                        <div class="question">
+                           <button>
+                           <div class="qa_q">Q. 예약확인은 어디서 하나요?</div>       
+                           </button>
+                           <div class="qa_a">A. [마이페이지] 에서 예약확인을 눌러 확인해주세요. </div>
+                        </div>
+                        <div class="question">
+                           <button>
+                           <div class="qa_q">Q. 이 사이트는 무엇을 하는곳인가요?</div>       
+                           </button>
+                           <div class="qa_a">A. 제주도로 여행가는 사람들의 편의를 위해 제작한 사이트입니다.</div>
+                        </div>
+                        <div class="question">
+                           <button>
+                           <div class="qa_q">Q. 예약취소는 어떻게 하나요?</div>
+                           </button>
+                           <div class="qa_a">A. 관리자에게 문의하기를 통해 예약취소를 진행하시면 됩니다.</div>
+                        </div>
+                        <div class="question">
+                           <button>
+                           <div class="qa_q">Q. 이 프로젝트 끝이 보이나요?</div>       
+                           </button>
+                           <div class="qa_a">A. 아뇨. 끝이 안보이고 할게 산 더미 입니다.</div>
+                        </div>
+                        <div class="question">
+                           <button>
+                              <div class="qa_q">Q. 당신은 누구인가요?</div>       
+                           </button>
+                           <div class="qa_a">A. 내가 누군지 궁금하면 대답해주는게 인지상정 난 로이</div>
+                        </div>
+                        <div class="question">
+                           <button>
+                           <div class="qa_q">Q. 질문 리스트 떨어졌죠?</div>       
+                           </button>
+                           <div class="qa_a">A. 천마디 말보단 행동이죠.</div>
+                        </div>
+                        <div class="question">
+                           <button>
+                           <div class="qa_q">Q. 솔직하게 쓸거 없죠?</div>       
+                           </button>
+                           <div class="qa_a">A. 아닙니다. 뚱이입니다.</div>
+                        </div>
+                     </div>
+               </div>
+      </div>
+     </div>
+</body>
+<script th:inline="javascript">
+
+$(document).on("click","button",function(){
+   var ps = $("button").next();
+   var curdis = $(this).next().css("display");
+   //console.log(ps);
+   for(var i = 0; i < ps.length; i++){
+      $(ps[i]).css("display","none");
+   }
+   if(curdis == "none"){
+      $(this).next().css("display","block");
+   }
+});
+
+function goQandA(){
+   console.log("안니영");
+}
+</script>
+
+</html>

@@ -1,0 +1,122 @@
+@charset "UTF-8";
+
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css");
+
+
+body{
+    background: url("/image/제주제주.png");
+}
+*{
+   margin: 0;
+   padding: 0;
+}
+/*왼쪽 메뉴*/
+.Pic_menu{
+    float: right;
+    margin-top: 50px;
+}
+.center{
+   font-size: 40px;
+   margin-left: 20px;
+   font-weight : bold;
+}
+hr{
+    margin: 15PX 15PX 0 15px;
+}
+
+.m5{
+   cursor: pointer;
+}
+.m2, .m3, .m4, .m5 {
+    font-size: 12pt;
+    font-weight: 600;
+    height: 50px;
+}
+.rara {
+    float: left;
+    background-color: orange;
+    width: 110px;
+    border-radius: 0 10px 10px 0;
+    font-size: 12.9pt;
+    font-weight: 600;
+    color: white;
+    padding: 10px;
+}
+/**/
+
+.main_container1{
+   width: 1920px;
+   height: 819px;
+   text-align: center;
+   
+}
+
+.main_container {
+   margin-top: 50px;
+    display: inline-block;
+    width: 1410px;
+    height: 700px;
+    margin-left: 50px;
+}
+.container{
+    display: inline-block;
+    width: 1280px;
+    height: 700px;
+    float: left;
+    background-color: beige;
+    opacity: 90%;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.questions-container{
+   width: 1200px;
+   display: inline-block;
+   
+}
+
+.manyqa {
+    font-size: 45px;
+    margin-top: 50px;
+    font-weight: 900;
+    width: 400px;
+    height: 80px;
+    color: orange;
+}
+
+.question {
+    width: 1200px;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+button {
+       border: 0;
+    outline: 0;
+    background: orange;
+    width: 1200px;
+    text-align: left;
+    border-radius: 10px 10px 0 0;
+    height: 55px;
+}
+
+.qa_a {
+   display: none;
+   padding-left: 50px;
+    font-size: 20px;
+    background-color: wheat;
+    height: 50px;
+    line-height: 2.3;
+    font-weight: 600;
+    border-radius: 0 0 10px 10px;
+    color: saddlebrown;
+   
+}
+.qa_q{
+   text-align: left;
+    position: relative;
+    font-size: 18pt;
+    font-weight: 600;
+    margin-left: 15px;
+    color: white;
+}

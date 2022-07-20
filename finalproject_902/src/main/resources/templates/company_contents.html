@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>page - 상세보기</title>
+<link th:href="@{/css/companyheader.css}" rel="stylesheet" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script th:inline="javascript">
+$(function () {
+	var msg = [[${msg}]];
+	
+	if(msg != null){
+		alert(msg);
+	}
+	
+	var option = [[${option}]];
+
+	console.log(option);
+
+	var optionTag = "";
+
+
+	if(option.length > 0){
+		for(var i = 0; i<option.length; i++){
+			if(i == option.length-1){
+				optionTag += option[i];
+				$("#option").html(optionTag);		
+			}
+			optionTag += option[i] + ", ";
+		}
+	} else if (option.length == 0){
+		optionTag = "옵션이 없습니다!";
+		$("#noption").html(optionTag);	
+	}
+	
+});
+</script>
+<style type="text/css">
+
+.c_contentsBox{
+	border: 1px solid;
+	margin-left : 360px;
+	margin-top : 50px;
+	width: 1500px;
+	height: 740px;
+}
+.h3{
+	display: inline;
+}
+.c_header{
+	width : 100%;
+	margin-bottom: 10px;
+}
+.ccfont{
+	font-size: 15px;
+}
+#popupDiv { /* 팝업창 css */
+	top: 0px;
+	position: absolute;
+	background-color: #FFFFFF;
+	width: 900px;
+	height: 700px;
+	display: none;
+	border: 1px solid #FFFFFF;
+	z-index: 10;
+}
+
+#popup_mask { /* 팝업 배경 css */
+	position: fixed;
+	width: 100%;
+	height: 1000px;
+	top: 0px;
+	left: 0px;
+	display: none;
+	background-color: #000;
+	opacity: 0.6;
+}
+.lightBox{
+	padding: 15px;
+}
+.cccfont{
+	font-size: 25px;
+	line-height: 50px;
+}
+
+
+.btn1{
+	border: 1px solid lightgray;
+	border-radius: 10px;
+	width: 100px;
+	height: 40px;
+}
+.btn1:hover{
+	background-color: lightgray;
+}
+.btn1:active{
+    box-shadow: 1px 1px 0 rgb(0,0,0,0.5);
+    position: relative;
+    top:2px;
+}
+
+
+.btn2{
+	border: 1px solid lightgray;
+	border-radius: 10px;
+	width: 100px;
+	height: 40px;
+}
+.btn2:hover{
+	background-color: lightgray;
+}
+.btn2:active{
+    box-shadow: 1px 1px 0 rgb(0,0,0,0.5);
+    position: relative;
+    top:2px;
+}
+
+
+.btn6{
+	border: 1px solid lightgray;
+	border-radius : 10PX;
+	width: 85px;
+	height: 40px;
+	font-size: 14px;
+}
+.btn6:hover{
+	background-color: lightgray;
+}
+.btn6:active{
+    box-shadow: 1px 1px 0 rgb(0,0,0,0.5);
+    position: relative;
+    top:2px;
+}
+
+.btn7:hover{
+	background-color: lightgray;
+}
+.btn7:active{
+    box-shadow: 1px 1px 0 rgb(0,0,0,0.5);
+    position: relative;
+    top:2px;
+}
+.btn10{
+	width: 800px; 
+	height: 40px; 
+	border : 1px solid #2BAE66; 
+	background-color: #2BAE66; 
+	color:white;
+	font-size: 20px;
+}
+.btn10:hover{
+	background-color: #329632;
+}
+.btn10:active{
+    box-shadow: 1px 1px 0 rgb(0,0,0,0.5);
+    position: relative;
+    top:2px;
+}
+.btn11{
+	width: 150px;
+	height: 40px;
+	border : 1px solid #2BAE66; 
+	background-color: #2BAE66;
+	font-size: 20px;
+	color: white;
+	margin-top: 20px;
+	margin-bottom: 10px; 
+}
+.btn11:hover{
+	background-color: #329632;
+}
+.btn11:active{
+    box-shadow: 1px 1px 0 rgb(0,0,0,0.5);
+    position: relative;
+    top:2px;
+}
+.imgTag{
+	width: 100px;
+	height: 100px;
+}
+.btn15{
+	width: 100px;
+	height: 40px;
+	border : 1px solid #2BAE66; 
+	background-color: #2BAE66;
+	font-size: 20px;
+	color: white;
+	margin-top: 20px;
+	margin-bottom: 10px; 
+}
+.btn15:hover{
+	background-color: #329632;
+}
+.btn15:active{
+    box-shadow: 1px 1px 0 rgb(0,0,0,0.5);
+    position: relative;
+    top:2px;
+}
+.ta{
+	border: 1px solid lightgray;
+	border-radius: 20px;
+}
+.noReview{
+	width: 700px;
+	height: 300px;
+	margin: 0 auto;
+	line-height: 300px;
+	margin-top: 100px;
+}
+.imgBox{
+	width: 600px;
+	height: 500px;
+	border: 5px solid #FFE1E6;
+	border-radius : 20px;
+	overflow: auto;
+	margin : 0 auto;
+	margin-top: 35px;
+}
+.cimgwh{
+	width: 150px;
+	height: 150px;
+}
+.optionCheckBox{
+	border: 1px solid;
+	width: 850px;
+	height: 670px;
+	margin: 0 auto;
+	margin-top: 15px;
+	overflow: auto;
+}
+</style>
+</head>
+<body>
+	<header>
+		<div th:include="fragment/companyHeader :: cheader"></div>
+	</header>
+	<section>
+		<div th:include="fragment/companyHeader :: csection"></div>
+	</section>
+	
+	<div class="c_contentsBox">
+		<div class="layerbox">
+		<div class="c_header">
+		<h3 class="h3">업체정보</h3>  
+		<span class="ccfont" ><b>업체 이름 : </b>[[${cdto.c_name}]]</span>  <span class="ccfont"><b>주소 : </b>[[${cdto.c_addr}]]</span>  <span class="ccfont"><b>전화번호 : </b>[[${cdto.c_phone}]] </span>
+		<button class="btn7" style="position: absolute; top:150px ; right: 95px; height: 40px; border: 1px solid lightgray; border-radius: 10px;" onclick="cliker()">업체 정보 상세보기</button>
+		<hr>
+		</div>
+		<th:block th:if="${rList != null}"><h4>방목록</h4></th:block><th:block th:if="${aList != null}"><h4>레저상품목록</h4></th:block>
+		<hr>
+		<br>
+		<div class="roomDiv">
+			<table class="roomtable">
+				<th:block th:if="${rList != null}">
+					<th:block th:each="data:${rList}">
+							<tr>
+								<td width="15%"><img class="layerkd" th:src="@{/upload/} + ${data.r_img}"></td>
+								<td width="50%">
+								방이름 : <span th:text="${data.r_name}"></span><br>
+								가격 : <span th:text="${data.r_price}"></span>
+								</td>
+								<td width="30%">
+								
+								<th:block th:if="${#strings.equals(data.r_hidden,'0')}">
+									<input type="button" id="hiddenCh" class="btn6" value="보이기" th:number="${data.r_pk_num}" th:onclick="goods_hiddenUpdate(this.getAttribute('number'))">
+								</th:block>
+								<th:block th:if="${#strings.equals(data.r_hidden,'1')}">
+									<input type="button" id="hiddenCh" class="btn6" value="숨기기" th:number="${data.r_pk_num}" th:onclick="goods_hiddenUpdate(this.getAttribute('number'))">
+								</th:block>
+								
+								<input type="button" class="btn6" value="수정하기" th:number="${data.r_pk_num}" th:onclick="updateFrm(this.getAttribute('number'))">
+								<button class="btn6" th:cate="${cdto.c_category}" th:pknum="${data.r_pk_num}" th:onclick="deleteGoods(this.getAttribute('cate'), this.getAttribute('pknum'))">삭제</button>
+								</td>
+							</tr>
+						</th:block>
+				</th:block>	
+				<th:block th:if="${aList != null}">
+					<th:block th:each="data:${aList}">
+							<tr>
+								<td width="15%"><img class="layerkd" th:src="@{/upload/} + ${data.at_img}"></td>
+								<td width="50%">
+								상품이름 : <span th:text="${data.at_name}"></span><br>
+								가격 : <span th:text="${data.at_price}"></span>
+								</td>
+								<td width="30%">
+								
+								<th:block th:if="${#strings.equals(data.at_hidden,'0')}">
+									<input type="button" id="hiddenCh" class="btn6" value="보이기" th:number="${data.at_pk_num}" th:onclick="goods_hiddenUpdate(this.getAttribute('number'))">
+								</th:block>
+								<th:block th:if="${#strings.equals(data.at_hidden,'1')}">
+									<input type="button" id="hiddenCh" class="btn6" value="숨기기" th:number="${data.at_pk_num}" th:onclick="goods_hiddenUpdate(this.getAttribute('number'))">
+								</th:block>
+								
+								<button class="btn6" th:number="${data.at_pk_num}" th:onclick="updateFrm(this.getAttribute('number'))">수정</button>
+								<button class="btn6" th:cate="${cdto.c_category}" th:pknum="${data.at_pk_num}" th:onclick="deleteGoods(this.getAttribute('cate'), this.getAttribute('pknum'))">삭제</button>
+								</td>
+							</tr>
+						</th:block>
+				</th:block>	
+			</table>
+		</div>
+		<th:block th:if="${rList != null}"> <button class="btn1" onclick="GoodsAddFrm()">방 추가</button></th:block>
+		<th:block th:if="${aList != null}"> <button class="btn1" onclick="GoodsAddFrm()">상품 추가</button></th:block>
+		<button class="btn2" onclick="backBtn()">뒤로 가기</button>
+		
+	</div>
+	</div>
+	
+	<div id="popupDiv" style="overflow: auto;">
+		<div id="lightBox1" >
+		<div class="lightBox">
+			<h2 style="margin-right: 300px;">업체정보 상세보기</h2>
+			<hr style="margin-bottom: 20px; margin-top: 10px; color: black;">
+				<span id="cImg"><img style="float: left; margin-right: 20px; " width="200px;" height="200px;" th:src="@{/upload/}+${cdto.c_img}"></span>
+				<span class="cccfont" ><b>업체 이름 : </b>[[${cdto.c_name}]]</span><br>
+				<span class="cccfont"><b>주소 : </b>[[${cdto.c_addr}]]</span><br>
+				<span class="cccfont"><b>전화번호 : </b>[[${cdto.c_phone}]] </span><br>
+				<span style="font-size: 15px; line-height: 30px;" id="noption"><b>옵션 : </b><span id="option"></span></span>
+		</div>
+		<table style="margin-top: 30px; width: 100%; text-align: center; font-size: 20px;">
+			<tr>
+				<th>영업 상태</th>
+			</tr>
+			<tr>
+				<td>[[${cdto.c_condition}]]</td>
+			</tr>	
+			<tr>
+				<th>업체 종류</th>
+			</tr>
+			<tr>
+				<td>[[${cdto.c_category}]]</td>			
+			</tr>
+			<tr>
+				<th>승인 여부</th>
+			</tr>
+			<tr>
+				<td>[[${cdto.c_check}]]</td>			
+			</tr>
+		</table>
+		<div style="margin: 0 auto; width: 305.8px;">	
+			<button class="btn11" th:songjan=${cdto.c_pk_cnum} th:onclick="updateCompany(this.getAttribute('songjan'))"><b>수정</b></button>
+			<button class="btn11" th:songjan="${cdto.c_pk_cnum}" th:onclick="companyDelete(this.getAttribute('songjan'))"><b>삭제</b></button><br>
+			<button class="btn11" th:songjan="${cdto.c_pk_cnum}" th:onclick="reviewManagement(this.getAttribute('songjan'))"><b>리뷰관리</b></button>
+			<button class="btn11" th:songjan="${cdto.c_pk_cnum}" th:onclick="viewCompanyImg(this.getAttribute('songjan'))"><b>사진보기</b></button>
+		</div>
+		
+		<div style="padding: 20px; margin: 0 auto; width: 801.5px;">
+		<button class="btn10" id="popCloseBtn"><b>끄기</b></button>
+		</div>
+		</div>
+		
+		<div id="lightBox2">
+			<div style="width: 800px; height: 500px; margin: 0 auto; margin-top: 20px; overflow: auto;">
+			<table id="reviewTable" style="width: 100%; margin: 0 auto; margin-top: 20px; text-align: center;"></table>
+			</div>
+			
+			<div style="width: 800px; margin: 0 auto; margin-top: 100px;">
+				<button class="btn10" onclick="backReview()">돌아가기</button>
+			</div>
+		</div>
+		
+		<div id="lightBox-reply">
+			<div>
+			<input type="hidden" id="rv_pk_num" value="">
+				<table style="margin: 0 auto; margin-top: 30px; width: 800px;">
+					<tr>
+						<td rowspan="3"><div id="solreviewImg" style="width: 200px; height: 200px;"></div></td>
+						<td id="solreviewId"></td>
+					</tr>
+					<tr>
+						<td id="solreviewDate"></td>
+					</tr>
+					<tr>
+						<td id="solreviewStar"></td>
+					</tr>
+					<tr>
+						<th colspan="3"><h3 style="margin-top: 30px;">내용</h3></th>
+					</tr>
+					<tr>
+						<td colspan="3" id="solreviewContents" style="text-align: center;"><div></div></td>
+					</tr>
+				</table>
+				<div style="width: 780px; height: 200px; margin: 0 auto; margin-top: 20px;">
+					<textarea class="ta" style="width: 95%; height: 100%; resize: none; font-size: 20px; padding : 20px;"></textarea>
+				</div>
+				
+				<div style="margin-top: 60px; margin-left: 300px;">
+					<button class="btn11" onclick="reviewUpdate()">올리기</button>
+					<button class="btn11" th:songjan="${cdto.c_pk_cnum}" th:onclick="reviewManagement(this.getAttribute('songjan'))">뒤로가기</button>
+				</div>
+			</div>
+		</div>
+		<div id="lightBox-img">
+			<div style="width: 878px; height: 679px; border: 10px solid #D2FFD2; margin: auto;">
+				<div class="imgBox">
+					<ul id="simg">
+									
+					</ul>
+				</div>
+				<button class="btn11" style="margin-left: 370px; margin-top: 50px; border-radius:10px; " onclick="cliker()">뒤로가기</button>
+			</div>
+		</div>
+		
+		
+	</div>
+	
+	
+	<div id="popup_mask"></div>
+	
+	
+</body>
+<script th:inline="javascript">
+//$("#lightBox1").show();
+$("#lightBox2").hide();
+$("#lightBox-reply").hide();
+$("#lightBox-img").hide();
+
+function reservationCheck(j){
+	var num = j;
+	var cate = [[${cdto.c_category}]];
+	
+	var che = confirm("예약관리를 확인하시겠습니까?");
+	
+	if(che){
+		location.href="CompanyreservationCheckFrm?num="+j+"&cate="+cate;
+	}
+}
+
+function updateCompany(j){
+	var che = confirm("수정을 위해 페이지를 이동하시겠습니까?");
+	if(che){
+		location.href="updateCompanyFrm?cnum=" + j;
+	}
+}
+
+function viewCompanyImg(cnum){
+	$("#lightBox1").hide();
+	$("#lightBox2").hide();
+	$("#lightBox-reply").hide();
+	$("#lightBox-img").show();
+	
+	var obj = {"cnum" : cnum};
+	
+	$.ajax({
+		url: "getCimgList",
+		type : "post",
+		data : obj,
+		datatype : "json",
+		success : function (result){
+			var ciList = result.ciList;
+			var cimgTag = "";
+			
+			for(var i = 0; i<ciList.length; i++){
+				cimgTag +=
+					"<li><img src='/upload/" + ciList[i].ci_sysname + "' class='cimgwh'></li>";
+			}
+			
+			$("#simg").html(cimgTag);
+			
+		},
+		error : function (result){
+			alert("통신실패");
+		}
+	});
+}
+
+
+
+function reviewUpdate(){
+	var rv_answer = $(".ta").val();
+	
+	if(rv_answer==null || rv_answer == ""){
+		alert("내용을 채워주세요.");
+		return;
+	}
+	
+	var cnum = [[${cdto.c_pk_cnum}]];
+	var obj = {"rv_answer" : rv_answer};
+	obj.rv_pk_num = $("#rv_pk_num").val();
+	$.ajax({
+		url: "reviewAnswer",
+		type : "post",
+		data : obj,
+		datatype : "json",
+		success : function (result){
+			
+			reviewManagement(cnum);
+		},
+		error : function (result){
+			
+		}
+	});
+}
+
+var rvList = null;
+function backReview(){
+	$("#lightBox2").hide();
+	$("#lightBox-reply").hide();
+	$("#lightBox-img").hide();
+	$("#lightBox1").show();
+}
+
+function rreply(rvnum, index){
+	$("#lightBox1").hide();
+	$("#lightBox2").hide();
+	$("#lightBox-img").hide();
+	$("#lightBox-reply").show();
+	$(".ta").val("");
+	var ll = rvList[index];
+	
+	var llimg = "<img src='/upload/" + ll.rv_img + "' style='width : 100%; heigth : 100%;'>"
+	
+	$("#solreviewImg").html(llimg);
+	$("#solreviewId").html("아이디 : " + ll.rv_fk_id);
+	$("#solreviewDate").html("날짜 : " + ll.rv_date);
+	$("#solreviewStar").html("별점 : " + ll.rv_star);
+	$("#solreviewContents").html(ll.rv_contents);
+	$("#rv_pk_num").val(ll.rv_pk_num);
+	
+	console.log(ll);
+	
+}
+
+function reviewManagement(cnum){
+	
+	$("#lightBox1").hide();
+	$("#lightBox-reply").hide();
+	$("#lightBox-img").hide();
+	$("#lightBox2").show();
+	
+	var obj = {"cnum" : cnum};
+	
+	$.ajax({
+		url : "getReviewList",
+		type : "post",
+		data : obj,
+		datatype : "json",
+		success : function(result){
+			rvList = result.rvList;
+			
+			var tableTag = "<tr height='70px;'>"
+				+"<th>사진</th>"
+				+"<th>리뷰 내용</th>"
+				+"<th>작성자 아이디</th>"
+				+"<th>별점</th>"
+				+"<th>답변유무</th>"
+				+"<th>댓글 달아주기~</th>"
+				+"</tr>";
+			
+			for(var i = 0; i<rvList.length; i++){
+				tableTag +=
+					"<tr id='rvpknum" + rvList[i].rv_pk_num + "'>"
+					+"<td style='wid'><img src='/upload/" + rvList[i].rv_img + "' class='imgTag'></td>"
+					+"<td><div>" + rvList[i].rv_contents + "</div></td>"
+					+"<td>" + rvList[i].rv_fk_id + "</td>"
+					+"<td>" + rvList[i].rv_star + "</td>";
+					
+				 if(rvList[i].rv_check == "0"){
+					 rvList[i].rv_check = "답변미완료"
+		         }else if(rvList[i].rv_check == "1"){
+		            	rvList[i].rv_check = "답변완료"
+		           }
+				 
+				tableTag += 
+					"<td>" + rvList[i].rv_check + "</td>"
+					+'<td><button class="btn15" onclick="rreply(\'' + rvList[i].rv_pk_num + '\',' + i + ')">댓글</button></td>'
+					+"</tr>";
+					
+				if(rvList[i].rv_check == "답변완료"){
+					tableTag+=
+						"<tr>"
+						+"<td colspan='6'><div style='height=30px; lineheight=30px;'>  답변 : " + rvList[i].rv_answer + "</div></td>"
+						+"</tr>"
+				}
+			}
+			
+			if(rvList.length == 0){
+				tableTag = "<tr>"
+				+ "<th colspan='6'><div class='noReview'> 리뷰가 없습니당~ <div></th>"
+				+ "</tr>";
+			}
+			
+			$("#reviewTable").html(tableTag);
+			
+			
+		},
+		error : function(result){
+			alert("통신실패!");
+		}
+	});
+	
+}
+
+function companyDelete(j) {
+	var delch = confirm("정말 삭제하시겠습니까?");
+	
+	if(delch){
+		location.href="companyDelete?cnum=" + j;
+	}
+}
+
+function goods_hiddenUpdate(pknum){
+	var hidChancheck = confirm("상태를 변경 하시겠습니까?");
+	var category = [[${cdto.c_category}]];
+	
+	if(hidChancheck){
+		location.href="hidChancheck?category="+category+"&pknum="+pknum;
+	}
+	
+	
+	
+}
+
+function backBtn(){
+	location.href="company";
+}
+
+function deleteGoods(cate, pknum){
+	var delcheck = confirm("삭제하시겠습니까?");
+	var obj ={"cate" : cate};
+	obj.pknum = pknum;
+	
+	
+	if(delcheck){
+		$.ajax({
+			url : "delGoods",
+			type : "post",
+			data : obj,
+				datatype : "json",
+			success : function(result){
+				var svmsg = result.msg;
+				location.href="company_contents?cnum="+[[${cdto.c_pk_cnum}]];
+				alert(svmsg);
+			},
+			error : function(result){
+				
+			}
+		});
+	}
+}
+
+function updateFrm(num,cnum){
+	var category = [[${cdto.c_category}]];
+	console.log("num : " + num + " c_pk_cnum : " + category);
+	location.href="updateAddGoods?c_category=" + category +"&pknum="+num;
+}
+
+function GoodsAddFrm(){
+	location.href="addGoodsFrm?cnum="+[[${cdto.c_pk_cnum}]];
+}
+function cliker(){ // 라이트 박스 띄우기
+	$("#lightBox2").hide();
+	$("#lightBox-reply").hide();
+	$("#lightBox-img").hide();
+	$("#lightBox1").show();
+	
+
+	$("#popupDiv").css({
+		"top" : (($(window).height() - $("#popupDiv").outerHeight()) / 2 
+			+ $(window).scrollTop())
+			+ "px","left" : (($(window).width() - $("#popupDiv").outerWidth()) / 2
+			+ $(window).scrollLeft())
+			+ "px"
+			//팝업창을 가운데로 띄우기 위해 현재 화면의 가운데 값과 스크롤 값을 계산하여 팝업창 CSS 설정
+	});
+	$("#popup_mask").css("display","block"); //팝업 뒷배경 display block
+	$("#popupDiv").css("display","block"); //팝업창 display block
+	$("body").css("overflow", "hidden");//body 스크롤바 없애기
+	
+	// <img style="float: left; margin-right: 20px; " width="200px;" height="200px;" th:src="@{/upload/}+${cdto.c_img}">
+	// var imgtag = "<img class='layerkd' th:src='" +[[@{/upload/}]] + [[${cdto.c_img}]] + "'>"
+	// $("#cImg").html(imgtag);
+	
+	
+	
+}
+$("#popCloseBtn").click(function(event) {
+	$("#popup_mask").css("display", "none"); //팝업창 뒷배경 display none
+	$("#popupDiv").css("display", "none"); //팝업창 display none
+	$("body").css("overflow", "auto");//body 스크롤바 생성
+	
+	
+
+});
+
+</script>
+</html>

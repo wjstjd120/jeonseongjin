@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.openai.jeju.dao.CompanyDao">
+
+<insert id="CompanyInsert"
+parameterType="CompanyDto">
+insert into company value(#{c_pk_cnum},#{c_fk_id},#{c_name},#{c_phone},#{c_category},#{c_addr},null,default,default,null,#{c_type})
+</insert>
+
+<insert id="loptionInsert"
+parameterType="String">
+insert into loption values(#{cnum},0,0,0,0,0,0,0,0,0,0,0)
+</insert>
+
+<insert id="aoptionInsert"
+parameterType="String">
+insert into aoption values(#{cnum},0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+</insert>
+
+<update id="CompanyC_imgU"
+parameterType="HashMap">
+update company set c_img=#{sysname} where c_pk_cnum=#{c_pk_cnum}
+</update>
+
+<insert id="CimgInsert"
+parameterType="HashMap">
+INSERT INTO cimg VALUES (NULL,#{c_pk_cnum},#{oriname},#{sysname})
+</insert>
+
+<select id="getCimgList"
+parameterType="String"
+resultType="CimgDto">
+select * from cimg where ci_fk_num = #{cnum}
+</select>
+
+<delete id="deleteCimg"
+parameterType="String">
+delete from cimg where ci_fk_num = #{cnum}
+</delete>
+
+<update id="companyUpdate"
+parameterType="CompanyDto">
+update company set c_type = #{c_type}, c_phone=#{c_phone} where c_pk_cnum = #{c_pk_cnum}
+</update>
+
+<delete id="delCimg"
+parameterType="String">
+delete from cimg where ci_sysname = #{sysname}
+</delete>
+
+
+<select id="getList"
+parameterType="String"
+resultType="CompanyDto">
+select * from company where c_fk_id=#{m_pk_id} and c_check=1
+</select>
+
+<select id="getListCount"
+parameterType="String"
+resultType="int">
+select count(*) from company where c_fk_id=#{m_pk_id} and c_check=1
+</select>
+
+<select id="getDto"
+parameterType="String"
+resultType="CompanyDto">
+select * from company where c_pk_cnum=#{data}
+</select>
+
+<insert id="roomInsert"
+parameterType="RoomDto"
+useGeneratedKeys="true" keyProperty="r_pk_num">
+      <selectKey keyProperty="r_pk_num" resultType="Integer"
+         order="AFTER">
+         SELECT LAST_INSERT_ID()
+      </selectKey>
+insert into room value(null,#{r_fk_cnum},#{r_name}, null ,#{r_contents},${r_price},#{r_in},#{r_out},0)
+</insert>
+
+<update id="roomImgUpdate"
+parameterType="HashMap">
+update room set r_img=#{sysname} where r_pk_num=#{r_pk_num}
+</update>
+
+<insert id="rImgInsert"
+parameterType="HashMap">
+INSERT INTO rimg VALUES (NULL,#{r_pk_num},#{oriname},#{sysname})
+</insert>
+
+<select id="getRoomList"
+parameterType="String"
+resultType="RoomDto">
+select * from room where r_fk_cnum = #{data}
+</select>
+
+<select id="getRimgList"
+parameterType="String"
+resultType="RoomImgDto">
+select * from rimg where ri_fk_num = #{ri_fk_num}
+</select>
+
+<select id="getAactivityList"
+parameterType="String"
+resultType="AactivityDto">
+select * from aactivity where at_fk_cnum = #{data}
+</select>
+
+<insert id="AactivityInsert"
+parameterType="AactivityDto"
+useGeneratedKeys="true" keyProperty="at_pk_num">
+      <selectKey keyProperty="at_pk_num" resultType="Integer"
+         order="AFTER">
+         SELECT LAST_INSERT_ID()
+      </selectKey>
+<if test='at_rtch.equals("0")'>
+insert into aactivity values(null,#{at_fk_cnum},#{at_name}, null ,#{at_contents},${at_price},null,null,false,0)
+</if>
+<if test='at_rtch.equals("1")'>
+insert into aactivity values(null,#{at_fk_cnum},#{at_name}, null ,#{at_contents},${at_price},${at_in},${at_out},true,0)
+</if>
+</insert>
+
+<update id="aactivityImgUpdate"
+parameterType="HashMap">
+update aactivity set at_img=#{sysname} where at_pk_num=#{r_pk_num}
+</update>
+
+<insert id="aImgInsert"
+parameterType="HashMap">
+INSERT INTO aimg VALUES (NULL,#{r_pk_num},#{oriname},#{sysname})
+</insert>
+
+<select id="getRoomDto"
+parameterType="String"
+resultType="RoomDto">
+select * from room where r_pk_num=#{num}
+</select>
+
+<select id="getAactivityDto"
+parameterType="String"
+resultType="AactivityDto">
+select * from aactivity where at_pk_num=#{num}
+</select>
+
+<delete id="solDelrImg"
+parameterType="String">
+delete from rimg where ri_sysname=#{sysname}
+</delete>
+
+<select id="selectCnumList"
+parameterType="String"
+resultType="RoomImgDto">
+select * from rimg where ri_fk_num=#{rnum}
+</select>
+
+<update id="roomUpdate"
+parameterType="RoomDto">
+update room set r_name=#{r_name} , r_contents=#{r_contents}, r_price=#{r_price}, r_in=#{r_in}, r_out=#{r_out}, r_hidden=#{r_hidden}
+where r_pk_num = #{r_pk_num} 
+</update>
+
+<select id="getAimgList"
+parameterType="String"
+resultType="AimgDto">
+select * from aimg where ai_fk_num = #{ai_fk_num}
+</select>
+
+<delete id="solDelaImg"
+parameterType="String">
+delete from aimg where ai_sysname=#{sysname}
+</delete>
+
+<update id="aactivityUpdate"
+parameterType="AactivityDto">
+
+<if test='at_rtch.equals("0")'>
+update aactivity set at_name=#{at_name}, at_contents=#{at_contents}, at_price=#{at_price}, at_rtch=#{at_rtch}, at_hidden=#{at_hidden} where at_pk_num=#{at_pk_num}
+</if>
+
+<if test='at_rtch.equals("1")'>
+update aactivity set at_name=#{at_name}, at_contents=#{at_contents}, at_price=#{at_price}, at_in=#{at_in}, at_out=#{at_out}, at_rtch=#{at_rtch}, at_hidden=#{at_hidden} 
+where at_pk_num=#{at_pk_num}
+</if>
+
+</update>
+
+<delete id="del_fk_delRImg"
+parameterType="String">
+delete from rimg where ri_fk_num=#{ri_fk_num}
+</delete>
+
+<delete id="delPK_Room"
+parameterType="String">
+delete from room where r_pk_num=#{r_pk_num}
+</delete>
+
+<delete id="del_fk_delAImg"
+parameterType="String">
+delete from aimg where ai_fk_num=#{ai_fk_num}
+</delete>
+
+<delete id="delPK_Aactivity"
+parameterType="String">
+delete from aactivity where at_pk_num=#{at_pk_num}
+</delete>
+
+<select id="searchCompany"
+parameterType="ListDto"
+resultType="CompanyDto">
+select * from company where c_fk_id=#{id} and ${colname} like concat('%',#{keyword},'%') and 
+<if test="lod == null and dir == null and act == null">
+(c_category="숙박" or c_category="레저" or c_category="식당")
+</if>
+
+<trim prefix="(" suffix=")" suffixOverrides="or">
+   <if test="lod != null and lod != ''">
+      c_category = #{lod} or
+   </if>
+   <if test="act != null and act != ''">
+      c_category = #{act} or
+   </if>
+   <if test="dir != null and dir != ''">
+      c_category = #{dir} or
+   </if>
+</trim>
+
+   <if test='c_check.equals("0")'>
+      and c_condition = #{c_check}      
+   </if>
+   <if test='c_check.equals("1")'>
+      and c_condition = #{c_check}
+   </if>
+
+</select>
+
+<update id="updateCondition"
+parameterType="CompanyDto">
+update company set c_condition=${c_condition} where c_pk_cnum=#{c_pk_cnum}
+</update>
+
+<delete id="deleteCompany"
+parameterType="String">
+delete from company where c_pk_cnum=#{cnum}
+</delete>
+
+<update id="solMemChange"
+parameterType="MemberDto">
+update member set m_category=#{m_category} where m_pk_id=#{m_pk_id}
+</update>
+
+<select id="cnumDeduplication"
+parameterType="String"
+resultType="int">
+select count(*) from company where c_pk_cnum = #{cnum}
+</select>
+
+<select id="getReviewList"
+parameterType="String"
+resultType="ReviewDto">
+select * from review where rv_fk_cnum = #{cnum}
+</select>
+
+<update id="reviewAnswer"
+parameterType="ReviewDto">
+update review set rv_answer=#{rv_answer}, rv_check=1, rv_updatedate=#{rv_updatedate} where rv_pk_num=#{rv_pk_num}
+</update>
+
+<delete id="reviewDelete"
+parameterType="String">
+delete from review where rv_fk_cnum=#{cnum}
+</delete>
+
+<delete id="loptionDelete"
+parameterType="String">
+delete from loption where l_fk_cnum = #{cnum}
+</delete>
+
+<delete id="aoptionDelete"
+parameterType="String">
+delete from aoption where a_fk_cnum = #{cnum}
+</delete>
+
+<update id="loptionUpdate"
+parameterType="LoptionDto">
+update loption set 
+L_Cityview=#{l_cityview},L_Seeview=#{l_seeview},L_Skyview=#{l_skyview},L_Outdoor=#{l_outdoor},
+L_Petok=#{l_petok},L_Bbq=#{l_bbq},L_Cooking=#{l_cooking},L_Pool=#{l_pool},L_Spa=#{l_spa}, 
+L_Wallpool=#{l_wallpool},L_Garaoke=#{l_garaoke} where L_Fk_cnum=#{l_fk_cnum}
+</update>
+
+
+
+<update id="aoptionUpdate"
+parameterType="AoptionDto">
+update aoption set 
+a_waterpark=#{a_waterpark},a_spa=#{a_spa},a_surfing=#{a_surfing},a_snowcooling=#{a_snowcooling},
+a_rafting=#{a_rafting},a_aquarium=#{a_aquarium},a_flowers=#{a_flowers},a_zoo=#{a_zoo},
+a_shooting=#{a_shooting},a_horse=#{a_horse},a_paragliding=#{a_paragliding},a_zipline=#{a_zipline},
+a_bike=#{a_bike},a_cart=#{a_cart},a_atv=#{a_atv},a_tourpass=#{a_tourpass},a_yort=#{a_yort},
+a_shipfishing=#{a_shipfishing},a_cablecar=#{a_cablecar},a_showpainting=#{a_showpainting},
+a_fishinglounge=#{a_fishinglounge},a_show=#{a_show} where A_fk_cnum=#{a_fk_cnum}
+</update>
+
+<select id="loptionSelect"
+parameterType="String"
+resultType="LoptionDto">
+select * from loption where L_Fk_cnum=#{cnum}
+</select>
+
+<select id="aoptionSelect"
+parameterType="String"
+resultType="AoptionDto">
+select * from aoption where A_fk_cnum = #{cnum}
+</select>
+
+<update id="companyOff"
+parameterType="String">
+update company set c_check = 0 where c_fk_id = #{id}
+</update>
+
+<delete id="reviewMemberDelete"
+parameterType="String">
+delete from review where rv_fk_id=#{id}
+</delete>
+
+</mapper>

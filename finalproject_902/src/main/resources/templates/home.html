@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http:www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>page - home</title>
+<link rel="stylesheet" type="text/css" href="css/home.css">
+<script src="js/jquery-3.6.0.min.js"></script>
+<style type="text/css">
+a{
+   text-decoration: none;
+}
+
+a:visited{
+   color: black;
+   
+}
+#kakao-talk-channel-chat-button{
+    position: fixed;
+    margin: 60px 0px 1300px 1750px;
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script th:inline="javascript"> 
+window.kakaoAsyncInit = function() {
+    Kakao.Channel.createChatButton({
+      container: '#kakao-talk-channel-chat-button',
+    });
+  };
+
+  (function(d, s, id) {
+	    var js, fjs = d.getElementsByTagName(s)[0];
+	    if (d.getElementById(id)) return;
+	    js = d.createElement(s); js.id = id;
+	    js.src = 'https://developers.kakao.com/sdk/js/kakao.channel.min.js';
+	    fjs.parentNode.insertBefore(js, fjs);
+	  })(document, 'script', 'kakao-js-sdk');
+  
+var mdto;
+$(function () {
+   var msg = [[${msg}]];
+   
+   if(msg != null){
+      alert(msg);
+   }
+   
+   
+   $(".M4"). hide();
+      
+   mdto = [[${session.user}]];
+   
+   if(mdto != null){
+      $("#inLogin").show();
+      $("#outLogin").hide();
+      $(".M2").css("display","block");
+	  $(".M3").css("display","block");
+	  $(".M1").css("display","none");	
+   }else{
+      $("#inLogin").hide();
+      $("#outLogin").show();
+      
+   }
+   
+   if(mdto.m_category == "사업자"){
+      $(".M4"). show();
+   }
+   
+   
+      
+});
+
+function goCompanyFrm(){
+   if(mdto == null){
+      var cc = confirm("로그인을 해주세요. 로그인하러 가시겠습니까?");
+      if(cc){
+         location.href="login";
+      }else{
+         location.href="/";
+      }
+   }else{
+      location.href="companyFrm";
+   }
+   
+}
+function joincheck(){  // 빈칸 체크
+   
+   if(mdto == null){
+      alert("로그인 후 이용해주세요.");
+      return false;
+   }
+   
+   $("#pps").val($('input[name=tr_relationship]:checked').val());
+   
+   
+   
+   
+   
+   //form 태그의 내용 전부 가져오기
+   var frm = document.cjoinFrm;
+   
+   var length = frm.length - 1;//submit 버튼 제외
+   console.log(length);
+   
+   for(var i = 0; i < length; i++){
+      if(frm[i].value == "" || frm[i].value == null){
+         alert(frm[i].title + "을(를) 채워주세요");
+         frm[i].focus();
+         return false;
+      }
+   }
+   return true;//모든 칸이 다 채워졌고, 중복 체크도 한 상태
+}
+</script>
+</head>
+<body>
+<div class="main_home">
+<header>
+        <div class="Header">
+            <div class="Member">
+                <span class="M3"><a th:href="@{Question_List}" style="text-decoration: none; ">고객센터</a></span>
+                <span class="M2" id="inLogin"><a th:href="@{logout}" style="text-decoration: none; ">로그아웃</a></span>
+                <span class="M1" id="outLogin"><a th:href="@{login}" style="text-decoration: none; ">로그인</a></span>
+                <span class="M1" id="outLogin"><a th:href="@{joinFrm}" style="text-decoration: none; ">회원가입</a></span>
+                <span class="M2" id="inLogin"><a th:href="@{mypage}" style="text-decoration: none; ">마이페이지</a></span>
+                <span class="M4" id="inLogin"><a th:href="@{company}" style="text-decoration: none; ">업체페이지</a></span>
+            </div>
+            <div class="Menu">
+                <span><a href="Lodgment_List?cate='숙박'" style="text-decoration: none; ">숙박</a></span>
+                <span><a href="Lodgment_List?cate='레저'" style="text-decoration: none; ">레져</a></span>
+                <span><a href="Lodgment_List?cate='식당'" style="text-decoration: none; ">식당</a></span>
+                <span><a th:href="@{JejuEvent_List}" style="text-decoration: none; ">여행정보</a></span>
+                <span><a th:href="@{Mypage_NowTrip}" style="text-decoration: none; ">나의여행</a></span>
+            </div>
+        </div>
+</header>
+            <div class="Title1"><a th:href="@{/}" style="color: orange;">쩨주옵서예</a></div>
+            <div class="Title2">HELLOW! WELCOME TO JEJU!</div>
+<div class="container">
+      <div class="main_contents">
+      <div
+           id="kakao-talk-channel-chat-button"
+           data-channel-public-id="_QaXcb"
+           data-title="consult"
+           data-size="large"
+           data-color="yellow"
+           data-shape="pc"
+           data-support-multiple-densities="true">   
+        </div>   
+         <div class="main_contents_img">
+        <div class="weatherinfo"> 
+            <h2 class ="ctitle">지금 제주 날씨는?</h2>
+            <div class="cDate"></div>
+            <div class="ctemp">현재 : </div>
+            <div class="chightemp">최고 : </div>
+            <div class="clowtemp">최저 : </div>
+            <div class="cicon"></div>
+        </div>       
+         </div>
+         <div class="Schedule" style="z-index: 15;">
+                <div class="Schedule1">
+                    <div class="Schedule_date"></div>
+                    
+                    
+                    
+               <div class = "calendar_container" style="margin-left: 200px; z-index: 10;"> 
+           
+                    <button class = "left_button"> &lt; </button>
+                    
+                    <table class = "calendar">
+                       <tr>
+                        <th class = "title" id="get_date">2월</th>
+                        </tr>
+                        <tbody>
+                            <tr class = "week">
+                                <td class = "day">일</td>
+                                <td class = "day">월</td>
+                                <td class = "day">화</td>
+                                <td class = "day">수</td>
+                                <td class = "day">목</td>
+                                <td class = "day">금</td>
+                                <td class = "day">토</td>
+                            </tr>
+                            <tr>    <!-- 달력 첫 번째 줄-->
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                            </tr>
+                            <tr>    <!-- 달력 두 번째 줄-->
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                            </tr>
+                            <tr>    <!-- 달력 세 번째 줄-->
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                            </tr>
+                            <tr>    <!-- 달력 네 번째 줄-->
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                            </tr>
+                            <tr>    <!-- 달력 다섯 번째 줄-->
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                            </tr>
+                            <tr>    <!-- 달력 여섯 번째 줄-->
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                                <td class = "calendar_days" roll = "button"> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+            
+                  
+                    <button class = "right_button"> > </button>
+                    
+                 
+                    
+                    
+                </div>
+                
+                    
+                    <form action="traInsert" method="post" name="cjoinFrm" onsubmit="return joincheck()" style="text-align: center;">
+                    
+                       <input class="Schedule_name" placeholder="여행시작일" id="trin2" type="text" title="여행시작일" name="tr_in">
+                       
+                       <input class="Schedule_name" placeholder="여행종료일" id="trout2" type="text" title="여행종료일" name="tr_out">
+                       
+                       <input class="Schedule_name" maxlength="10" name="tr_title" title="여행 제목" placeholder="여행 제목">
+                      
+                       <div class="Schedule_people">
+                           <label>
+                               <input type="radio" class="btn" name="tr_relationship" value="혼자">
+                               <div class="s1"><img class="img" src="/image/혼자.png"></div>
+                           </label>
+                           <label>
+                               <input type="radio" class="btn" name="tr_relationship" value="커플">
+                               <div class="s1"><img class="img" src="/image/커플.png"></div>
+                           </label>
+                           <label>
+                               <input type="radio" class="btn" name="tr_relationship" value="가족">
+                               <div class="s1"><img class="img" src="/image/가족.png"></div>
+                           </label>
+                           <label>
+                               <input type="radio" class="btn" name="tr_relationship" value="단체">
+                               <div class="s1"><img class="img" src="/image/단체.png"></div>
+                           </label>
+                           <input title="인원" id="pps" type="hidden">
+                       </div>
+                    <button type="submit" class="Schedule_go">여행일정짜러가기</button>
+                    </form>
+                </div>
+            </div>
+      </div>
+   </div>
+
+
+   
+   		<div class="md_product">
+			<p>MD 추천 상품</p>
+			<div class="md_product1">
+				<div class="md_ad">광고</div>
+				<!--
+				<div class="md_company">
+					<div class="md_company1">
+					--> 
+					<th:block th:each="mdl : ${mdl}">
+						<div class="md_title1">
+							<div  th:text="${mdl.c_name}"></div>
+							<div th:text="${mdl.c_addr}"></div>
+							<div th:text="${mdl.c_type}"></div>
+						</div>
+						<div class="md_img1">
+							<img th:src="@{/upload/} + ${mdl.c_img}" style="width: 400px; height: 290px;">
+						</div>
+					</th:block>
+					<!--
+					<div class="md_company2">
+						-->
+					<th:block th:each="mda : ${mda}">	
+						<div class="md_img2">
+							<img th:src="@{/upload/} + ${mda.c_img}" style="width: 400px; height: 290px;">
+						</div>
+						<div class="md_title2">
+							<div th:text="${mda.c_name}"></div>
+							<div th:text="${mda.c_addr}"></div>
+							<div th:text="${mda.c_type}"></div>
+						</div>
+					</th:block>			
+			</div>
+		</div>
+
+   
+	<div class="best_product">
+			<p>BEST 상품</p>
+			<div class="room">
+				<div class="row1">
+					<div class="col-md-3 col-sm-6">
+						<div class="product-grid2">
+							<div class="product-image2">
+								<a href="#"> 
+									<img class="pic-1" src="https://via.placeholder.com/280x300/6495ED/000000"> 
+									<img class="pic-2" src="https://via.placeholder.com/280x300/FFB6C1/000000">
+								</a>
+								<ul class="social">
+									<li><a href="#" data-tip="Quick View"><i class="fa fa-eye"></i></a></li>
+									<li><a href="#" data-tip="Add to Wishlist"><i class="fa fa-shopping-bag"></i></a></li>
+									<li><a href="#" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a></li>
+								</ul>
+								<a class="add-to-cart" href="">Add to cart</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<th:block th:each="cdto : ${cdto}">
+				<div class="row2" style="height: 300px;">				
+					<div class="col-md-3 col-sm-6">
+						<div class="product-grid2">
+							<div class="product-image2">
+								<a href="#"> 
+									<img class="pic-1" th:src="@{/upload/} + ${cdto.c_img}" style="height: 300px;">
+								</a>
+								<ul class="social">
+									<li><a href="#" data-tip="Quick View"><i class="fa fa-eye"></i></a></li>
+									<li><a href="#" data-tip="Add to Wishlist"><i class="fa fa-shopping-bag"></i></a></li>
+									<li><a href="#" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a></li>
+								</ul>
+								<a class="add-to-cart" href="" th:text="${cdto.c_name}"></a>
+							</div>
+						</div>
+					</div>
+				
+				</div>
+				</th:block>	
+			</div>	
+
+
+        	<!--  레져 BEST 상품 -->
+			<div class="active">
+				<div class="row3">
+					<div class="col-md-3 col-sm-6">
+						<div class="product-grid2">
+							<div class="product-image2">
+								<a href="#"> 
+									<img class="pic-1" src="https://via.placeholder.com/280x300/6495ED/000000"> 
+									<img class="pic-2" src="https://via.placeholder.com/280x300/FFB6C1/000000">
+								</a>
+								<ul class="social">
+									<li><a href="#" data-tip="Quick View"><i class="fa fa-eye"></i></a></li>
+									<li><a href="#" data-tip="Add to Wishlist"><i class="fa fa-shopping-bag"></i></a></li>
+									<li><a href="#" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<th:block th:each="adto : ${adto}">
+				<div class="row4" style="height: 300px;">
+					<div class="col-md-3 col-sm-6">
+						<div class="product-grid2">
+							<div class="product-image2">
+								<a href="#"> 
+									<img class="pic-1" th:src="@{/upload/} + ${adto.c_img}" style="height: 300px;">
+								</a>
+								<ul class="social">
+									<li><a href="#" data-tip="Quick View"><i class="fa fa-eye"></i></a></li>
+									<li><a href="#" data-tip="Add to Wishlist"><i class="fa fa-shopping-bag"></i></a></li>
+									<li><a href="#" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a></li>
+								</ul>
+								<a class="add-to-cart" href="" th:text="${adto.c_name}"></a>
+							</div>
+						</div>
+					</div>
+				</div>
+				</th:block>
+			</div>
+			
+			
+		</div>
+
+
+
+      <div class="event">
+			<p>제주 행사 및 인기 관광지</p>
+			<div class="event_1">
+				<div style="float: right;">
+					<div class="event_slider">
+						<th:block th:each="edto : ${edto}">
+							<div><img class="eslide" th:src="@{/upload/} + ${edto.e_img}" style="width: 100%; height: 620px;"></div>
+							</th:block>
+					</div>
+				</div>
+			<th:block th:each="big : ${bigsdto}">
+				<div class="main_event" style="position: relative;">
+					<div class="main_event_baby" style="position: absolute;">
+							<img th:src="@{/upload/} + ${big.s_img}" style="height: 300px; width: 800px;">
+								<div th:text="${big.s_tittle}"></div>
+								<div th:text="${big.s_addr}"></div>
+					</div>
+				</div>
+			</th:block>		
+				<div class="best_event">
+					<th:block th:each="sdto : ${sdto}">
+						<div class="best_event1" style="position: relative;">
+							<div class="main_event_baby" style="position: absolute;">
+									<img th:src="@{/upload/} + ${sdto.s_img}" style="width: 390px; height: 300px;">
+										<div th:text="${sdto.s_tittle}"></div>
+										<div th:text="${sdto.s_addr}"></div>
+							</div>
+						</div>
+					</th:block>		
+				</div>	
+			</div>
+		</div>	
+
+		
+		 <div class="blog">
+         <p>후기글</p>
+         <div class="blog_1">
+            <div class="main_blog">
+               <img src="" style="width: 110px; height: 110px;" alt="제일 큰 후기글">
+            </div>
+            <div class="mini_blog_1">
+               <div class="mini_blog1">
+                  <img src="" style="width: 110px; height: 110px;" alt="미니1">
+               </div>
+               <div class="mini_blog1">
+                  <img src="" style="width: 110px; height: 110px;" alt="미니2">
+               </div>
+               <div class="mini_blog1">
+                  <img src="" style="width: 110px; height: 110px;" alt="미니3">
+               </div>
+               <div class="mini_blog1">
+                  <img src="" style="width: 110px; height: 110px;" alt="미니4">
+               </div>
+            </div>
+            <div class="mini_blog_2">
+               <div class="mini_blog2">
+                  <img src=""  style="width: 110px; height: 110px;" alt="미니5">
+               </div>
+               <div class="mini_blog2">
+                  <img src=""  style="width: 110px; height: 110px;" alt="미니6">
+               </div>
+               <div class="mini_blog2">
+                  <img src=""  style="width: 110px; height: 110px;" alt="미니7">
+               </div>
+               <div class="mini_blog2">
+                  <img src=""  style="width: 110px; height: 110px;" alt="미니8">
+               </div>
+            </div>
+         </div>
+      </div>
+		
+
+
+      <div class="function">
+         <div class="main_function">
+            <p>사이트만의 주요 기능</p>
+            <div class="function1">
+               <img src="/image/고객센터.png" style="width: 400px; height: 280px;" alt="고객센터운영">
+            </div>
+            <div class="function2">
+               <img src="/image/챗봇.png"  style="width: 400px; height: 280px;" alt="1:1 챗봇운영">
+            </div>
+            <div class="function3">
+               <img class="img1" src="/image/지도경로.png"  style="width: 400px; height: 280px;" alt="지도경로지원">
+            </div>
+
+
+            <!--
+            <div class="function1">
+               <div class="function1_1">
+                  <div class="function_text1">
+                     <p class="text1">고객센터 운영</p>
+                     <p class="text2">운영시간   09:00~18:00<br>
+                        점심시간   12:00~13:00</p>
+                     <p class="text3">(점심시간에는 상담업무가 
+                        제공되지 않습니다.)</p>
+                     <div class="button1">문의  |  032-432-2190</div>
+                  </div>
+                  <div class="function_img1"></div>
+               </div>
+            </div>
+
+            <div class="function2">
+               <div class="function1_1">
+                  <div class="function_text1">
+                     <p class="text1">1:1 챗봇운영</p>
+                     <p class="text2">운영시간   09:00~18:00<br>
+                        점심시간   12:00~13:00</p>
+                     <p class="text3">(점심시간에는 상담업무가 
+                        제공되지 않습니다.)</p>
+                     <div class="button1">문의  |  j e j u t r i p</div>
+                  </div>
+                  <div class="function_img1"></div>
+               </div>
+            </div>
+
+            <div class="function3">
+               <div class="function1_1">
+                  <div class="function_text1">
+                     <p class="text1">지도로 일정 세우기</p>
+                     <p class="text2">담아놓은 지도 위치에 따라<br>
+                        지도경로 서비스 지원
+                     <div class="button1">문의  |  032-432-2190</div>
+                  </div>
+                  <div class="function_img1"></div>
+               </div>
+            </div>
+           -->
+         </div>
+      </div>
+      <div class="last">
+			<div class="last1">
+				<div class="jeju_noties">
+					<div class="jeju_noties_up">
+						<p>공지사항</p>
+						<a href="Notice_List">+더보기</a>
+					</div>
+					<table class="jeju_noties_td">
+						<tr>
+							<th style="width: 70%;">제목</th>
+							<th style="width: 30%;">작성일</th>
+						</tr>
+						<tbody>
+						<tr th:each="ndto : ${ndto}">
+							<td><a th:href="@{/Notice/(n_pk_num=${ndto.n_pk_num})}" style="text-decoration: none; color: black;">
+								<span th:text="${ndto.n_title}"></span></a></td>
+							<td th:text="${#dates.format(ndto.n_date, 'yyyy-MM-dd')}"></td>
+						</tr>
+						</tbody>
+					</table>
+					
+				</div>
+          <div class="jeju_qa">
+					<div class="jeju_qa_up">
+						<p>Q&A</p>
+						<a href="QA_List">+더보기</a>
+					</div>
+					<table class="jeju_qa_td" >
+						<tr>
+							<th style="width: 70%;">제목</th>
+							<th style="width: 30%;">작성일</th>
+						</tr>
+						<tbody>
+						<tr th:each="pldto : ${pldto}">
+							<td th:text="${pldto.co_title}"></td>
+							<td th:text="${#dates.format(pldto.co_date, 'yyyy-MM-dd')}"></td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
+			<div class="board">
+					<div class="board1">
+						<div class="notice">
+							<a href="Notice_List">
+								<img src="/image/" style="width: 110px; height: 110px;" alt="공지사항">
+							</a>
+						</div>
+						<div class="many_qa">
+							<a href="Question_List">
+								<img src="" style="width: 110px; height: 110px;" alt="자주하는질문">
+							</a>
+						</div>
+						<div class="qa">
+							<a href="QA_List">
+								<img src="" style="width: 110px; height: 110px;" alt="Q&A">
+							</a>
+						</div>
+					</div>
+					<div class="board2">
+						<div class="basket">
+							<img src="" style="width: 110px; height: 110px;" alt="장바구니">
+						</div>
+						<div class="my_qa">
+							<a href="Myqa_List">
+								<img src="" style="width: 110px; height: 110px;" alt="내가한질문답변">
+							</a>
+						</div>
+						<div class="refund">
+							<img src="" style="width: 110px; height: 110px;" alt="환불규정">
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+
+      <footer>
+         <div class="Footer">
+            <div class="Foter1">
+               <div class="Footer_text1">제주옵서예</div>
+               <div class="Footer_text2">WELECOME TO JEJU</div>
+            </div>
+            <div class="Footer_text3">본격 제주여행 사이트   |   TEL. 032)432-7373 / E-mail. Hellgate@naver.com<br>
+               COPYRIGHT ⓒ 2022 JEJU JJEJUTRP. ALL HAPPY TRIP.</div>
+               <div class="Footer_menu"> 
+                  <div class="Solo">개인정보 처리 방침</div>
+                  <div class="Terms">| 이용약관</div>
+                  <div class="Store" onclick="goCompanyFrm()">| 업체신청</div>
+                  <div class="Admin">| 관리자</div>
+               </div>
+         </div>
+   
+      </footer>
+
+   </div>
+</body>
+
+<script th:inline="javascript">
+
+
+
+const calendarDays = document.querySelectorAll(".calendar_days"),
+calendarTitle = document.querySelector(".title"),
+leftButton = document.querySelector(".left_button"),
+rightButton = document.querySelector(".right_button"),
+calendar = document.querySelector(".calendar");
+// dateUpdate = document.querySelector(".date_update");
+
+
+class Calendar {
+   constructor(year, month) {
+       this.today = new Date(year, month);
+       this.year = this.today.getFullYear(),
+           this.month = this.today.getMonth(),
+           this.date = this.today.getDate(),
+           this.day = this.today.getDay()
+   }
+   
+   
+   getFirstDay() {
+       const firstDate = new Date(this.year, this.month);
+       return firstDate.getDay();
+   }
+   
+   getLastDay() {
+       let wholeDays = [];
+       if ((this.year % 4 === 0 && this.year % 100 !== 0) || (this.year % 400 === 0)) {
+           wholeDays = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+       } else {
+           wholeDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+       }
+       return wholeDays[this.month];
+   }
+   
+   fillCalendar() {
+       this.initCalendar();
+       calendarTitle.innerHTML = `${this.year}년 ${this.month + 1}월`
+       
+       //var rla = `${this.year}년 ${this.month + 1}월`
+       const firstDay = this.getFirstDay();
+       const lastDay = this.getLastDay();
+       let day = 1;
+       
+       for (let i = firstDay; i < calendarDays.length; i++) {
+           if (day <= lastDay) {
+               calendarDays[i].innerHTML = `<button class = "day_button">${day}</button>`;
+               day++;
+           }
+   
+       }
+   }
+   
+   initCalendar() {
+       calendarDays.forEach((e) => {
+           e.innerHTML = "";
+       });
+   }
+   
+   
+   drawCalendar() {
+       let change = 0;
+       const today = new Date();
+       let calendarInstance = new Calendar(today.getFullYear(), today.getMonth() + change);
+   
+       calendarInstance.fillCalendar();
+   
+       leftButton.addEventListener("click", (e) => {
+           e.stopPropagation();
+           change--;
+           calendarInstance = new Calendar(today.getFullYear(), today.getMonth() + change);
+           calendarInstance.fillCalendar();
+           this.updateCalendarStyle();
+       });
+       rightButton.addEventListener("click", (e) => {
+           e.stopPropagation();
+           change++;
+           calendarInstance = new Calendar(today.getFullYear(), today.getMonth() + change);
+           calendarInstance.fillCalendar();
+           this.updateCalendarStyle();
+       });
+   }
+   
+   
+   updateCalendarStyle() {
+      
+       const dayButtons = document.querySelectorAll(".day_button");
+       let firstSelectedDay = 0;
+       let lastSelectedDay = 0;
+       let clickCount = 0;
+   
+       // 달력 스타일 초기화
+       dayButtons.forEach((element) => {
+           element.classList.remove("day_selected");
+           calendarDays.forEach((e) => e.classList.remove("gray"));
+       })
+   
+   
+       // 달력 날짜들에 클릭 이벤트 추가
+       dayButtons.forEach((element) => {
+           element.addEventListener("click", (event) => {
+               event.target.classList.toggle("day_selected");
+   
+               clickCount++;
+   
+               // 선택 일자 타입 변환
+               if (firstSelectedDay === 0) {
+                   firstSelectedDay = Number(event.target.innerText);
+               } else {
+                   lastSelectedDay = Number(event.target.innerText);
+               }
+   
+               // 클릭 횟수 2회 넘어가면 달력 스타일 초기화
+               if (clickCount > 2) {
+                   dayButtons.forEach((e) => {
+                       e.parentNode.classList.remove("gray");
+                       e.classList.remove("day_selected");
+                       clickCount = 0;
+                       firstSelectedDay = 0;
+                       lastSelectedDay = 0;
+                   });
+               }
+   
+               // 선택 일자 사이에 회색 배경 적용
+               if (firstSelectedDay !== 0 && lastSelectedDay !== 0) {
+                   dayButtons.forEach((e) => {
+                       const day = Number(e.innerText);
+                       if (day >= firstSelectedDay && day <= lastSelectedDay) {
+                           e.parentNode.classList.toggle("gray");
+                           
+                       }
+                   });
+               }
+               
+                // 선택 일자 를 콘솔에 표시
+              
+               if (firstSelectedDay !== 0 && lastSelectedDay !== 0) {
+                   dayButtons.forEach((e) => {
+                       const day = Number(e.innerText);
+                       if (day >= firstSelectedDay && day <= lastSelectedDay) {
+                          // console.log(day);
+                     
+                          // console.log ($(".title").html() + day);
+                           
+                           // console.log(document.querySelector(".title"));
+                       }
+                   });
+                   
+                   
+               }
+             //  console.log($(".title").html() + firstSelectedDay);
+             //  console.log($(".title").html() + lastSelectedDay);
+               
+              var firstd = $(".title").html() + firstSelectedDay;
+              var lastd = $(".title").html() + lastSelectedDay;
+               
+              if(firstSelectedDay != 0 && lastSelectedDay!= 0){
+               $("#trin2").val(firstd+"일");
+               $("#trout2").val(lastd+"일");
+              }else{
+               $("#trin2").val("");
+               $("#trout2").val("");
+              }
+              
+               
+               
+               
+               console.log($("#trin2").val());
+               console.log($("#trout2").val());
+               
+               
+               // 선택 일자 중 왼쪽값이 오른쪽 값보다 크면 회색 배경 삭제 
+               if (firstSelectedDay > lastSelectedDay) {
+                   dayButtons.forEach((e) => {
+                       e.parentNode.classList.remove("gray");
+                   });
+               }
+           });
+       });
+   
+   
+       // 달력 날짜들에 호버링 이벤트 추가
+       dayButtons.forEach((element) => {
+           element.addEventListener("mouseenter", (event) => {
+               event.target.classList.add("day_hover")
+           });
+       });
+   
+       dayButtons.forEach((element) => {
+           element.addEventListener("mouseleave", (event) => {
+               event.target.classList.remove("day_hover")
+           });
+       });
+   }
+   
+   
+   
+   handleEvents() {
+       this.drawCalendar();
+       this.updateCalendarStyle();
+   }
+   
+}
+
+
+const cal = new Calendar();
+cal.handleEvents();
+
+$.getJSON
+('http://api.openweathermap.org/data/2.5/forecast?id=1846266&APPID=8e232026ca24c5a03cc027b3bd1011cf&units=metric', function(data){
+   //alert(data.list[0].main.temp_min);
+   var $minTemp = data.list[0].main.temp_min + '°';
+   var $maxTemp = data.list[0].main.temp_max + '°';
+   var $cTemp = data.list[0].main.temp + '°';
+   var $wIcon = data.list[0].weather[0].icon;
+   var $now = new Date($.now());
+   
+   if($now.getMinutes() < 10){
+      var $cDate =$now.getFullYear() + '년' + $now.getMonth() + '월' +
+            $now.getDate() + '일 ' + $now.getHours() + ':' +'0'+
+            $now.getMinutes();
+   }
+   if($now.getMinutes() >= 10){
+      var $cDate =$now.getFullYear() + '년' + $now.getMonth() + '월' +
+      $now.getDate() + '일 ' + $now.getHours() + ':' +
+      $now.getMinutes();
+}
+   
+   $('.cDate').append($cDate);
+   $('.clowtemp').append($minTemp);
+   $('.ctemp').append($cTemp);
+   $('.chightemp').append($maxTemp);
+   $('.h2').prepend($cDate);
+   $('.cicon').append('<img src="http://openweathermap.org/img/w/' + $wIcon + '.png" />')
+});
+</script>
+</html>

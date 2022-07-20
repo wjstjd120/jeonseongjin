@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.openai.jeju.dao.AdminDao">
+
+<select id="selectMlist" 
+      parameterType="ListDto"
+      resultType="MemberDto">
+      SELECT * FROM member
+      WHERE (m_birth BETWEEN DATE('${sage}') AND DATE('${eage}'))
+      <if test="colname != null and colname != ''">
+         AND ${colname} LIKE concat('%',#{keyword},'%')
+      </if>
+      <if test="selgender != null and selgender != ''">
+         AND m_gender = #{selgender}
+      </if>
+      <trim prefix="AND (" suffix=")" prefixOverrides="OR">
+         <if test="pr != null and pr != ''">
+         m_category ='개인'
+         </if>
+         <if test="co != null and co != ''">
+         OR m_category ='업체'
+         </if>
+         <if test="bl != null and bl != ''">
+         OR m_category ='블랙리스트'
+         </if>
+      </trim>
+      LIMIT #{pageNum}, #{listCnt}
+   </select>
+   
+   <select id="Mcntselect" 
+      parameterType="ListDto"
+      resultType="int">
+      SELECT count(*) FROM member
+      WHERE (m_birth BETWEEN DATE('${sage}') AND DATE('${eage}'))
+      <if test="colname != null and colname != ''">
+         AND ${colname} LIKE concat('%',#{keyword},'%')
+      </if>
+      <if test="selgender != null and selgender != ''">
+         AND m_gender = #{selgender}
+      </if>
+      <trim prefix="AND (" suffix=")" prefixOverrides="OR">
+         <if test="pr != null and pr != ''">
+         m_category ='개인'
+         </if>
+         <if test="co != null and co != ''">
+         OR m_category ='업체'
+         </if>
+         <if test="bl != null and bl != ''">
+         OR m_category ='블랙리스트'
+         </if>
+      </trim>
+   </select>
+   
+   <select id="allMselect" resultType="MemberDto">
+      SELECT * FROM member
+   </select>
+   
+   <select id="MemberIdSelect" parameterType="String" resultType="MemberDto">
+      SELECT * FROM member WHERE m_pk_id=#{id}
+   </select>
+   
+   <update id="Admin_Member_Update" parameterType="MemberDto">
+      UPDATE member set m_name = #{m_name}, m_addr = #{m_addr}, m_phone = #{m_phone}, m_birth = #{m_birth} 
+      WHERE m_pk_id = #{m_pk_id}
+   </update>
+   
+   <delete id="Admin_Member_Delete" parameterType="String">
+      DELETE FROM member WHERE m_pk_id=#{id}
+   </delete>
+   
+   <delete id="Admin_Company_Mid_Delete" parameterType="String">
+      DELETE FROM company WHERE c_fk_id=#{id}
+   </delete>
+   
+   <delete id="Admin_Complaint_Mid_Delete" parameterType="String">
+      DELETE FROM complaint WHERE co_fk_id=#{id}
+   </delete>
+   
+   <update id="Bmember_Change_Category" parameterType="String">
+      UPDATE member set m_category = '개인'
+      WHERE m_pk_id = #{id}
+   </update>
+   
+   <update id="Member_Change_Category" parameterType="String">
+      UPDATE member set m_category = '블랙리스트'
+      WHERE m_pk_id = #{id}
+   </update>
+   
+   
+   <select id="selectClist" 
+      parameterType="ListDto"
+      resultType="CompanyDto">
+      SELECT * FROM company WHERE c_phone LIKE '%0%'
+      <if test="colname != null and colname != ''">
+         AND ${colname} LIKE concat('%',#{keyword},'%')
+      </if>
+      <trim prefix="AND (" suffix=")" prefixOverrides="OR">
+         <if test="lod != null and lod != ''">
+            c_category ='숙박'
+         </if>
+         <if test="at != null and at != ''">
+            OR c_category ='레저'
+         </if>
+         <if test="fo != null and fo != ''">
+            OR c_category ='식당'
+         </if>
+      </trim>
+      <trim prefix="AND (" suffix=")" prefixOverrides="OR">   
+         <if test="conditionOn != null and conditionOn != ''">
+            c_condition =true
+         </if>
+         <if test="conditionOff != null and conditionOff != ''">
+            OR c_condition =false
+         </if>
+      </trim>
+      <trim prefix="AND (" suffix=")" prefixOverrides="OR">
+         <if test="checkOn != null and checkOn != ''">
+            c_check =true
+         </if>
+         <if test="checkOff != null and checkOff != ''">
+            OR c_check =false
+         </if>
+      </trim>
+   LIMIT #{pageNum}, #{listCnt}
+   </select>
+   
+   <select id="selectCntClist" 
+      parameterType="ListDto"
+      resultType="int">
+      SELECT count(*) FROM company WHERE c_phone LIKE '%0%'
+      <if test="colname != null and colname != ''">
+         AND ${colname} LIKE concat('%',#{keyword},'%')
+      </if>
+      <trim prefix="AND (" suffix=")" prefixOverrides="OR">
+         <if test="lod != null and lod != ''">
+            c_category ='숙박'
+         </if>
+         <if test="at != null and at != ''">
+            OR c_category ='레저'
+         </if>
+         <if test="fo != null and fo != ''">
+            OR c_category ='식당'
+         </if>
+      </trim>
+      <trim prefix="AND (" suffix=")" prefixOverrides="OR">   
+         <if test="conditionOn != null and conditionOn != ''">
+            c_condition =true
+         </if>
+         <if test="conditionOff != null and conditionOff != ''">
+            OR c_condition =false
+         </if>
+      </trim>
+      <trim prefix="AND (" suffix=")" prefixOverrides="OR">
+         <if test="checkOn != null and checkOn != ''">
+            c_check =true
+         </if>
+         <if test="checkOff != null and checkOff != ''">
+            OR c_check =false
+         </if>
+      </trim>
+   </select>
+   
+   <select id="CompanyCnumSelect" parameterType="String" resultType="CompanyDto">
+      SELECT * FROM company WHERE c_pk_cnum=#{cnum}
+   </select>
+   
+   <update id="Admin_Company_Update" parameterType="CompanyDto">
+      UPDATE company set c_name = #{c_name}, c_addr = #{c_addr}, c_phone = #{c_phone}, c_condition = #{c_condition}, c_check = #{c_check} 
+      WHERE c_pk_cnum = #{c_pk_cnum}
+   </update>
+   
+   <update id="Admin_Company_File_Update" parameterType="CompanyDto">
+      UPDATE company set c_img = #{c_img}
+      WHERE c_pk_cnum = #{c_pk_cnum}
+   </update>
+   
+   <delete id="Admin_Company_Delete" parameterType="String">
+      DELETE FROM company WHERE c_pk_cnum=#{cnum}
+   </delete>
+   
+   <select id="selectElist" 
+      parameterType="ListDto"
+      resultType="EventDto">
+      SELECT * FROM event WHERE e_title like '%${keyword}%'
+      <trim prefix="AND (" suffix=")" prefixOverrides="OR">   
+         <if test="e_on != null and e_on != ''">
+            e_eventing = '1'
+         </if>
+         <if test="e_off != null and e_off != ''">
+            OR e_eventing = '0'
+         </if>
+      </trim>
+      <trim prefix="AND (" suffix=")" prefixOverrides="AND">
+         <if test="sage != null and sage != ''">
+            e_date &gt; #{sage}
+         </if>
+         <if test="eage != null and eage != ''">
+            AND e_date &lt; #{eage}
+         </if>
+      </trim>
+      order by e_pk_enum desc LIMIT #{pageNum}, #{listCnt}
+   </select>
+   <select id="selectCntElist" 
+      parameterType="ListDto"
+      resultType="int">
+      SELECT count(*) FROM event WHERE e_title like '%${keyword}%'
+      <trim prefix="AND (" suffix=")" prefixOverrides="OR">   
+         <if test="e_on != null and e_on != ''">
+            e_eventing = '1'
+         </if>
+         <if test="e_off != null and e_off != ''">
+            OR e_eventing = '0'
+         </if>
+      </trim>
+      <trim prefix="AND (" suffix=")" prefixOverrides="AND">
+         <if test="sage != null and sage != ''">
+            e_date &gt; #{sage}
+         </if>
+         <if test="eage != null and eage != ''">
+            AND e_date &lt; #{eage}
+         </if>
+      </trim>
+   </select>
+   
+   <select id="EventEnumSelect" parameterType="String" resultType="EventDto">
+      SELECT * FROM event WHERE e_pk_enum=${e_num}
+   </select>
+   
+   <update id="Admin_Event_Update" parameterType="EventDto">
+      UPDATE event set e_title=#{e_title}, e_addr=#{e_addr}, e_eventing=#{e_eventing}, e_eday=#{e_eday}, e_info=#{e_info} 
+      WHERE e_pk_enum = #{e_pk_enum}
+   </update>
+   
+   <update id="Admin_Event_File_Update" parameterType="EventDto">
+      UPDATE event set e_img = #{e_img}
+      WHERE e_pk_enum = #{e_pk_enum}
+   </update>
+   
+   <delete id="Admin_Event_Delete" parameterType="String">
+      DELETE FROM event WHERE e_pk_enum=#{e_pk_enum}
+   </delete>
+   
+      <insert id="Admin_Event_Insert" 
+      parameterType="EventDto"
+      useGeneratedKeys="true" keyProperty="e_pk_enum">
+      <selectKey keyProperty="e_pk_enum" resultType="String"
+         order="AFTER">
+         SELECT LAST_INSERT_ID()
+      </selectKey>
+      INSERT INTO event
+      VALUES (NULL,now(),#{e_title},#{e_addr},#{e_eday},#{e_img},#{e_info},'0')
+   </insert>
+   
+   <select id="selectSlist" parameterType="ListDto" resultType="SpotDto">
+      SELECT * FROM spot WHERE s_tittle like '%${keyword}%' LIMIT #{pageNum}, #{listCnt}
+   </select>
+   <select id="selectCntSlist" parameterType="ListDto" resultType="int">
+      SELECT count(*) FROM spot WHERE s_tittle like '%${keyword}%'
+   </select>
+   
+   <select id="SpotSnumSelect" parameterType="String" resultType="SpotDto">
+      SELECT * FROM spot WHERE s_pk_num=${snum}
+   </select>
+   
+   <select id="selectSimglist" parameterType="String" resultType="SimgDto">
+      SELECT * FROM simg WHERE si_fk_num=${snum}
+   </select>
+   
+   <update id="Admin_Spot_File_Update" parameterType="SpotDto">
+      UPDATE spot set s_img = #{s_img}
+      WHERE s_pk_num = #{s_pk_num}
+   </update>
+   
+   <delete id="SimgDel" parameterType="String">
+      DELETE FROM simg WHERE si_fk_num = #{snum}
+   </delete>
+   
+   <insert id="insertSimg" parameterType="SimgDto">
+      INSERT INTO simg values(null, #{si_fk_num}, #{si_oriname}, #{si_sysname})
+   </insert>
+   
+   
+   <insert id="Admin_Spot_Insert" 
+      parameterType="SpotDto"
+      useGeneratedKeys="true" keyProperty="s_pk_num">
+      <selectKey keyProperty="s_pk_num" resultType="String"
+         order="AFTER">
+         SELECT LAST_INSERT_ID()
+      </selectKey>
+      INSERT INTO spot
+      VALUES (NULL,#{s_tittle},#{s_addr}, #{s_info}, #{s_img},
+         #{s_guide})
+   </insert>
+   
+   <update id="Admin_Spot_Update" parameterType="SpotDto">
+      UPDATE spot set s_tittle=#{s_tittle}, s_addr=#{s_addr}, s_info=#{s_info}, s_guide=#{s_guide}
+      WHERE s_pk_num = #{s_pk_num}
+   </update>
+   
+   <delete id="Admin_Spot_Delete" parameterType="String">
+      DELETE FROM spot WHERE s_pk_num=#{snum}
+   </delete>
+   
+   <delete id="Admin_Simg_Snum_Delete" parameterType="String">
+      DELETE FROM simg WHERE si_fk_num=#{snum}
+   </delete>
+   
+   <select id="selectNlist" 
+      parameterType="ListDto"
+      resultType="NoticeDto">
+      SELECT * FROM notice WHERE ${colname} like '%${keyword}%'
+      <trim prefix="AND (" suffix=")" prefixOverrides="AND">
+         <if test="sage != null and sage != ''">
+            n_date &gt; #{sage}
+         </if>
+         <if test="eage != null and eage != ''">
+            AND n_date &lt; #{eage}
+         </if>
+      </trim>
+      order by n_pk_num desc LIMIT #{pageNum}, #{listCnt}
+   </select>
+   <select id="selectCntNlist"
+      parameterType="ListDto"
+      resultType="int">
+      SELECT count(*) FROM notice WHERE ${colname} like '%${keyword}%'
+      <trim prefix="AND (" suffix=")" prefixOverrides="AND">
+         <if test="sage != null and sage != ''">
+            n_date &gt; #{sage}
+         </if>
+         <if test="eage != null and eage != ''">
+            AND n_date &lt; #{eage}
+         </if>
+      </trim>
+   </select>
+   
+   <select id="NoticeNnumSelect" parameterType="String" resultType="NoticeDto">
+      SELECT * FROM notice WHERE n_pk_num=${nnum}
+   </select>
+   
+   <update id="Admin_Notice_Update" parameterType="NoticeDto">
+      UPDATE notice set n_title=#{n_title}, n_contents=#{n_contents} 
+      WHERE n_pk_num = #{n_pk_num}
+   </update>
+   
+   <insert id="Admin_Notice_Insert" parameterType="NoticeDto">
+      INSERT INTO notice values(null, #{n_title}, #{n_contents}, default, now())
+   </insert>
+   
+   <delete id="Admin_Notice_Delete" parameterType="String">
+      DELETE FROM notice WHERE n_pk_num=#{nnum}
+   </delete>
+   
+   <select id="selectColist" 
+      parameterType="ListDto"
+      resultType="ComplaintDto">
+      SELECT * FROM complaint WHERE ${colname} like '%${keyword}%'
+      <trim prefix="AND (" suffix=")" prefixOverrides="OR">
+         <if test="pr != null and pr != ''">
+         co_check ='0'
+         </if>
+         <if test="co != null and co != ''">
+         OR co_check ='1'
+         </if>
+      </trim>
+      <trim prefix="AND (" suffix=")" prefixOverrides="AND">
+         <if test="sage != null and sage != ''">
+            n_date &gt; #{sage}
+         </if>
+         <if test="eage != null and eage != ''">
+            AND n_date &lt; #{eage}
+         </if>
+      </trim>
+      order by co_pk_conum desc LIMIT #{pageNum}, #{listCnt}
+   </select>
+   <select id="selectCntColist"
+      parameterType="ListDto"
+      resultType="int">
+      SELECT count(*) FROM complaint WHERE ${colname} like '%${keyword}%'
+      <trim prefix="AND (" suffix=")" prefixOverrides="OR">
+         <if test="pr != null and pr != ''">
+         co_check ='0'
+         </if>
+         <if test="co != null and co != ''">
+         OR co_check ='1'
+         </if>
+      </trim>
+      <trim prefix="AND (" suffix=")" prefixOverrides="AND">
+         <if test="sage != null and sage != ''">
+            n_date &gt; #{sage}
+         </if>
+         <if test="eage != null and eage != ''">
+            AND n_date &lt; #{eage}
+         </if>
+      </trim>
+   </select>
+   
+   <select id="ComplaintConumSelect" parameterType="String" resultType="ComplaintDto">
+      SELECT * FROM complaint WHERE co_pk_conum=${conum}
+   </select>
+   
+   <update id="Admin_Complaint_Update" parameterType="ComplaintDto">
+      UPDATE complaint set co_reply=#{co_reply}, co_check='1', co_re_date=now()
+      WHERE co_pk_conum = #{co_pk_conum}
+   </update>
+   
+   <delete id="Admin_Complaint_Delete" parameterType="String">
+      DELETE FROM complaint WHERE co_pk_conum=#{conum}
+   </delete>
+   
+   <select id="CompanyMidSelect" parameterType="String" resultType="CompanyDto">
+      SELECT * FROM company WHERE c_fk_id=#{id}
+   </select>
+</mapper>

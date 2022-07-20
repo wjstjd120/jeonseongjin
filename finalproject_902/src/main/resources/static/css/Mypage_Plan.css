@@ -1,0 +1,408 @@
+@charset "UTF-8";
+
+/*공통 레이아웃*/
+*{
+    padding: 0%;
+    margin: 0%;
+   /*
+    border: 1px solid;
+    */
+}
+
+/* header 레이아웃 */
+
+header{
+    text-align: center;
+    
+}
+
+.Header{
+    width: 100%;
+    height: 150px;
+/*    border: 1px solid;*/
+    overflow: hidden;
+}
+.Member{
+    height: 25px;
+    margin-top: 5px;
+}
+.Member>span{
+    float: right;
+    margin-right: 20px;
+    font-size: 13pt;
+}
+.Title{
+    height: 80px;
+    font-size: 40pt;
+    text-align: center;
+    width: 100%;
+}
+.Menu>span{
+    font-size: 20pt;
+    margin: 0 20px 0 20px;
+}
+
+.Pic_menu{
+    float: left;
+    /*width: 320px;*/
+    width: 16%;
+    height: 100%;
+/*    border: 1px solid;*/
+    box-sizing: border-box;
+    position: fixed;
+}
+
+/* 픽 메뉴의 내용*/
+/* 회원정보 div */
+.menu_div1{
+	width: 65%;
+	height: 300px;
+	float: right;
+	background-color: red;
+}
+
+.menu_title1{
+	width: 100%;
+	height: 50px;
+	margin-top: 50px;
+	text-align: left;
+	line-height: 50px;
+	background-color: lightyellow;
+}
+
+.menu_member{
+	width: 100%;
+	height: 40px;
+	text-align: left;
+	line-height: 40px;
+	float: left;
+	background-color: lightgreen;
+}
+
+.menu_div3{
+	width: 65%;
+	height: 400px;
+	float: right;
+	background-color: yellow;
+}
+
+.menu_title2{
+	width: 100%;
+	height: 50px;
+	text-align: left;
+	line-height: 50px;
+	background-color: lightyellow;
+}
+
+.menu_Travel{
+	width: 100%;
+	height: 40px;
+	text-align: left;
+	line-height: 40px;
+	float: left;
+	background-color: lightgreen;
+}
+
+.mypage_plan{
+	float: left;
+	width: 84%;
+	margin-left: 16%;
+	background-color: skyblue;
+	text-align: center;
+}
+
+.plan_div{
+	width: 1280px;
+	height: 783px;
+	background-color: yellow;
+	display: inline-block;
+}
+
+.plan_div1{
+	width: 1230px;
+	height: 750px;
+	background-color: lightgreen;
+	margin: 20px auto;
+}
+
+.plan_div1_1{
+	width: 1230px;
+	height: 180px;
+	background-color: lightyellow;
+}
+
+.top_text{
+	width: 450px;
+	height: 180px;
+	background-color: skyblue;
+	float: left;
+
+}
+
+.top_text1{
+	width: 450px;
+	height: 90px;
+	background-color: yellow;
+	float: left;
+}
+
+.top_text2{
+	width: 450px;
+	height: 90px;
+	background-color: green;
+	float: left;
+	line-height: 90px;
+}
+
+.top_btn_div{
+	width: 400px;
+	height: 180px;
+	background-color: skyblue;
+	float: right;
+}
+
+.btn_div1{
+	width: 400px;
+	height: 90px;
+	background-color: green;
+	float: left;
+}
+
+.btn_div2{
+	width: 200px;
+	height: 90px;
+	background-color: blue;
+	float: left;
+}
+
+.middle_div{
+	width: 1230px;
+	height: 570px;
+	background-color: red;
+	float: left;
+}
+
+.m_1{
+	width: 1200px;
+	height: 540px;
+	background-color: lightgreen;
+	margin: 15px 15px 15px 15px;
+}
+
+.m_1_list{
+	width: 1200px;
+	height: 500px;
+	background-color: lightyellow;
+	float: left;	
+}
+
+ul, li{
+	list-style: none;
+}
+
+.listplan_div{
+	width: 240px;
+	height: 250px;
+	float: left;
+	background-color: lightgreen;
+	cursor: pointer;
+}
+
+.lp_div1{
+	width: 220px;
+	height: 230px;
+	float: left;
+	background-color: skyblue;
+	margin: 10px 10px 10px 10px;
+}
+
+.lp_img{
+	width: 220px;
+	height: 180px;
+	float: left;
+	background-color: lightyellow;
+}
+
+.lp_title{
+	width: 220px;
+	height: 25px;
+	float: left;
+	background-color: yellow;
+	line-height: 25px;
+}
+
+.lp_price{
+	width: 220px;
+	height: 25px;
+	background-color: white;
+	float: left;
+	line-height: 25px;
+}
+
+.m_1_pdiv{
+	width: 1200px;
+	height: 40px;
+	background-color: skyblue;
+	float: left;
+	text-align: center;
+	line-height: 40px;
+}
+
+/* 팝업 css 구역 */
+
+.popup_mask { /* 팝업 배경 css */
+        position: fixed;
+        width: 100%;
+        height: 1000px;
+        top: 0px;
+        left: 0px;
+         display: none; 
+         background-color:#000;
+         opacity: 0.8;
+    }
+    
+.popupDiv {  /* 팝업창 css */
+    top : 0px;
+    position: absolute;
+    background: yellow;
+    width: 830px;
+    height: 870px;
+    display: none; 
+    border: 1px solid black;
+    overflow: scroll;
+    overflow-x: hidden; 
+    }
+    
+.popup{
+	width: 730px;
+	height: 770px;
+	margin: 50px 50px 50px 50px;
+	background-color: blue;
+}
+    
+.pop_div1{
+	width: 730px;
+	height: 270px;
+	background-color: lightgreen;
+	float: left;
+}
+
+ 
+.pop_div1_m_img{
+	width: 340px;
+	height: 270px;
+	background-color: skyblue;
+	line-height: 270px;
+	text-align: center;
+	float: left;
+}
+
+.pop_div1_text{
+	width: 385px;
+	height: 270px;
+	background-color: lightyellow;
+	float: left;
+}
+
+.pop_div1_text1{
+	width: 375px;
+	height: 70px;
+	background-color: skyblue;
+	margin: 0 0 0 10px;
+	float: left;
+	text-align: left;
+}
+
+.pop_div1_text2{
+	width: 375px;
+	height: 70px;
+	background-color: skyblue;
+	margin: 10px 0 0 10px;
+	float: left;
+	text-align: left;
+}
+
+.pop_div1_text3{
+	width: 375px;
+	height: 100px;
+	background-color: skyblue;
+	margin: 10px 0 0 10px;
+	float: left;
+	text-align: left;
+}
+
+.pop_div2{
+	width: 730px;
+	height: 270px; 
+	background-color: lightyellow;
+	float: left;
+	margin-top: 40px;
+	line-height: 270px;
+	text-align: center;
+}
+
+.pop_div3{
+	width: 730px;
+	height: 270px;
+	background-color: lightyellow;
+	float: left;
+	margin-top: 40px;
+	line-height: 270px;
+	text-align: center;
+}
+
+.pop_div4{
+	width: 730px;
+	height: 270px;
+	background-color: lightyellow;
+	float: left;
+	margin-top: 40px;
+	line-height: 270px;
+	text-align: center;
+}
+
+.pop_div5{
+	width: 730px;
+	height: 100px;
+	background-color: skyblue;
+	float: left;
+	margin-top: 40px;
+}
+  
+.pop_div5_btn{
+	width: 500px;
+	height: 100px;
+	background-color: lightgreen;
+	margin: 0 auto;
+}  
+
+.pop_btn1{
+	width: 120px;
+	height: 70px;
+	background-color: lightyellow;
+/*	margin: 15px 10px 15px 100px;*/
+	float: left;
+	margin-left: 50px;
+	text-align: center;
+	line-height: 70px;
+}
+
+.pop_btn2{
+	width: 120px;
+	height: 70px;
+	background-color: lightyellow;
+	float: left;
+	margin-left: 20px;
+	text-align: center;
+	line-height: 70px;
+}
+
+.pop_btn3{
+	width: 120px;
+	height: 70px;
+	background-color: lightyellow;
+	float: left;
+	margin-left: 20px;
+	text-align: center;
+	line-height: 70px;
+}

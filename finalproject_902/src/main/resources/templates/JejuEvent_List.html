@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/jejuevent_list.css">
+     <link rel="stylesheet" type="text/css" href="css/header2.css">
+    <script src="https://kit.fontawesome.com/2cc77ea41b.js" crossorigin="anonymous"></script>
+     <script src="js/jquery-3.6.0.min.js"></script>
+    <title>Document</title>
+    <script th:inline="javascript">
+$(function () {
+      
+      var msg = [[${msg}]];
+      
+      if(msg != null){
+         alert(msg);
+      }
+      
+      $(".M4"). hide();
+         
+      mdto = [[${session.user}]];
+      
+      if(mdto != null){
+         $("#inLogin").show();
+         $("#outLogin").hide();
+         $(".M1").css("display","none");
+      }else{
+         $("#inLogin").hide();
+         $("#outLogin").show();
+         
+      }
+      
+      
+      
+      if(mdto.m_category == "사업자"){
+         $(".M4"). show();
+      }
+         
+   });
+</script>
+<body>
+<header>
+   <div th:include="fragment/header::header"></div>
+ </header>
+   <div class="main_container1">
+      <div class="main_container">
+          <div class="plan_menu">
+            <div class="pm0" ><a class="rara">나의여행</a></div>
+                <div class="pm1"><a class="rara">후기게시판</a></div>
+              <div class="pm2" onclick="location.href='JejuEvent_List'"><a class="rara">제주행사</a></div>
+              <div class="pm3" onclick="location.href='jejutourList'"><a class="rara">제주관광지</a></div>
+             </div>
+             
+      <div class="container">
+        
+          <div class="planboard">
+
+             <div class="pboard">제주행사</div>
+                 <select class="plantcw" id="sel">
+                 <option value="e_title">제목</option>
+                 <option value="e_info">글내용</option>
+                 <option value="e_addr">위치</option>
+             </select>
+             <input type="text" class="plansearch" placeholder="검색어를 입력하세요." id="keyword">
+             <div>
+                 <i class="fa-solid fa-magnifying-glass" id="search"></i>
+             </div>
+          </div>
+      <hr class="line_main">
+      <ul class="items" th:each="edto : ${edto}">
+          <li>
+           <div class="imglist"><a th:href="@{/JejuEvent/(e_pk_enum=${edto.e_pk_enum})}"><img class="img1" th:src="@{/upload/} + ${edto.e_img}" style="width: 350px; height: 500px;"></a></div>
+           <div class="itemstittle"><a th:href="@{/JejuEvent/(e_pk_enum=${edto.e_pk_enum})}" style="text-decoration: none; color: black;">
+           
+               <h3><span th:text="${edto.e_title}"></span></h3>
+               <h3><span th:text="${edto.e_addr}"></span></h3>
+               <h3><span th:text="${edto.e_eday}"></span></h3>
+           </a></div>   
+       </li>
+      </ul>
+      <div class="planlastnumber">
+         <div th:utext="${paging}"></div>
+      </div>
+   </div>
+</div>
+</div>
+
+</body>
+<script th:inline="javascript">
+$("#search").click(function(){
+    var keyword = $("#keyword").val();
+    if(keyword == ""){
+       alert("검색어를 입력하세요.");
+       return;
+    }
+    var select = $("#sel").val();
+    console.log(select,keyword);
+    location.href="./JejuEvent_List?colname=" + select + "&keyword=" + keyword + "&pageNum=1";
+ });
+
+</script>
+</html>

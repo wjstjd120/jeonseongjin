@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Mypage_Plan_Update</title>
+<link rel="stylesheet" href="css/Mypage_Plan_Update.css">
+
+ <script th:inline="javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=6aq5dw9tpb"></script> 
+
+<script src="js/jquery-3.6.0.min.js"></script>
+
+ 
+<script id="data">
+//경로로 표시할 배열(array)
+//naver.maps.LatLng 위도 경도 변수
+var polylinePath = [
+ new naver.maps.LatLng(33.5104135, 126.4913534),
+ new naver.maps.LatLng(33.4355028, 126.2706452),
+ new naver.maps.LatLng(33.3616666, 126.5291666)
+];
+</script>
+
+<script id="code">
+    //지도 표시
+    var map = new naver.maps.Map('map', {
+        zoom: 11, // 지도의 초기 줌 레벨
+        minZoom: 11, // 지도의 최소 줌 레벨
+        center: new naver.maps.LatLng(33.3616666, 126.5291666), // 지도의 초기 중심 좌표
+        zoomControl: true, //줌 컨트롤의 표시 여부
+        zoomControlOptions: { //줌 컨트롤의 옵션
+        	//position: naver.maps.Position.TOP_RIGHT
+        	mapTypeId: naver.maps.MapTypeId.ROADMAP
+        }
+        
+        
+    });
+
+    //위의 배열을 이용해 라인 그리기
+    var polyline = new naver.maps.Polyline({
+        path: polylinePath,      //선 위치 변수배열
+        strokeColor: '#FF0000', //선 색 빨강 #빨강,초록,파랑
+        strokeOpacity: 0.8, //선 투명도 0 ~ 1
+        strokeWeight: 2,   //선 두께
+        map: map           //오버레이할 지도
+    });
+
+    // 배열 마지막 위치를 마크로 표시함
+    /*
+    var marker = new naver.maps.Marker({
+        position: polylinePath[polylinePath.length-1], //마크 표시할 위치 배열의 마지막 위치
+        map: map
+    });
+    
+    // 배열 맨 처음 위치를 마크로 표시함
+    var marker2 = new naver.maps.Marker({
+        position: polylinePath[0], //마크 표시할 위치 배열 맨 처음
+        map: map
+    });
+    */
+    
+    // 배열의 모든 위치를 마크로 표시함
+    for (var i = 0; i<polylinePath.length; i++){
+ 	var marker3 = new naver.maps.Marker({
+ 		position: polylinePath[i],  // 마크 표시할 위치 배열의 전부
+ 		map: map
+ 	});
+    }
+ 	
+</script>
+ 
+
+
+
+<script th:inline="javascript">
+$(function () {
+	
+	var msg = [[${msg}]];
+	
+	if(msg != null){
+		alert(msg);
+	}
+	
+	$(".M4"). hide();
+		
+	mdto = [[${session.user}]];
+	
+	if(mdto != null){
+		$("#inLogin").show();
+		$("#outLogin").hide();
+		$(".M1").css("display","none");
+	}else{
+		$("#inLogin").hide();
+		$("#outLogin").show();
+		
+	}
+	
+	
+	
+	if(mdto.m_category == "사업자"){
+		$(".M4"). show();
+	}
+		
+});
+
+
+$(function(){
+	$('.logout').click(function(){
+		session.invalidate();
+		console.log([[${session.id}]]);
+	//	location.href = "/login";
+	});
+
+});
+
+</script>
+
+</head>
+<body>
+
+     <header>
+        <div class="Header">
+            <div class="Member">
+                <span class="M3"><a th:href="@{Question_List}" style="text-decoration: none; color: black;">고객센터</a></span>
+                <span class="M2" id="inLogin"><a th:href="@{logout}" style="text-decoration: none; color: black;">로그아웃</a></span>
+                <span class="M1" id="outLogin"><a th:href="@{login}" style="text-decoration: none; color: black;">로그인</a></span>
+                <span class="M1" id="outLogin"><a th:href="@{joinFrm}" style="text-decoration: none; color: black;">회원가입</a></span>
+                <span class="M2" id="inLogin"><a th:href="@{/}" style="text-decoration: none; color: black;">마이페이지</a></span>
+                <span class="M4" id="inLogin"><a th:href="@{company}" style="text-decoration: none; color: black;">업체페이지</a></span>
+            </div>
+            <div class="Title"><a th:href="@{/}" style="text-decoration: none; color: black;">제주옵서예</a></div>
+            <div class="Menu">
+                <span><a th:href="@{Lodgment_List}" style="text-decoration: none; color: black;">숙박</a></span>
+                <span><a th:href="@{Activity_List}" style="text-decoration: none; color: black;">레져</a></span>
+                <span><a th:href="@{Food_List}" style="text-decoration: none; color: black;">식당</a></span>
+                <span><a th:href="@{JejuPlan_List}" style="text-decoration: none; color: black;">여행정보</a></span>
+                <span><a th:href="@{Mypage}" style="text-decoration: none; color: black;">나의여행</a></span>
+            </div>
+        </div>
+    </header>
+
+<form th:action="@{PlanUpdate}" method="post" enctype="multipart/form-data"> 
+
+    <div class="plan_update">
+    	<div class="p_u_div">
+    		<div class="update_div1">
+    			<div class="up_div1_img">[[${bdto.b_img}]]
+    				<input type="text" name="b_img" th:value="${bdto.b_img}">
+    			</div>	
+    			<div class="up_div1_title">[[${bdto.b_title}]]
+    				<input type="text" name="b_title" th:value="${bdto.b_title}" style="border-style: none">
+    			</div>
+    			<div class="up_div1_cost">[[${bdto.b_cost}]]
+    				<input type="text" name="b_cost" th:value="${bdto.b_cost}" style="border-style: none">
+    			</div>
+    			<div class="up_div1_contents">[[${bdto.b_contents}]]
+    				<input type="text" name="b_contents" th:value="${bdto.b_contents}" style="border-style: none">
+    			</div>
+    			
+    		</div>
+    		<div class="update_div2">경로지도
+    		
+    			 <div id="map" style="width: 1000px; height: 300px;"></div> 
+    	
+    		</div>
+    		<div class="update_div3" >
+    			<div class="update_div3_1" >신라호텔[[${bdto.bi_oriname}]]
+	    			<input type="text" name="bi_oriname" th:value="${bdto.bi_oriname}" class="upload-name" readonly style="border-style: none">
+	    			<input type="hidden" id="filecheck" value="0" name="fileCheck">  <!-- 데이터가 넘어갈때는 name 값으로 넘어가고 value 값을 변경하고싶으면 id 값을 사용한다! -->
+    				<label style="width: 100%;" onclick="del(${bimgdto.bi_sysname})"></label>
+    			</div>
+    			<div class="update_div3_2">
+    			 	<input type="file" name="files" id="file" multiple> 
+    			</div>
+    		</div>
+    		<div class="update_div4">여자친구 200일 큰맘먹고 ....
+    			<input type="text" name="b_contents" th:value="${bdto.b_contents}" style="border-style: none">
+    		</div>
+    		<div class="update_div5">이미지 추가등록 공간</div>
+    		<div class="update_div6">
+    			<div class="update_btn1">
+    				
+    			 	<!-- <input type="button" id="planUpdate" value="수정하기" th:bnum = "${bdto.b_pk_num}" th:onclick="updatePlan(this.getAttribute('bnum'))" >  -->   
+    		
+    				<input type="submit" id="planUpdate" value="수정하기">  
+    			
+    			</div>
+    		</div>
+    		<div class="update_div6">
+    			<div class="update_btn2"><input type="button" onclick="Cancell()" id="cencell" value="취소하기"></div>
+    		</div>
+    		
+    		
+    		<div>
+    		
+    			<input type="hidden" name="b_pk_num" th:value = ${bdto.b_pk_num} style="hidden;">
+    			
+    		</div>
+    		
+    		
+    	</div>
+    </div>
+    
+</form>  
+
+</body>
+
+<script th:inline="javascript">
+/*
+function updatePlan(num){
+	var bnum = {"b_pk_num" : num};
+	
+	console.log(bnum);
+	
+	$.ajax({
+		url : "updatePlan",
+		type : "post",
+		data : bnum,
+		dataType : "JSON",
+		success : function(result){
+			console.log(result);
+			
+				alert("1");
+				location.href="Mypage_Plan";
+					
+		},
+		error : function(error){
+			console.log(error.res);
+			alert("3");
+		}
+	});
+}
+*/
+
+
+
+function Cancell(){
+	if(confirm("비밀번호 수정을 취소하고 홈 화면으로 돌아가시겠습니까?") == true){
+		//true 는 확인을 눌렀을때
+		console.log("true");
+		location.href = "/";  //mapge.html로 이동하기
+	}
+	else {
+		console.log("false");
+		//false 는 취소를 눌렀을때
+	}
+}
+
+
+$("#file").on("change", function(){
+	//파일 입력창에서 선택한 파일 목록 가져오기
+	var files = $("#file")[0].files;
+	console.log(files);
+	
+	var fileName = "";
+	
+	if(files.length > 1){ //하나 이상의 파일 선택 시
+		fileName =  files[0].naem + " 외 " 
+			+ (files.length -1) + "개";
+	}
+	else if(files.length == 1){    //else 로 쓰면 0개까지 조건을 가지기때문에 else if 로 사용한다!!
+		fileName = files[0].name;
+	}
+	
+	$(".upload-name").val(fileName);
+	
+	//fileCheck 부분 변경
+	if(fileName == ""){//파일 취소 시
+		$("#filecheck").val(0);	
+		$(".upload-name").val("파일선택")
+	}
+	else{ //파일 선택 시
+		$("#filecheck").val(1);
+	}
+	console.log($("#filecheck").val());
+});
+
+
+
+function del(sysname){
+	console.log(sysname);
+	
+	var con = confirm("파일을 삭제하겠습니까?");
+	
+	if(con == true){
+		var objdata = {"sysname" : sysname};
+//		objdata.bnum = ${board.b_num};//파일목록 다시 불러오기에서 사용
+		console.log(objdata);
+		
+		$.ajax({
+			url: "delFile",
+			type: "post",
+			data: objdata,
+			dataType: "json",
+			success: function(result){
+				console.log(result);
+				alert("삭제 성공");
+				
+				//새로운 파일 목록 출력
+				var flist = "";
+				var rflist = result.fList; //서비스에서 데이터 담을때 지정했던 이름
+				console.log(rflist);
+				if(rflist.length == 0){
+					flist += '<label style="width: 100%">첨부파일 없음</label>';
+				}
+				else {
+					for(var i = 0; i < rflist.length; i++){
+						flist += '<label style="width: 100%" onclick="del(\'' 
+								+ rflist[i].bi_sysname + '\')">'
+								+ rflist[i].bi_oriname + '</label>';
+						
+					}
+				}
+				
+				$("#bfile").html(flist);
+			},
+			error: function(error){
+				console.log(error);
+				alert("삭제 실패");
+			}
+		});
+	}
+}
+
+
+</script>
+
+</html>

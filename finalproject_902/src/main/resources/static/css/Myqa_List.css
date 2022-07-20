@@ -1,0 +1,253 @@
+@charset "UTF-8";
+
+body{
+    background: url("/image/제주제주.png");
+}
+
+/*왼쪽 메뉴*/
+.Pic_menu {
+    float: left;
+    width: 120px;
+}
+.center{
+   font-size: 40px;
+   margin-left: 20px;
+   font-weight : bold;
+}
+hr{
+    margin: 15PX 15PX 0 15px;
+}
+
+.m5{
+   cursor: pointer;
+}
+.m2, .m3, .m4, .m5 {
+    font-size: 12pt;
+    font-weight: 600;
+    height: 50px;
+    margin: 10px;
+}
+.rara {
+    float: left;
+    background-color: orange;
+    width: 110px;
+    border-radius: 0 10px 10px 0;
+    font-size: 12.9pt;
+    font-weight: 600;
+    color: white;
+}
+
+/*여기까지*/
+
+.main_container1 {
+    width: 1920px;
+    height: 719px;
+    text-align: center;
+}
+
+.main_container {
+    margin-top: 50px;
+    display: inline-block;
+    width: 1550px;
+    height: 650px;
+}
+
+.container{
+    display: inline-block;
+    width: 1240px;
+    height: 650px;
+    float: left;
+    background-color: beige;
+    opacity: 90%;
+    padding-left: 40px;
+    border-radius: 20px;
+}
+
+.myqa {
+   margin-top: 28px;
+   
+}
+.myqa>p {
+   font-size: 40px;
+   margin-right: 65%;
+   display: inline-block;
+}
+.myqa>hr {
+   width: 93%;
+   height: 2px;
+   background-color: #3c3c3c;
+   margin-left: 4%;
+   border-radius: 2px;
+   text-align: center;
+   
+}
+.welcome {
+   width: 85%;
+   display: inline-block;
+   height: 145px;
+   margin-top: 15px;
+   background-color: pink;
+}
+.board {
+   width: 85%;
+   display: inline-block;
+   height: 145px;
+   margin-top: 40px;
+   text-align: center;
+}
+
+.board>table {
+   width: 100%;
+   border-bottom: 1px solid black;
+}
+.board>table>thead>tr>.board_t{
+   border: 1px solid black;
+}
+.board>table>tbody>tr>.board_d {
+   border: 1px solid black;
+}
+.btn-area{
+   margin-left: 16%;
+}
+.del-bor{
+   float: right;
+   margin-top: 5px;
+   margin-right: 80px;
+}
+
+span,a {
+   text-decoration: none; 
+   color: black;
+}
+.paging {
+   margin-left: 40%;
+   margin-top: 3%;
+}
+
+@charset "UTF-8";
+
+body{
+    background: url("/image/제주제주.png");
+}
+
+/*왼쪽 메뉴*/
+.Pic_menu{
+    float: right;
+    margin-top: 50px;
+}
+.center{
+   font-size: 40px;
+   margin-left: 20px;
+   font-weight : bold;
+}
+hr{
+    margin: 15PX 15PX 0 15px;
+}
+
+.m5{
+   cursor: pointer;
+}
+.m2, .m3, .m4, .m5 {
+    font-size: 12pt;
+    font-weight: 600;
+    height: 50px;
+}
+.rara {
+    float: left;
+    background-color: orange;
+    width: 110px;
+    border-radius: 0 10px 10px 0;
+    font-size: 12.9pt;
+    font-weight: 600;
+    color: white;
+}
+
+/*여기까지*/
+
+.main_container1{
+   width: 1920px;
+   height: 819px;
+   text-align: center;
+   
+}
+
+.main_container {
+   margin-top: 50px;
+    display: inline-block;
+    width: 1410px;
+    height: 650px;
+    margin-left: 50px;
+}
+
+.container{
+    display: inline-block;
+    width: 1240px;
+    height: 650px;
+    float: left;
+    background-color: beige;
+    opacity: 90%;
+    padding-left: 40px;
+    border-radius: 20px;
+}
+
+.myqa {
+   margin-top: 28px;
+   
+}
+.myqa>p {
+   font-size: 40px;
+   margin-right: 65%;
+   display: inline-block;
+}
+.myqa>hr {
+   width: 93%;
+   height: 2px;
+   background-color: #3c3c3c;
+   margin-left: 4%;
+   border-radius: 2px;
+   text-align: center;
+   
+}
+.welcome {
+   width: 85%;
+   display: inline-block;
+   height: 145px;
+   margin-top: 15px;
+   background-color: pink;
+}
+.board {
+   width: 85%;
+   display: inline-block;
+   height: 145px;
+   margin-top: 40px;
+   text-align: center;
+}
+
+.board>table {
+   width: 100%;
+   border-bottom: 1px solid black;
+}
+.board>table>thead>tr>.board_t{
+   border: 1px solid black;
+}
+.board>table>tbody>tr>.board_d {
+   border: 1px solid black;
+}
+.btn-area{
+   margin-left: 16%;
+}
+.del-bor{
+   float: right;
+   margin-top: 5px;
+   margin-right: 80px;
+}
+
+span,a {
+   text-decoration: none; 
+   color: black;
+}
+.paging {
+   margin-left: 40%;
+   margin-top: 3%;
+}
+

@@ -1,0 +1,379 @@
+@charset "UTF-8";
+
+/*공통 레이아웃*/
+*{
+    padding: 0%;
+    margin: 0%;
+   /*
+    border: 1px solid;
+    */
+}
+
+/* header 레이아웃 */
+
+header{
+    text-align: center;
+    
+}
+
+.Header{
+    width: 100%;
+    height: 150px;
+/*    border: 1px solid;*/
+    overflow: hidden;
+}
+.Member{
+    height: 25px;
+    margin-top: 5px;
+}
+.Member>span{
+    float: right;
+    margin-right: 20px;
+    font-size: 13pt;
+}
+.Title{
+    height: 80px;
+    font-size: 40pt;
+    text-align: center;
+    width: 100%;
+}
+.Menu>span{
+    font-size: 20pt;
+    margin: 0 20px 0 20px;
+}
+
+.Pic_menu{
+    float: left;
+    /*width: 320px;*/
+    width: 16%;
+    height: 100%;
+/*    border: 1px solid;*/
+    box-sizing: border-box;
+    position: fixed;
+}
+
+/* 픽 메뉴의 내용*/
+/* 회원정보 div */
+.menu_div1{
+	width: 65%;
+	height: 300px;
+	float: right;
+	background-color: red;
+}
+
+.menu_title1{
+	width: 100%;
+	height: 50px;
+	margin-top: 50px;
+	text-align: left;
+	line-height: 50px;
+	background-color: lightyellow;
+}
+
+.menu_member{
+	width: 100%;
+	height: 40px;
+	text-align: left;
+	line-height: 40px;
+	float: left;
+	background-color: lightgreen;
+}
+
+.menu_div3{
+	width: 65%;
+	height: 400px;
+	float: right;
+	background-color: yellow;
+}
+
+.menu_title2{
+	width: 100%;
+	height: 50px;
+	text-align: left;
+	line-height: 50px;
+	background-color: lightyellow;
+}
+
+.menu_Travel{
+	width: 100%;
+	height: 40px;
+	text-align: left;
+	line-height: 40px;
+	float: left;
+	background-color: lightgreen;
+}
+
+/*여기까지 복사붙이기*/
+
+.review{
+	float: left;
+	width: 84%;
+	margin-left: 16%;
+	background-color: skyblue;
+	text-align: center;
+}
+
+.review_div{
+	width: 1280px;
+	height: 783px;
+	background-color: yellow;
+	display: inline-block;
+}
+
+.review_d_div{
+	width: 1250px;
+	height: 770px;
+	background-color: green;
+	margin: 7px auto;
+	margin-bottom: 6px;
+}
+
+.r_div1{
+	width: 910px;
+	height: 730px;
+	background-color: lightyellow;
+	float: left;
+	overflow: scroll;
+	overflow-x: hidden; 
+	margin-top: 20px;
+}
+
+.r_div1_overflow{
+	width: 880px;
+	height: 770px;
+	}
+
+
+.r_div1_1{
+	width: 880px;
+	height: 280px;
+	float: left;
+	background-color: lightgreen;
+	margin: 10px 10px 0 10px;
+}
+
+.r_1_img{
+	width: 320px;
+	height: 280px;
+	float: left;
+	background-color: skyblue;
+}
+
+.r_img{
+	width: 300px;
+	height: 260px;
+	background-color: lightgreen;
+	margin: 10px 10px 10px 10px;
+}
+
+.r_1_title{
+	width: 560px;
+	height: 100px;
+	float: left;
+	background-color: skyblue;
+}
+
+.r_title{
+	width: 550px;
+	height: 80px;
+	background-color: lightgreen;
+	margin: 10px 10px 10px 0;
+}
+
+.r_t1{
+	width: 215px;
+	height: 80px;
+	float: left;
+	background-color: lightyellow;
+	line-height: 80px;
+}
+
+.r_t2{
+	width: 215px;
+	height: 80px;
+	float: left;
+	background-color: lightyellow;
+	margin-left: 10px;
+	line-height: 80px;
+}
+
+
+
+.r_btn{
+	width: 100px;
+	height: 80px;
+	float: left;
+	background-color: lightyellow;
+	margin-left: 10px;
+	line-height: 80px;
+}
+
+.r_1_text{
+	width: 560px;
+	height: 180px;
+	float: left;
+	background-color: skyblue;
+}
+
+.r_text{
+	width: 550px;
+	height: 170px;
+	background-color: lightgreen;
+	margin: 0 10px 10px 0;
+	line-height: 170px;
+}
+
+.r_div1_2{
+	width: 880px;
+	height: 280px;
+	float: left;
+	background-color: lightgreen;
+	margin: 10px 10px 0 10px;
+}
+
+.r_1_blank{
+	width: 880px;
+	height: 20px;
+	background-color: skyblue;
+	float: left;
+}
+
+.r_1_div{
+	width: 880px;
+	height: 90px;
+	background-color: skyblue;
+	float: left;
+}
+
+.r_1_2_title1{
+	width: 375px;
+	height: 80px;
+	float:left;
+	background-color: lightgreen;
+	margin: 0 10px 10px 10px;
+	line-height: 80px;
+}
+
+.r_1_2_title2{
+	width: 375px;
+	height: 80px;
+	float: left;
+	background-color: lightgreen;
+	margin: 0 10px 10px 0; 
+	line-height: 80px;
+}
+
+.r_btn2{
+	width: 90px;
+	height: 80px;
+	background-color: lightgreen;
+	float: left;
+	margin-right: 10px;
+	line-height: 80px;
+}
+
+.r_1_2_text{
+	width: 880px;
+	height: 170px;
+	background-color: skyblue;
+	float: left;
+}
+
+.r_1_2_t1{
+	width: 860px;
+	height: 160px;
+	background-color: lightgreen;
+	margin: 0 auto;
+	line-height: 160px;
+}
+
+.r_div1_3{
+	width: 880px;
+	height: 170px;
+	float: left;
+	background-color: lightgreen;
+	margin: 10px 10px 0 10px;
+}
+
+.r_div1_3_blank{
+	width: 880px;
+	height: 20px;
+	float: left;
+	background-color: skyblue;
+}
+
+.r_div1_3_title{
+	width: 880px;
+	height: 70px;
+	float: left;
+	background-color: skyblue;
+}
+
+.r_div1_3_t1{
+	width: 770px;
+	height: 60px;
+	float: left;
+	background-color: lightgreen;
+	margin: 0 10px 0 10px;
+	
+}
+
+.r_div1_3_btn1{
+	width: 80px;
+	height: 60px;
+	background-color: lightgreen;
+	float: left;
+	margin-right: 10px;
+}
+
+.r_div1_3_text{
+	width: 880px;
+	height: 80px;
+	background-color: skyblue;
+	float: left;
+}
+
+.r_div1_3_text1{
+	width: 860px;
+	height: 70px;
+	background-color: lightgreen;
+	margin-left: 10px;
+}
+
+.r_div2{
+	width: 340px;
+	height: 730px;
+	background-color: skyblue;
+	float: right;
+	margin-top: 20px;
+}
+
+.r_d2_1{
+	width: 300px;
+	height: 730px;
+	margin: 0 auto;
+	background-color: lightgreen;
+}
+
+.r_d2_1_btndiv{
+	width: 150px;
+	height: 400px;
+	background-color: lightyellow;
+	float: left;
+}
+
+.r_d2_1_btn1{
+	width: 150px;
+	height: 100px;
+	background-color: yellow;
+	float: left;
+}
+
+.r_d2_1_btn2{
+	width: 130px;
+	height: 80px;
+	background-color: lightyellow;
+	line-height: 80px;
+	float: left;
+	margin: 10px 10px 10px 10px;
+}

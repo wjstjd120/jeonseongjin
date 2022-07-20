@@ -1,0 +1,101 @@
+@charset "UTF-8";
+
+*{
+   margin: 0;
+   padding: 0;
+}
+
+a{
+   text-decoration: none;
+}
+
+a:visited{
+   color: black;
+   
+}
+
+/* header */
+header{
+   padding: 20px;
+   height: 40px;
+   border-bottom: 1px solid lightgray;
+   width: 1880px;
+}
+.head{
+   float: left;
+   margin: 5px;
+}
+ul{
+   float: right;   
+}
+li{
+   float: left;
+   list-style: none;
+   margin-left: 30px;   
+   margin-top: 10px;   
+}
+.btn6{
+   width: 70px;
+   height: 35px;
+   margin-right: 5px;
+}
+.roomDiv{
+   width : 900px;
+   height : 400px;
+   padding: 5px;
+}
+/* section */
+section{
+   width: 250px;
+   height: 848px;
+   border-right: 1px solid lightgray;
+   float: left;
+}
+.sectionTitle{
+   text-align: center;
+   margin-top: 20px;
+}
+.sectionList{
+   margin-top: 200px;
+   margin-left: 20px;
+}
+.list{
+   margin-bottom: 8px;
+}
+.searchBox{
+   overflow: auto;
+}
+/* layerCSS */
+/* 업체 상세정보 페이지 */
+.layerbox{
+   padding: 30px;
+   font-size: 30px;
+}
+.layerImg{
+   width: 150px;
+   height: 150px;
+   float: left;
+}
+.layerInput{
+   width: 400px;
+   height: 35px;
+}
+.roomDiv{
+   width: 1300px;
+   height: 500px;
+   overflow: auto;
+   border: 1px solid;
+   margin: 0 auto;
+}
+.roomtable{
+   width: 100%;
+}
+
+.layerkd{
+   width: 150px;
+   height: 150px;
+}
+.layerkd1{
+	width: 200px;
+	height: 200px;	
+}

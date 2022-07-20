@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link href='css/jejucss.css' rel='stylesheet'>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="js/jquery.serializeObject.js"></script>
+<title>관리자페이지</title>
+<style>
+  .member_listtable {
+    border-collapse: collapse;
+  }
+  .member_listtable>thead tr {
+    background-color: #1e96ff;
+    color: #ffffff;
+  }
+  .member_listtable>tbody tr:nth-child(2n) {
+    background-color: #bbdefb;
+  }
+  .member_listtable>tbody tr:nth-child(2n+1) {
+    background-color: #e3f2fd;
+  }
+</style>
+</head>
+<body>
+<header>   
+   <div th:replace="fragment/Header :: Admin_Header"></div>
+</header>
+
+<section>
+   <div th:replace="fragment/Menubar :: Admin_Menubar"></div>
+   <div class="contents_holder">   
+      <div class="member_searchbar">
+         <div class="member_title"><h3>회원 검색</h3></div>
+         <form th:action="@{Admin_Member_List}" method="get">
+         <div class="member_searchtag">
+            <div class="searchbar_Mtags">
+               <span class="cssnot">회원 종류 : </span>
+               <span><input type="checkbox" name="pr" value="개인" id="pr">개인</span>
+               <span><input type="checkbox" name="co" value="사업자">사업자</span>
+               <span><input type="checkbox" name="bl" value="블랙리스트">블랙리스트</span>
+            </div>
+            <div class="searchMark">
+               <input type="image" src="image/mark2.png" alt="제출버튼" style="width: 70px; height: 70px;">
+            </div>
+            <div class="searchbar_Minputbox">
+               <div class="searchbar_Mselect">
+                  <select name="colname">
+                     <option value="m_pk_id" selected>아이디</option>
+                     <option value="m_name">이름</option>
+                     <option value="m_nickname">닉네임</option>
+                  </select>
+                  <select name="selgender">
+                     <option value="" selected>성별</option>
+                     <option value="M">남자</option>
+                     <option value="F">여자</option>
+                  </select>
+               </div>
+               <div class="searchbar_Minput">
+                  <input type="text" name="keyword">
+                  <span>생년월일 : </span>
+                  <input class="ageinput" type="date" name="sage"> -
+                  <input class="ageinput" type="date" name="eage">
+               </div>
+            </div>
+         </div>
+         </form>
+      </div>
+      <div class="member_listbar">
+         <div>
+         </div>
+         <div>
+            <table class="member_listtable">
+               <thead>   
+                  <tr>
+                     <td style="width: 10%">아이디</td>
+                     <td style="width: 10%">닉네임</td>
+                     <td style="width: 10%">이름</td>
+                     <td style="width: 5%">성별</td>
+                     <td style="width: 20%">생년월일</td>
+                     <td style="width: 20%">전화번호</td>
+                     <td style="width: 10%">회원종류</td>
+                     <td style="width: 20%">관리</td>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr th:each="member : ${mList}">
+                     <td th:text="${member.m_pk_id}"></td>
+                     <td th:text="${member.m_nickname}"></td>
+                     <td th:text="${member.m_name}"></td>
+                     <td th:text="${member.m_gender}"></td>
+                     <td th:text="${member.m_birth}"></td>
+                     <td th:text="${member.m_phone}"></td>
+                     <td th:text="${member.m_category}"></td>
+                     <td><input type="button" class="adminBtn" th:memid="${member.m_pk_id}" th:onclick="popupOpen(this.getAttribute('memid'))" value="관리"></td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+      <div class="paging" th:utext="${paging}"></div>
+   </div>
+   
+   
+<div id ="popup_mask" ></div> <!-- 팝업 배경 DIV -->
+
+<div id="popupDiv"> <!-- 팝업창 -->
+   <div id="popup_selectform">
+      <div class="popup_topbar">
+         <img src="image/closebtn.gif" class="popup_closebtn" th:onclick='popupClose()'>
+         <h3 class="popuptitle">회원정보 수정</h3>
+      </div>
+      <div class="contentsbox">
+         <div>   
+            <div class="member_login_tablebox" style="margin-top: 40px;">
+            <h3>로그인 정보</h3>
+            <table class="popup_member_login">
+               <tr>
+                  <td style="width: 80px;"></td>
+                  <td style="width: 200px;"></td>
+               </tr>
+               <tr>
+                  <td style="padding: 5px;">아이디 : </td>
+                  <td id="mid"></td>
+               </tr>
+               <tr>
+                  <td style="padding: 5px;">닉네임 : </td>
+                  <td id="mnick"></td>
+               </tr>
+               <tr>
+                  <td style="padding: 5px;">이메일 : </td>
+                  <td id="memail"></td>
+               </tr>
+               <tr>
+                  <td style="padding: 5px;">회원종류 : </td>
+                  <td id="mcate"></td>
+               </tr>
+            </table>
+            </div>
+            <div>
+            <h3>개인 정보</h3>
+            <table class="popup_member_login">
+               <tr>
+                  <td style="width: 80px"></td>
+                  <td style="width: 200px;"></td>
+               </tr>
+               <tr>
+                  <td style="padding: 5px;">이름 : </td>
+                  <td id="mname"></td>
+               </tr>
+               <tr>
+                  <td style="padding: 5px;">주소 : </td>
+                  <td id="maddr"></td>
+               </tr>
+               <tr>
+                  <td style="padding: 5px;">휴대전화 : </td>
+                  <td id="mphone"></td>
+               </tr>
+               <tr>
+                  <td style="padding: 5px;">생년월일 : </td>
+                  <td id="mbirth"></td>
+               </tr>
+               <tr>
+                  <td style="padding: 5px;">성별 : </td>
+                  <td id="mgen"></td>
+               </tr>
+            </table>
+            </div>
+         </div>
+         <div style="margin-top: 30px;">
+            <button th:onclick="Updatepopup()" class="button-65">개인정보 수정</button>
+            <button type="button" th:onclick="CategoryChange()" class="hidblackbtn button-65">블랙리스트 등록</button>
+            <button type="button" th:onclick="popupClose()" class="button-65">닫기</button>
+         </div>
+      </div>
+   </div>
+   <div id="popup_updateform">
+      <div class="popup_topbar">
+         <img src="image/closebtn.gif" class="popup_closebtn" th:onclick='popupClose()'>
+         <h3 class="popuptitle">회원정보 수정</h3>
+      </div>
+      <div class="contentsbox">
+         <div>   
+            <form id="Admin_Member_Update_Frm" method="post">
+               <div class="member_login_tablebox" style="margin-top: 40px;">
+                  <h3>로그인 정보</h3>
+                  <input type="hidden" id="hidmid" name="m_pk_id">
+                  <table class="popup_member_login">
+                     <tr>
+                        <td style="width: 80px;"></td>
+                        <td style="width: 200px;"></td>
+                     </tr>
+                     <tr>
+                        <td style="padding: 5px;">아이디 : </td>
+                        <td id="input_mid"></td>
+                     </tr>
+                     <tr>
+                        <td style="padding: 5px;">닉네임 : </td>
+                        <td id="input_mnick"></td>
+                     </tr>
+                     <tr>
+                        <td style="padding: 5px;">이메일 : </td>
+                        <td id="input_memail"></td>
+                     </tr>
+                     <tr>
+                        <td style="padding: 5px;">회원종류 : </td>
+                        <td>
+                        	<select name="m_category" id="input_mcate">
+			                     <option value="개인" selected>개인</option>
+			                     <option value="사업자">사업자</option>
+			                     <option value="블랙리스트">블랙리스트</option>
+			                </select>
+                        </td>
+                     </tr>
+                  </table>
+                  </div>
+                  <div>
+                  <h3>개인 정보</h3>
+                  <table class="popup_member_login">
+                     <tr>
+                        <td style="width: 80px"></td>
+                        <td style="width: 200px;"></td>
+                     </tr>
+                     <tr>
+                        <td style="padding: 5px;">이름 : </td>
+                        <td><input type="text" id="input_mname" name="m_name"></td>
+                     </tr>
+                     <tr>
+                        <td style="padding: 5px;">주소 : </td>
+                        <td><input type="text" id="input_maddr" name="m_addr"></td>
+                     </tr>
+                     <tr>
+                        <td style="padding: 5px;">휴대전화 : </td>
+                        <td><input type="text" id="input_mphone" name="m_phone"></td>
+                     </tr>
+                     <tr>
+                        <td style="padding: 5px;">생년월일 : </td>
+                        <td><input type="date" id="input_mbirth" name="m_birth"></td>
+                     </tr>
+                     <tr>
+                        <td style="padding: 5px;">성별 : </td>
+                        <td id="input_mgen"></td>
+                     </tr>
+                  </table>
+               </div>
+               <div style="margin-top: 30px;">
+                  <button type="button" th:onclick="AdminMemberUpdate()" class="button-65">수정</button>
+                  <button type="button" th:onclick="CategoryChange()" class="hidblackbtn button-65">블랙리스트 등록</button>
+                  <button type="button" th:onclick="newpopupClose()" class="button-65">이전</button>
+               </div>
+            </form>
+         </div>
+      </div>
+   </div>   
+</div>
+
+</section>
+</body>
+<script th:inline="javascript">
+$(function(){
+   var msg = [[${msg}]];
+   
+   if(msg != null){
+      alert(msg);
+   }
+   
+});
+
+var pkid;
+
+history.replaceState({}, null, location.pathname);
+   function popupOpen(id){
+      pkid = id;
+      $("#popupDiv").css({
+            "top": (($(window).height()-$("#popupDiv").outerHeight())/2+$(window).scrollTop())+"px",
+            "left": (($(window).width()-$("#popupDiv").outerWidth())/2+$(window).scrollLeft())+"px"
+      });   
+            //팝업창을 가운데로 띄우기 위해 현재 화면의 가운데 값과 스크롤 값을 계산하여 팝업창 CSS 설정
+        $("#popup_mask").css("display","block"); //팝업 뒷배경 display block
+        $("#popupDiv").css("display","block"); //팝업창 display block
+        $("#popup_selectform").css("display","block"); //팝업창 display block
+            
+        $("body").css("overflow","hidden");//body 스크롤바 없애기 
+        
+        var memid = {"id" : pkid};
+        $.ajax({
+          url: "MemberIdSelect",
+          type: "post", //json 객체는 post 사용!
+          data: memid,
+          dataType: "json",
+          success: function(result){
+             var member = result.member;
+             
+             $("#mid").html(member.m_pk_id); // index가 끝날때까지 
+            $("#mnick").html(member.m_nickname);
+            $("#memail").html(member.m_email);
+            $("#mcate").html(member.m_category);
+             $("#mname").html(member.m_name); // index가 끝날때까지 
+            $("#maddr").html(member.m_addr);
+            $("#mphone").html(member.m_phone);
+            $("#mbirth").html(member.m_birth);
+            $("#mgen").html(member.m_gender);
+            
+            if(member.m_category != "블랙리스트"){
+               $(".hidblackbtn").css("display","inline");
+            } else {
+               $(".hidblackbtn").css("display","none");
+            }
+          },
+          error: function(error){
+             alert("전송실패");
+             console.log(error);
+          }
+       });
+          
+   }
+   
+   
+   function Updatepopup(){
+        $("#popup_selectform").css("display","none"); //팝업창 display block
+        $("#popup_updateform").css("display","block"); //팝업창 display block
+        
+        var memid = {"id" : pkid};
+        $.ajax({
+          url: "MemberIdSelect",
+          type: "post", //json 객체는 post 사용!
+          data: memid,
+          dataType: "json",
+          success: function(result){
+             var member = result.member;
+             
+             $("#hidmid").val(member.m_pk_id);
+             $("#input_mid").html(member.m_pk_id); // index가 끝날때까지 
+            $("#input_mnick").html(member.m_nickname);
+            $("#input_memail").html(member.m_email);
+            if(member.m_category == "개인"){
+                $("#input_mcate").val("개인").prop("seleced",true);
+             } else if(member.m_category == "사업자") {
+                $("#input_mcate").val("사업자").prop("seleced",true);
+             } else if(member.m_category == "블랙리스트") {
+                $("#input_mcate").val("블랙리스트").prop("seleced",true);
+             } 
+             $("#input_mname").val(member.m_name); // index가 끝날때까지 
+            $("#input_maddr").val(member.m_addr);
+            $("#input_mphone").val(member.m_phone);
+            $("#input_mbirth").val(member.m_birth);
+            $("#input_mgen").html(member.m_gender);
+          },
+          error: function(error){
+             alert("전송실패");
+             console.log(error);
+          }
+       });
+          
+   }
+   
+   function AdminMemberUpdate(){
+        
+      var mDto = $("#Admin_Member_Update_Frm").serializeObject();
+        
+        console.log(mDto);
+        
+        $.ajax({
+          url: "Admin_Member_Update",
+          type: "post", //json 객체는 post 사용!
+          data: mDto,
+          dataType: "json",
+          success: function(result){
+             
+             console.log(result.res);
+             
+             if(result.res = "ok"){
+                alert("수정성공");
+             } else {
+                alert("수정실패");
+             }
+             
+             location.href = "/Admin_Member_List";
+             
+          },
+          error: function(error){
+             alert("전송실패");
+             console.log(error);
+          }
+       });
+        
+   }
+   
+   function CategoryChange(){
+        
+      if (confirm("블랙리스트로 전환하시겠습니까???")) {
+      var memid = {"id" : pkid};
+        $.ajax({
+          url: "Member_Change_Category",
+          type: "post", //json 객체는 post 사용!
+          data: memid,
+          dataType: "json",
+          success: function(result){
+             
+             console.log(result.res);
+             
+             if(result.res = "ok"){
+                alert("전환성공");
+               } else {
+                alert("전환실패");
+               }
+             
+             location.href = "/Admin_Member_List";
+          },
+          error: function(error){
+             alert("전송실패");
+             console.log(error);
+          }
+       });
+      } else {
+         return false;
+      }
+   }
+   
+
+   
+   
+   function popupClose() {
+        $("#popup_mask").css("display","none"); //팝업창 뒷배경 display none
+        $("#popupDiv").css("display","none"); //팝업창 display none
+        $("#popup_selectform").css("display","none"); //팝업창 display block
+        $("#popup_updateform").css("display","none"); //팝업창 display block
+        $("body").css("overflow","auto");//body 스크롤바 생성
+    }
+   
+   function newpopupClose() {
+        $("#popup_selectform").css("display","block"); //팝업창 display block
+        $("#popup_updateform").css("display","none"); //팝업창 display block
+    }
+
+</script>
+</html>

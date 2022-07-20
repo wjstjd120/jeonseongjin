@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.openai.jeju.dao.JejuplanDao">
+
+	<insert id="jejuplanInsert" parameterType="jejuplanDto">
+		insert into blog
+		value(null,#{b_fk_tnum},#{b_fk_id},#{b_img},#{b_date},#{b_title},#{b_cost},#{b_contents})
+	</insert>
+	<select id="jejuplanInfo" resultType="jejuplanDto">
+		select * from blog where
+		b_pk_num=#{jnum}
+	</select>
+	<select id="jejuplanImg" resultType="BimgDto">
+		select * from bimg where
+		bi_pk_num=#{jnum}
+	</select>
+	<select id="jejuplancnt" parameterType="ListDto"
+		resultType="int">
+		select count(*) from blog
+	</select>
+	<insert id="BimgInsert" parameterType="BimgDto">
+		insert into bimg
+		value(null,#{bi_fk_num},#{bi_oriname},#{bi_sysname})
+	</insert>
+	<select id="planList" parameterType="ListDto"
+		resultType="jejuplanDto">
+		select * from blog
+		<if test="colname != null and colname != ''">
+			WHERE ${colname} LIKE concat('%',#{keyword},'%')
+		</if>
+		LIMIT #{pageNum},#{listCnt}
+	</select>
+	<select id="replySelect" parameterType="Integer"
+		resultType="com.openai.jeju.dto.BreplyDto">
+		SELECT * FROM breply WHERE br_fk_num=#{br_fk_num}
+	</select>
+
+	<insert id="replyInsert"
+		parameterType="BreplyDto">
+		INSERT INTO breply
+		VALUES(NULL,#{br_fk_num},#{br_fk_id},DEFAULT,#{br_contents})
+	</insert>
+	
+	<select id="spotList" parameterType="ListDto"
+		resultType="JejuspotDto">
+		select * from spot
+		<if test="colname != null and colname != ''">
+			WHERE ${colname} LIKE concat('%',#{keyword},'%')
+		</if>
+		LIMIT #{pageNum},#{listCnt}
+	</select>
+	<select id="spotcnt" parameterType="ListDto"
+		resultType="int">
+		select count(*) from spot
+	</select>
+	<select id="spotInfo" resultType="JejuspotDto">
+		select * from spot where
+		s_pk_num=#{jnum}
+	</select>
+	<select id="spotimgList" resultType="JejusimgDto">
+		select * from simg where
+		si_fk_num=#{jnum} and si_pk_num=#{jnum}
+	</select>
+	<select id="spotimgList2" resultType="JejusimgDto">
+    select * from simg where si_fk_num=#{jnum} and si_pk_num=2 ;
+	</select>
+	<select id="spotimgList3" resultType="JejusimgDto">
+    select * from simg where si_fk_num=#{jnum} and si_pk_num=3 ;
+	</select>
+	<select id="spotimgList4" resultType="JejusimgDto">
+    select * from simg where si_fk_num=#{jnum} and si_pk_num=4 ;
+	</select>
+	<select id ="spotreview" parameterType="Integer"
+		resultType="JejuspotreviewDto">
+		SELECT * FROM sreiview WHERE sv_fk_num=#{jnum}
+	</select>
+	<insert id="spotreviewInsert"
+		parameterType="JejuspotreviewDto">
+		INSERT INTO sreiview
+		VALUES(NULL,#{sv_fk_id},${sv_fk_num},#{sv_img},#{sv_contents},#{sv_star},now())
+	</insert>
+	<delete id="breDelete" parameterType="Integer">
+	DELETE FROM sreiview WHERE sv_pk_num=${sv_pk_num}
+	</delete>
+	
+	
+	<select id="replynumselect" parameterType="int" resultType="JejuspotreviewDto">
+		select * from sreiview where sv_pk_num = ${renum}
+	</select>
+	
+	<update id="spotreviewUpdate"
+		parameterType="JejuspotreviewDto">
+		UPDATE sreiview set sv_img=#{sv_img}, sv_contents=#{sv_contents}, sv_date=now()
+      WHERE sv_pk_num = #{sv_pk_num}
+	</update>
+	
+	
+	
+	
+	<select id="eventListselect" resultType="EventDto" parameterType="ListDto">
+		SELECT e_pk_enum,e_title,e_addr,e_img,e_eday FROM event 
+		<if test="colname != null and colname != ''">
+		WHERE ${colname} LIKE concat('%',#{keyword},'%')
+		</if>
+		 ORDER BY e_pk_enum DESC LIMIT ${pageNum}, ${listCnt};
+	</select>
+	
+	<select id="eventCntList" resultType="int" parameterType="ListDto">
+		SELECT count(*) FROM event
+	</select>
+	
+	<select id="eventList" parameterType="Integer" resultType="EventDto">
+		SELECT * FROM event WHERE e_pk_enum=${e_pk_enum}
+	</select>
+	
+</mapper>

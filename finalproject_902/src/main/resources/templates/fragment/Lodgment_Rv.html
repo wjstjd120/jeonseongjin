@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http:www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link th:href="@{/css/lodgment.css}" rel="stylesheet" />
+<title>Document</title>
+</head>
+<body>
+	<div th:fragment="option">
+		
+	</div>
+	<div th:fragment="lodd">
+		<div id="lodrvpop">
+			<div id="slideShow">
+				<ul class="slides">
+
+				</ul>
+				<p class="controller">
+
+					<!-- &lang: 왼쪽 방향 화살표
+      			&rang: 오른쪽 방향 화살표 -->
+					<span class="prev">&lang;</span> <span class="next">&rang;</span>
+				</p>
+			</div>
+			
+				<div class="lodrvmem" style="overflow: auto;">
+						<p class="lodrvmeminfo">예약자 정보</p>
+						<input type="text" id="lodrvname" class="lodrvname" title="예약자 성함"
+							placeholder="예약자 성함" name="bk_name"> 
+							
+						<input type="text"
+							id="lodrvnumber" class="lodrvnumber" placeholder="예약자 번호" title="예약자 번호"
+							name="bk_number"
+							onKeyup="this.value=this.value.replace(/[^0-9]/g,'');">
+							
+						<p class="lodrvmemcaryn">차량 여부</p>
+							<label class="lodcar"> 
+							<input type="radio" name="car" title="차량 여부" value="차량" onclick="getCar(event)" />
+								<span>차량</span>
+							</label> 
+							<label class="lodcar"> 
+							<input type="radio" name="car" title="차량 여부" value="도보" onclick="getCar(event)" />
+								<span>도보</span>
+							</label>
+							
+							<th:block th:if="${#strings.equals(cdto.c_category,'숙박')}">
+								<p class="lodrvmemtime">입실 날짜</p>
+								<div class="input_date_box">
+									<input type="date" name="time" title="입실시간" id="inDate" th:min="${session.tdto.tr_in}" th:max="${session.tdto.tr_out}" />
+								</div>
+												
+								<p class="lodrvmemtime">퇴실 날짜</p>
+								<div class="input_date_box">
+									<input type="date" name="time" title="퇴실시간" id="outDate" th:min="${session.tdto.tr_in}" th:max="${session.tdto.tr_out}"/>
+								</div>
+							</th:block>
+							
+							<th:block th:if="${#strings.equals(cdto.c_category,'레저')}">
+								<p class="lodrvmemtime">예약 날짜</p>
+								<div class="input_date_box">
+									<input type="date" name="time" title="퇴실시간" id="aqDate" th:min="${session.tdto.tr_in}" th:max="${session.tdto.tr_out}"/>
+								</div>
+							</th:block>
+								
+								
+						<th:block th:if="${#strings.equals(cdto.c_category,'레저')}">
+							<p class="lodrvmemtime">인원 : <input type="number" max="8" min="0" name="time" title="인원수" id="peopleNum" style="height: 30px; width: 70px;"/></p>
+							
+						</th:block>
+						
+				</div>
+				<div class="lodrvch">
+					<table style="width: 100%">
+						<tr>
+							<td><div class="lodrvlname"
+									style="height: 30px; border: 0px; text-align: center;">숙소 이름</div></td>
+						</tr>
+
+						<tr>
+							<td><div id="r_name" class="lodrvlname"
+								style="height: 30px; border: 0px;text-align: center;"></div></td>
+						</tr>
+					</table>
+
+
+					<fieldset>
+						<th:block th:if="${#strings.equals(cdto.c_category,'숙박')}">
+							<legend>숙소옵션</legend>
+						</th:block>
+						<th:block th:if="${#strings.equals(cdto.c_category,'레저')}">
+							<legend>레저옵션</legend>
+						</th:block>
+							<span id="loption"> </span>
+							
+					</fieldset>
+					
+					
+					<form th:action="@{LodInsert}" method="post" name="cjoinFrm" onsubmit="return joincheck()">
+						<table style="margin-bottom: 10px; width: 100%; height: 200px;">
+							<tr>
+								<td rowspan="2"><div>예약자 정보</div></td>
+								<td>ㅤ
+									<span><input readonly="readonly" class="typingInput" title="예약자이름" name="bk_name" type="text" id="humanName" style="margin-top: 20px;"></span>ㅤ
+								</td>
+	
+							</tr>
+							<tr>
+								<td>ㅤ
+									<span><input readonly="readonly" class="typingInput" title="예약자번호"  name="bk_number" type="text" id="humanNumber"></span>ㅤ
+								</td>
+							</tr>
+							<tr>
+								<td>차량여부</td>
+								<td>
+									<span><input readonly="readonly" class="typingInput" title="차량여부"  name="bk_carch" type="text" id="lodrvca"style="border: 0px; text-align: center;"></span>
+								</td>
+							</tr>
+							
+							<th:block th:if="${#strings.equals(cdto.c_category,'숙박')}">	
+								<tr>
+									<td>입실날짜</td>
+									<td>
+										<span><input readonly="readonly" class="typingInput" title="입실시간"  name="bk_in" type="text" id="lodti" style="border: 0px; text-align: center;"></span>
+									</td>
+								</tr>
+								
+								<tr>
+									<td>퇴실날짜</td>
+									<td>
+										<span><input readonly="readonly" class="typingInput" title="퇴실시간"  name="bk_out" type="text" id="lodtit" style="border: 0px; text-align: center;"></span>
+									</td>
+								</tr>
+							</th:block>
+							<th:block th:if="${#strings.equals(cdto.c_category,'레저')}">
+								<tr>
+									<td>예약날짜</td>
+									<td>
+										<span><input readonly="readonly" class="typingInput" title="입실시간"  name="bk_in" type="text" id="lodti" style="border: 0px; text-align: center;"></span>
+										<input readonly="readonly" class="typingInput" title="퇴실시간"  name="bk_out" type="hidden" id="lodtit" style="border: 0px; text-align: center;">
+									</td>
+								</tr>
+							</th:block>
+							
+							
+							<th:block th:if="${#strings.equals(cdto.c_category,'레저')}">
+								<tr>
+									<td>인원수</td>
+									<td>
+										<span><input readonly="readonly" class="typingInput" title="인원수"  name="bk_people" type="text" id="peopleNum1" style="border: 0px; text-align: center;"></span>
+									</td>
+								</tr>
+							</th:block>
+							
+							<tr>
+								<td>최종결재금액</td>
+								<td>
+									<span><input readonly="readonly" class="typingInput" title="금액"  name="bk_price" type="text" id="r_price" style="border: 0px; text-align: center;"></span> 
+									
+								</td>
+							</tr>
+							<tr>
+								
+								<td>
+									<input type="hidden" name="rname" id="r_name1">
+									<input type="hidden" name="cnum" th:value="${cdto.c_pk_cnum}">
+									<input type="hidden" name="bk_fk_num" id="r_pk_num">
+									<input type="submit" class="lodrvsubmit" value="예약 담기">
+								</td>
+								<td><input type="button" class="lodrvcancel" value="취소 하기"></td>
+							</tr>
+						</table>
+					</form>
+					<div style="margin-left: -472px; height: auto; margin-top: 150px;">
+						<table style="border: 1px solid;">
+							<tr>
+								
+									<td>
+										<div style="height: 30px; width: 796px; border: 0px; text-align: center;">숙소
+											주의사항 및 옵션</div>
+									</td>
+							</tr>
+							<tr>
+								<td>
+								<div style="border: 0px;" class="lodrvnotion"
+										id="r_contents">
+								</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+		
+		</div>
+	</div>
+</body>
+</html>

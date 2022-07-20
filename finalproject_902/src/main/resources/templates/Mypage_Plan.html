@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Mypage_Plan</title>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script th:inline="javascript">
+$(function () {
+	
+	var msg = [[${msg}]];
+	
+	if(msg != null){
+		alert(msg);
+	}
+	
+	$(".M4"). hide();
+		
+	mdto = [[${session.user}]];
+	
+	if(mdto != null){
+		$("#inLogin").show();
+		$("#outLogin").hide();
+		$(".M1").css("display","none");
+	}else{
+		$("#inLogin").hide();
+		$("#outLogin").show();
+		
+	}
+	
+	
+	
+	if(mdto.m_category == "사업자"){
+		$(".M4"). show();
+	}
+		
+});
+
+
+
+
+</script>
+<link rel="stylesheet" href="css/Mypage_Plan.css">
+</head>
+<body>
+
+<!-- header 영역 -->
+<header>
+        <div th:include="fragment/header :: header"></div>
+</header>
+    <div class="Pic_menu">
+    	<div class="menu_div1">
+    		<div class="menu_title1"><h2>회원</h2></div>
+    		<div class="menu_member"><a th:href = @{mypage}><h4>-내정보</h4></a></div>	
+    		<div class="menu_member"><a th:href = @{Mypage_DealList}><h4>-거래내역</h4></a></div>	
+    	</div>
+    	<div class="menu_div2"></div>
+    	<div class="menu_div3">
+    		<div class="menu_title2"><h2>여행</h2></div>
+    		<div class="menu_Travel"><a th:href = @{Mypage_NowTrip}><h4>-진행중인 여행</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Mypage_PastTrip}><h4>-지난여행</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Favorites_Lodgment}><h4>-즐겨찾기</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Mypage_Plan}><h4>-게시글</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Review_Lodgment}><h4>-리뷰관리</h4></a></div>
+    	</div>
+    </div>
+
+<div class="mypage_plan">
+	<div class="plan_div">
+		<div class="plan_div1">
+			<div class="plan_div1_1">
+				<div class="top_text">
+					<div class="top_text1"></div>
+					<div class="top_text2">내가 작성한 게시글</div>
+				</div>
+				<div class="top_btn_div">
+					<div class="btn_div1"></div>
+					<div class="btn_div1">
+						<div class="btn_div2" >
+						
+						<!-- 팝업 간편수정을 위한 간이 버튼 생성 -->
+						<!-- 
+							<select>
+								<option>최신순</option>
+								<option>2</option>
+							</select>
+						 -->
+						 
+						</div>
+						
+						<div class="btn_div2">
+						
+						<!-- 
+							<select>
+								<option>평점순</option>
+								<option>2</option>
+							</select>
+						 -->
+						
+						</div>
+					</div>
+					
+				</div>
+			</div>
+			<div class="middle_div">
+				<div class="m_1">
+					<div class="m_1_list">
+					
+						<ul>
+							<li>
+								<th:block th:each="bList : ${bList}">
+									<div class="listplan_div" th:bnum="${bList.b_pk_num}"    th:onclick="planPopUp(this.getAttribute('bnum'))">
+										<div class="lp_div1" >
+											<div class="lp_img" th:text="${bList.b_img}"></div>
+											<div class="lp_title" th:text="${bList.b_title}"></div>
+											<div class="lp_price" th:text="${bList.b_cost}"></div>
+										</div>
+									</div>
+								</th:block>
+							</li>
+						</ul>
+						
+					</div>
+					<div class="m_1_pdiv" th:utext="${paging}"><!-- 페이징처리 버튼 --></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+	<div class ="popup_mask" ></div> <!-- 팝업 배경 DIV -->
+    
+    <div class="popupDiv"> <!-- 팝업창 -->
+	    	<div class="popup" >
+	    		<div class= "pop_div1">
+	    			<div class="pop_div1_m_img"></div>
+	    			<div class="pop_div1_text">
+	    				<div class="pop_div1_text1"></div>
+	    				<div class="pop_div1_text2"></div>
+	    				<div class="pop_div1_text3">신라호텔>해오름>용진각>신라호텔퇴실</div>
+	    			</div>
+	    		</div>
+	    		<div class="pop_div2">경로지도</div>
+	    		<div class="pop_div3"></div>
+	    		<div class="pop_div4"></div>
+	    		<div class="pop_div5">
+	    			<div class="pop_div5_btn">
+	    				<div class="pop_btn1"></div>
+	    				<div class="pop_btn2"></div>
+	    				<div class="pop_btn3">
+	    					<input type="button" class="popCloseBtn" onclick="popCloseBtn()" value="닫기">
+	    				</div>
+	    			</div>
+	    		</div>	
+	    	</div>
+    </div>
+	
+<script th:inline="javascript">
+
+/* 팝업창 수정버튼 실행 */
+ function planUpdate(a){
+	
+	location.href="Mypage_Plan_Update?bnum=" + a;
+				
+}
+ 
+ 
+
+/* 팝업창 삭제버튼 실행 */
+function planDelete(j){
+	console.log(j);
+	var bnum = {"b_pk_num" : j};
+	
+	$.ajax({
+		url : "planDelete",
+		type : "post",
+		data : bnum,
+		dataType : "JSON",
+		success : function(result){
+			console.log(result.res);
+			if(result.res == "ok"){
+				alert("1");
+				location.href="Mypage_Plan";
+				
+			}
+			else{
+				alert("2");
+			}
+		},
+		error : function(error){
+			console.log(error.res);
+			alert("3");
+		}
+	});
+}
+
+/* 팝업창에 데이터 출력 */
+function planPopUp(num){
+	var bnum = {"b_pk_num" : num};
+
+	console.log(bnum);
+
+	
+	$.ajax({
+		url : "planPopUp",
+		type : "post",
+		data : bnum,
+		dataType : "JSON",
+		success : function(result){
+			var blist = result.blist;
+			
+			var updateTag =
+						'<input type="button" value="수정" onclick="planUpdate(' + blist.b_pk_num + ')">';
+			
+			var deleteTag =
+						'<input type="button" value="삭제" onclick="planDelete(' + blist.b_pk_num + ')">';
+			
+						
+			$(".pop_div1_m_img").html(blist.b_img);
+			$(".pop_div1_text1").html(blist.b_title);
+			$(".pop_div1_text2").html(blist.b_cost);
+			$(".pop_div3").html(blist.bi_oriname);
+			$(".pop_div4").html(blist.b_contents);
+			
+			
+			$(".pop_btn1").html(updateTag);
+			$(".pop_btn2").html(deleteTag);
+			console.log(result.blist);
+			
+		},
+		error : function(error){
+			console.log(error.res);
+			alert("3");
+		}
+	});
+}
+
+
+
+
+	$(".popCloseBtn").click(function(){
+		if(confirm("뒤로 돌아가시겠습니까?")==true){
+			//true 는 확인을 눌렀을때
+			console.log("true");
+			location.href="Mypage_Plan"; //Mypage_html로 이동하기
+		}
+		else {
+			console.log("false");
+			//false 는 취소를 눌렀을때
+		}
+	});
+
+
+$(document).ready(function(){
+    
+    $(".listplan_div").click(function(event){  //팝업창 보기 버튼 클릭 시 
+
+         $(".popupDiv").css({
+            "top": (($(window).height()-$(".popupDiv").outerHeight())/2+$(window).scrollTop())+"px",
+            "left": (($(window).width()-$(".popupDiv").outerWidth())/2+$(window).scrollLeft())+"px"
+            //팝업창을 가운데로 띄우기 위해 현재 화면의 가운데 값과 스크롤 값을 계산하여 팝업창 CSS 설정
+         
+         }); 
+        
+        $(".popup_mask").css("display","block"); //팝업 뒷배경 display block
+        $(".popupDiv").css("display","block"); //팝업창 display block
+        
+        $("body").css("overflow","hidden");//body 스크롤바 없애기
+    });
+       
+    
+});
+    
+
+</script>
+
+</body>
+</html>

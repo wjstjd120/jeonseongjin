@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http:www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title></title>
+<link th:href="@{/css/jejutour.css}" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="css/header2.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="js/jquery.serializeObject.js"></script>
+<style type="text/css">
+
+#popupDiv { /* 팝업창 css */
+	top: 0px;
+	position: absolute;
+	background-color: #FAEBD7;
+	width: 900px;
+	height: 700px;
+	display: none;
+	border: 1px solid black;
+	z-index: 10;
+}
+
+#popup_mask { /* 팝업 배경 css */
+	position: fixed;
+	width: 100%;
+	height: 1000px;
+	top: 0px;
+	left: 0px;
+	display: none;
+	background-color: #000;
+	opacity: 0.6;
+}
+.updatebtn{
+	float:right;
+	height: 30px;
+	width:  60px;
+}
+.deletebtn{
+	float:right;
+	height: 30px;
+	width:  60px;
+}
+</style>
+</head>
+<body>
+	<header>
+        <div th:include="fragment/header :: header"></div>
+    </header>
+
+	<div class="main_container1">
+		<div class="pic_menu"></div>
+		<div class="main_container">
+
+			<div id="con" th:each="sList:${sList}">
+				<img class="img1" th:src="@{/upload/} + ${sList.s_img}"
+					style="width: 100%; height: 500px;">
+				<div class="subcon">
+					<div class="s_tittle" th:text="${sList.s_tittle}"></div>
+					<div class="s_addr" th:text="${sList.s_addr}"></div>
+				</div>
+			</div>
+
+			<div id="bottomcon">
+				<p>관광지 소개</p>
+				<div class="incon">
+					<div class="inconimg" th:each="siList:${siList}">
+						<img class="img1" th:src="@{/upload/} + ${siList.si_sysname}"
+							style="width: 100%; height: 100%;">
+					</div>
+					<div th:each="sList:${sList}">
+						<div class="inconcontent" th:text="${sList.s_info}"></div>
+						<p>이용안내</p>
+						<div class="info" th:text="${sList.s_guide}"></div>
+					</div>
+				</div>
+
+			</div>
+			<div class="imgdiv">
+				<p>관광지 사진</p>
+				<div class="photo1" th:each="siList2:${siList2}">
+					<img class="img1" th:src="@{/upload/} + ${siList2.si_sysname}"
+						style="width: 100%; height: 100%; border-radius: 20px;">
+				</div>
+				<div class="photo2" th:each="siList3:${siList3}">
+					<img class="img1" th:src="@{/upload/} + ${siList3.si_sysname}"
+						style="width: 100%; height: 100%; border-radius: 20px;">
+				</div>
+				<div class="photo3" th:each="siList4:${siList4}">
+					<img class="img1" th:src="@{/upload/} + ${siList4.si_sysname}"
+						style="width: 100%; height: 100%; border-radius: 20px;">
+				</div>
+
+			</div>
+
+			<div id="review">
+				<p>관광지 리뷰</p>
+				<button class="reviewbtn" onclick="clicker()">리뷰 작성하기</button>
+				<div id="popupDiv">
+				<div id="opction">
+				
+				
+      <div><strong>댓글작성</strong></div>
+         <form id="reviewwrite" method="post">
+        	<input type="hidden" id="hidsnum" name="sv_fk_num">
+        	<input type="hidden" id="hidid" name="sv_fk_id">
+        	<input type="hidden" id="hidrenum" name="sv_pk_num">
+        	
+            <div style="width: 250px; height: 250px; display: inline; float: left;">
+                  <img id="preview-imageFrm" style="width: 250px; height: 250px;" src="">
+             </div>
+            <div style="width: 700px; height: 250px;">
+                    
+                     <div class="star-widget" style="margin-top:30px;">
+						<div class="review_rating">
+							<div class="warning_msg">별점을 선택해 주세요.</div>
+							<div class="rating">
+								<input id="hrate" type="hidden" name="sv_star" value="0">
+								<!-- 해당 별점을 클릭하면 해당 별과 그 왼쪽의 모든 별의 체크박스에 checked 적용 -->
+								<input type="checkbox" name="sv_star" id="rating1" value="1"
+									class="rate_radio" title="1점"> <label for="rating1"></label>
+								<input type="checkbox" name="sv_star" id="rating2" value="2"class="rate_radio" title="2점"> <label for="rating2"></label>
+								<input type="checkbox" name="sv_star" id="rating3" value="3"
+									class="rate_radio" title="3점"> <label for="rating3"></label>
+								<input type="checkbox" name="sv_star" id="rating4" value="4"
+									class="rate_radio" title="4점"> <label for="rating4"></label>
+								<input type="checkbox" name="sv_star" id="rating5" value="5"
+									class="rate_radio" title="5점"> <label for="rating5"></label>
+							</div>
+						</div>
+					</div>
+                   <textarea style="width:300px;height: 100px; margin-bottom: -50px;" th:name="sv_contents" id="inserttitle"></textarea>               
+            </div>
+         <div>
+             <input style="display: inline;float:left" type="file" id="input-imageinsert" name="sv_img">
+             <input type="hidden" id="filecheck" name="FileCheck" value="0">
+          </div>   
+	 <div style="padding-top: 40px;">
+         <button th:onclick="reviewInsert()" class="button-65" type="button" id="writebtn">작성</button>
+         <button th:onclick="reviewUpdate()" class="button-65" type="button" id="updatebtn" style="display: none;">수정</button>
+		<input type="button" id="popCloseBtn" value="나가기">
+     </div>
+      </form>
+      </div>
+      
+      
+      
+      
+				</div>
+					<div id="popup_mask"></div>
+				<th:block th:each="reply :${riList}">
+					<th:block th:if="${reply.sv_img != null}">
+						<div class="rv_one">
+							<div class="reviewfrm">
+								<div class="reid">작성자 : [[${reply.sv_fk_id}]]</div>
+								<div class="restar" th:if="${reply.sv_star}=='1'">⭐️</div>
+								<div class="restar" th:if="${reply.sv_star}=='2'">⭐⭐️</div>
+								<div class="restar" th:if="${reply.sv_star}=='3'">⭐⭐⭐️</div>
+								<div class="restar" th:if="${reply.sv_star}=='4'">⭐️⭐⭐⭐</div>
+								<div class="restar" th:if="${reply.sv_star}=='5'">⭐️⭐⭐⭐⭐</div>
+								<div class="redate" th:text="${#dates.format(reply.sv_date, 'yyyy-MM-dd')}"></div>
+							<th:block th:if="${reply.sv_fk_id} == ${session.user.m_pk_id}">	
+								<button class="updatebtn" type="button" th:renum="${reply.sv_pk_num}" th:onclick="updateclicker(this.getAttribute('renum'))">수정</button>
+								<input class="deletebtn" type="button" th:songjan="${reply.sv_pk_num}" th:onclick="redelete(this.getAttribute('songjan'))" value="삭제">
+							</th:block>
+							</div>
+							<div class="rephoto">
+								<div class="rv_img">
+									<img class="img1" th:src="@{/upload/} + ${reply.sv_img}"
+										style="width: 100%; height: 100%; border-radius: 8px;">
+								</div>
+								<div class="recontent" th:text="${reply.sv_contents}"></div>
+							</div>
+						</div>
+					</th:block>
+					<th:block th:if="${reply.sv_img == null}">
+						<div class="rv_one">
+							<div class="reviewfrm">
+								<div class="reid">작성자 : [[${reply.sv_fk_id}]]</div>
+								<div class="restar" th:if="${reply.sv_star}=='1'">️⭐️</div>
+								<div class="restar" th:if="${reply.sv_star}=='2'">⭐⭐️</div>
+								<div class="restar" th:if="${reply.sv_star}=='3'">⭐⭐⭐️</div>
+								<div class="restar" th:if="${reply.sv_star}=='4'">⭐️⭐⭐⭐</div>
+								<div class="restar" th:if="${reply.sv_star}=='5'">⭐️⭐⭐⭐⭐</div>
+								<div class="redate" th:text="${#dates.format(reply.sv_date, 'yyyy-MM-dd')}"></div>
+							<th:block th:if="${reply.sv_fk_id} == ${session.user.m_pk_id}">
+								<button class="updatebtn" type="button" th:renum="${reply.sv_pk_num}" th:onclick="updateclicker(this.getAttribute('renum'))">수정</button>
+								<input class="deletebtn" type="button" th:songjan="${reply.sv_pk_num}" th:onclick="redelete(this.getAttribute('songjan'))" value="삭제">
+							</th:block>
+							</div>
+							<div class="recontent2" th:text="${reply.sv_contents}"></div>
+						</div>
+					</th:block>
+				</th:block>
+			</div>
+			<div class=back_btn>
+				<button class="list" onclick="href=location.href='jejutourList'">목록</button>
+			</div>
+		</div>
+	</div>
+</body>
+
+<script th:inline="javascript">
+$(function () {
+	
+	var msg = [[${msg}]];
+	
+	if(msg != null){
+		alert(msg);
+	}
+	
+	$(".M4"). hide();
+		
+	mdto = [[${session.user}]];
+	
+	if(mdto != null){
+		$("#inLogin").show();
+		$("#outLogin").hide();
+		$(".M1").css("display","none");
+	}else{
+		$("#inLogin").hide();
+		$("#outLogin").show();
+		
+	}
+	
+	
+	
+	if(mdto.m_category == "사업자"){
+		$(".M4"). show();
+	}
+		
+});
+
+const URLSearch = new URLSearchParams(location.search);
+
+const snum = URLSearch.get('jnum');
+
+const id = [[${session.user.m_pk_id}]];
+
+console.log(snum);
+console.log(id);
+
+
+
+
+var siList = [[${siList}]];
+console.log(siList);
+var sList = [[${sList}]];
+console.log(sList);
+var riList = [[${riList}]];
+console.log(riList);
+
+
+function clicker() {
+	document.getElementById("preview-imageFrm").src = "/upload/사진설정.png";
+	$("#inserttitle").val("");
+	$("#popupDiv")
+			.css(
+				  {
+						"top" : (($(window).height() - $("#popupDiv")
+								.outerHeight()) / 2 + $(window).scrollTop())
+								+ "px",
+						"left" : (($(window).width() - $("#popupDiv")
+								.outerWidth()) / 2 + $(window).scrollLeft())
+								+ "px"
+					//팝업창을 가운데로 띄우기 위해 현재 화면의 가운데 값과 스크롤 값을 계산하여 팝업창 CSS 설정
+					});
+	$("#updatebtn").css("display", "none");
+	$("#writebtn").css("display", "inline");
+	$("#popup_mask").css("display", "block"); //팝업 뒷배경 display block
+	$("#popupDiv").css("display", "block"); //팝업창 display block
+	$("body").css("overflow", "hidden");//body 스크롤바 없애기
+}
+
+function updateclicker(renum) {
+	$("#inserttitle").val("");
+	var rnum = {"renum" : renum};
+	    $.ajax({
+	      url: "replynumselect",
+	      type: "post", //json 객체는 post 사용!
+	      data: rnum,
+	      dataType: "json",
+	      success: function(result){
+	         var reply = result.reply;
+	    	  
+	         $("#inserttitle").val(reply.sv_contents);
+	         $("#hidrenum").val(renum);
+	         if(reply.sv_img != null){
+	         	document.getElementById("preview-imageFrm").src = "/upload/" + reply.sv_img;
+	         } else {
+	        	document.getElementById("preview-imageFrm").src = "/upload/사진설정.png";
+	         }
+	      },
+	      error: function(error){
+	         alert("전송실패");
+	         console.log(error);
+	      }
+	   });
+	
+	
+	
+	
+	$("#popupDiv")
+			.css(
+				  {
+						"top" : (($(window).height() - $("#popupDiv")
+								.outerHeight()) / 2 + $(window).scrollTop())
+								+ "px",
+						"left" : (($(window).width() - $("#popupDiv")
+								.outerWidth()) / 2 + $(window).scrollLeft())
+								+ "px"
+					//팝업창을 가운데로 띄우기 위해 현재 화면의 가운데 값과 스크롤 값을 계산하여 팝업창 CSS 설정
+					});
+	$("#updatebtn").css("display", "inline");
+	$("#writebtn").css("display", "none");
+	$("#popup_mask").css("display", "block"); //팝업 뒷배경 display block
+	$("#popupDiv").css("display", "block"); //팝업창 display block
+	$("body").css("overflow", "hidden");//body 스크롤바 없애기
+}
+$("#popCloseBtn").click(function(event) {
+	$("#popup_mask").css("display", "none"); //팝업창 뒷배경 display none
+	$("#popupDiv").css("display", "none"); //팝업창 display none
+	$("body").css("overflow", "auto");//body 스크롤바 생성
+});
+function readImage(input) {
+    // 인풋 태그에 파일이 있는 경우
+    if(input.files && input.files[0]) {
+        // 이미지 파일인지 검사 (생략)
+        // FileReader 인스턴스 생성
+        const reader = new FileReader();
+        // 이미지가 로드가 된 경우
+        reader.onload = e => {
+            const previewImage = document.getElementById("preview-imageFrm")
+            previewImage.src = e.target.result
+        }
+        // reader가 이미지 읽도록 하기
+        reader.readAsDataURL(input.files[0])
+    }
+}
+// input file에 change 이벤트 부여
+const inputImage = document.getElementById("input-imageinsert")
+inputImage.addEventListener("change", e => {
+	var files = $("#input-imageinsert").val();
+	   
+	   if(files != ""){
+	      $("#filecheck").val("1");
+	   } else if (files == "") {
+	      $("#filecheck").val("0");
+	   }
+	
+	readImage(e.target)
+})
+function reviewInsert(){
+    
+	   if(document.getElementById("inserttitle").value == ""){
+		      alert("댓글을 입력해주십시오.");
+		      document.getElementById("inserttitle").focus();
+		    return false;
+	   }
+	   $("#hidsnum").val(snum);
+	   $("#hidid").val(id);
+
+	   
+	   var data = new FormData($('#reviewwrite')[0]);
+	     console.log(data);
+	    $.ajax({
+	       type: "POST",
+	        enctype: 'multipart/form-data',
+	        url: "reviewwrite",
+	        data: data,
+	        processData: false,
+	        contentType: false,
+	        cache: false,
+	        success: function (result) {
+	           console.log(result.res);
+	         if(result.res == "ok"){
+	            alert("작성 성공");
+	         } else {
+	            alert("작성 실패");
+	         }
+	           location.href = "/jejutour?jnum=" + snum;
+	        },
+	        error: function (e) {
+	            console.log("ERROR : ", e);
+	            alert("fail");
+	         }
+	   });
+}
+
+function reviewUpdate(){
+    
+	   if(document.getElementById("inserttitle").value == ""){
+		      alert("댓글을 입력해주십시오.");
+		      document.getElementById("inserttitle").focus();
+		    return false;
+	   }
+	   $("#hidsnum").val(snum);
+	   $("#hidid").val(id);
+
+	   
+	   var data = new FormData($('#reviewwrite')[0]);
+	     console.log(data);
+	    $.ajax({
+	       type: "POST",
+	        enctype: 'multipart/form-data',
+	        url: "reviewupdate",
+	        data: data,
+	        processData: false,
+	        contentType: false,
+	        cache: false,
+	        success: function (result) {
+	           console.log(result.res);
+	         if(result.res == "ok"){
+	            alert("수정 성공");
+	         } else {
+	            alert("수정 실패");
+	         }
+	           location.href = "/jejutour?jnum=" + snum;
+	        },
+	        error: function (e) {
+	            console.log("ERROR : ", e);
+	            alert("fail");
+	         }
+	   });
+}
+
+	
+//별점 마킹 모듈 프로토타입으로 생성
+function Rating(){};
+Rating.prototype.rate = 0;
+Rating.prototype.setRate = function(newrate){
+    //별점 마킹 - 클릭한 별 이하 모든 별 체크 처리
+    this.rate = newrate;
+    let items = document.querySelectorAll('.rate_radio');
+    items.forEach(function(item, idx){
+        if(idx < newrate){
+            item.checked = true;
+        }else{
+            item.checked = false;
+        }
+    });
+}
+let rating = new Rating();//별점 인스턴스 생성
+document.addEventListener('DOMContentLoaded', function(){
+    //별점선택 이벤트 리스너
+    document.querySelector('.rating').addEventListener('click',function(e){
+        let elem = e.target;
+        if(elem.classList.contains('rate_radio')){
+            rating.setRate(parseInt(elem.value));
+            console.log(elem.value);
+            document.querySelector("#hrate").value = elem.value;
+        }
+    })
+});
+
+function redelete(num) { 
+	   if(confirm("삭제 하시겠습니까?")){
+	   var conum = {"sv_pk_num" : num};
+	   console.log(conum);
+	   var pn = sList[0].s_pk_num;
+	   console.log(pn);
+	   		
+	$.ajax({	
+		url: "redeletedelete",
+		data : conum, 
+		type : 'POST',
+		dataType : 'json',
+		success: function(result){
+			  console.log(result.res);
+		         if(result.res == "yes") {
+		            alert("삭제 되었습니다.");
+		            location.href = "/jejutour?jnum="+pn;
+		         }
+		         else {
+		            alert("삭제에 실패하였습니다.");
+		            location.href = "/jejuplan";
+		         }
+		         
+		      },
+		      error : function(error) {
+		         console.log(error.res);
+		      }
+		   });
+		
+		}
+}
+
+</script>
+</html>

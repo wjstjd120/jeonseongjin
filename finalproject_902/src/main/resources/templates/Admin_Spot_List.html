@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link href='css/jejucss.css' rel='stylesheet'>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="js/jquery.serializeObject.js"></script>
+<title>관리자페이지</title>
+<style>
+  .member_listtable {
+    border-collapse: collapse;
+  }
+  .member_listtable>thead tr {
+    background-color: #1e96ff;
+    color: #ffffff;
+  }
+  .member_listtable>tbody tr:nth-child(2n) {
+    background-color: #bbdefb;
+  }
+  .member_listtable>tbody tr:nth-child(2n+1) {
+    background-color: #e3f2fd;
+  }
+</style>
+</head>
+<body>
+<header>   
+   <div th:replace="fragment/Header :: Admin_Header"></div>
+</header>
+
+<section>
+<div th:replace="fragment/Menubar :: Admin_Menubar"></div>
+   <div class="contents_holder">   
+      <div class="member_searchbar">
+         <div class="member_title"><h3>관광지 검색</h3></div>
+         <form th:action="@{Admin_Spot_List}" method="get">
+         <div class="member_searchtag">
+            <div class="searchMark">
+               <input type="image" src="image/mark2.png" alt="제출버튼" style="width: 35px; height: 35px;">
+            </div>
+            <div class="searchbar_Einputbox">
+               <div class="searchbar_Eselect">
+                  <span>관광지 이름: </span>
+               </div>
+               <span class="searchbar_Sinput">
+                  <input type="text" name="keyword">
+               </span>
+            </div>
+         </div>
+         </form>
+      </div>
+      <div class="member_listbar">
+         <div>
+         </div>
+         <div>
+            <table class="member_listtable">
+               <thead>   
+                  <tr>
+                     <td style="width: 7%">관광지번호</td>
+                     <td style="width: 30%">관광지 이름</td>
+                     <td style="width: 35%">주소</td>
+                     <td style="width: 10%">관리</td>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr th:each="spot : ${sList}">
+                     <td th:text="${spot.s_pk_num}"></td>
+                     <td th:text="${spot.s_tittle}"></td>
+                     <td th:text="${spot.s_addr}"></td>
+                     <td><input type="button" class="adminBtn" th:songjan="${spot.s_pk_num}" th:onclick="popupOpen(this.getAttribute('songjan'))" value="관리"/></td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+      <div class="paging" th:utext="${paging}"></div>
+      <button type="button" th:onclick='insertpopup()' style="margin-top: 40px;" class="button-65">글쓰기</button>
+   </div>
+   
+   
+<div id ="popup_mask"></div> <!-- 팝업 배경 DIV -->
+
+<div id="SpotPopupDiv"> <!-- 팝업창 -->
+   <div>
+      <img src="image/closebtn.gif" class="popup_closebtn" th:onclick='popupClose()'>
+      <h1 class="popuptitle">관광지정보 관리</h1>
+   </div>
+   <div id="Admin_Spot_info" style="overflow: auto;">
+      <strong>기본정보</strong>
+      <div>
+         <table>
+            <tbody>
+              <tr>
+                <td rowspan="3"><div class="img_title_box"><img id="preview-image" src="./upload/사진설정.png"></div></td>
+                <td style="text-align: center; padding-left: 10px;">관광지 번호 : </td>
+                <td id="spknum" style="padding-left: 10px;"></td>
+              </tr>
+              <tr>
+                <td style="text-align: center; padding-left: 10px;">관광지 이름 : </td>
+                <td id="stitle" style="padding-left: 10px;"></td>
+              </tr>
+              <tr>
+                <td style="text-align: center; padding-left: 10px;">주소 : </td>
+                <td id="saddr" style="padding-left: 10px;"></td>
+              </tr>
+            </tbody>
+         </table>
+         <div style="padding-top: 20px;"><strong>상세사진</strong></div>
+         <div id="sampleimg" style="white-space:nowrap; height: 160px; overflow: auto;">
+            
+         </div>
+            <table>
+               </tbody>
+                  <tr>
+                     <td style="padding-top: 20px;"><strong>관광지 정보</strong></td>
+                  </tr>
+                  <tr>
+                     <td colspan="4" style="padding-left: 10px; width: 890px;">
+                        <div id="sinfo" style="min-height: 200px; border: 1px solid black; box-sizing: border-box; border-radius: 4px; padding: 5px; background-color: white;"></div>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td style="padding-top: 20px;"><strong>이용안내</strong></td>
+                  </tr>
+                  <tr>
+                     <td colspan="4" style="padding-left: 10px;">
+                        <div id="sguide" style="min-height: 200px; border: 1px solid black; box-sizing: border-box; border-radius: 4px; padding: 5px; background-color: white;"></div>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+      </div>
+      <div style="padding-top: 40px;">
+         <button th:onclick="Updatepopup()" class="button-65">축제정보 수정</button>
+         <button type="button" th:onclick="popupClose()" class="button-65">닫기</button>
+      </div>
+   </div>
+   
+   
+   <div id="Admin_Spot_updateFrm" style="overflow: auto;">
+      <div>
+         <div><strong>기본정보</strong></div>
+         <form style="width: 250px; height: 250px; display: inline; float: left;">
+            <div style="display: inline-block;">
+                  <img id="preview-imageFrm" style="width: 250px; height: 250px;" src="">
+             </div>
+         </form>
+         <form class="Admin_Spot_Update_Frm" method="post">
+            <div style="width: 700px; height: 250px;">
+            <input type="hidden" id="spknumhid" name="s_pk_num">
+               <table style="height: 250px;">
+                  <tbody>
+                    <tr>
+                      <td style="text-align: center; padding-left: 10px;">관광지 번호 : </td>
+                      <td id="s_pk_num" style="padding-left: 10px;"></td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: center; padding-left: 10px;">관광지 이름 : </td>
+                      <td style="padding-left: 10px;"><input type="text" id="s_title" name="s_tittle"></td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: center; padding-left: 10px;">주소 : </td>
+                      <td style="padding-left: 10px;"><input type="text" id="s_addr" name="s_addr"></td>
+                    </tr>
+                  </tbody>
+               </table>
+            </div>
+         </form>
+         <div>
+            <form id="Admin_Spot_file_Update_Frm">
+               <button type="button" onclick="AdminSpotFileUpdate()" style="display: inline;">변경</button>
+                <input style="display: inline;" type="file" id="input-image" name="titlefile">
+                <input type="hidden" name="s_pk_num" id="s_pk_num1">
+               <input type="hidden" name="s_img" id="s_imghid">
+             </form>
+          </div>
+      <form id="Admin_Spot_Multi_file_Update_Frm">   
+         <div style="padding-top: 20px;"><strong>상세사진</strong></div>
+         <div id="sampleimgFrm" style="white-space:nowrap; height: 160px; overflow: auto;"></div>
+         <div>
+            <button type="button" onclick="AdminSpotMultiFileUpdate()" style="display: inline;">변경</button>
+             <input style="display: inline;" type="file" id="input-imageMulti" name="titlefileMulti" accept="image/*" onchange="setThumbnail(event);" multiple/>
+             <input type="hidden" name="s_pk_num" id="s_pk_num2">
+          </div>
+       </form>   
+      <form class="Admin_Spot_Update_Frm" method="post">
+         <table>
+            </tbody>
+               <tr>
+                  <td style="padding-top: 20px;"><strong>관광지 정보</strong></td>
+               </tr>
+               <tr>
+                  <td colspan="4"><div><textarea id="s_info" style="resize: none; width: 890px; height: 300px; padding: 5px; box-sizing: border-box;" name="s_info"></textarea></div></td>
+               </tr>
+               <tr>
+                  <td style="padding-top: 20px;"><strong>이용안내</strong></td>
+               </tr>
+               <tr>
+                  <td colspan="4"><div><textarea id="s_guide" style="resize: none; width: 890px; height: 200px; padding: 5px; box-sizing: border-box;" name="s_guide"></textarea></div></td>
+               </tr>
+            </tbody>
+         </table>
+      </form>
+      </div>
+      <div style="padding-top: 40px;">
+         <button th:onclick="AdminSpotUpdate()" class="button-65">수정</button>
+         <button type="button" th:onclick="AdminSpotDelete()" class="button-65">게시물 삭제</button>
+         <button type="button" th:onclick="newpopupClose()" class="button-65">이전</button>
+      </div>
+   </div>
+   
+   
+   <div id="Admin_Spot_insertFrm" style="overflow: auto;">
+   <div>
+      <div><strong>기본정보</strong></div>
+         <form id="Admin_Spot_Insert_Frm" method="post">
+            <div style="width: 250px; height: 250px; display: inline; float: left;">
+                  <img id="preview-imageinsertFrm" style="width: 250px; height: 250px;" src="">
+            </div>
+            <div style="width: 700px; height: 250px;">
+               <table style="height: 250px;">
+                    <tr>
+                      <td style="text-align: center; padding-left: 10px;">관광지 이름 : </td>
+                      <td style="padding-left: 10px;"><input type="text" id="inserttitle" name="s_tittle"></td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: center; padding-left: 10px;">주소 : </td>
+                      <td style="padding-left: 10px;"><input type="text" id="insertaddr" name="s_addr"></td>
+                    </tr>
+                  </tbody>
+               </table>
+            </div>
+         <div>
+             <input style="display: inline;" type="file" id="input-imageinsert" name="titlefile">
+             <input type="hidden" id="filecheck" name="FileCheck" value="0">
+          </div>   
+         <div style="padding-top: 20px;"><strong>상세사진</strong></div>
+         <div id="sampleimginsertFrm" style="white-space:nowrap; height: 160px; overflow: auto;"></div>
+         <div>
+             <input style="display: inline;" type="file" id="input-imageMultiinsert" name="titlefileMulti" accept="image/*" onchange="setThumbnailinsert(event)" multiple/>
+             <input type="hidden" id="filecheckMulti" name="MultiFileCheck" value="0">
+          </div>
+         <table>
+            </tbody>
+               <tr>
+                  <td style="padding-top: 20px;"><strong>관광지 정보</strong></td>
+               </tr>
+               <tr>
+                  <td colspan="4"><div><textarea id="insertinfo" style="resize: none; width: 890px; height: 300px; padding: 5px; box-sizing: border-box;" name="s_info"></textarea></div></td>
+               </tr>
+               <tr>
+                  <td style="padding-top: 20px;"><strong>이용안내</strong></td>
+               </tr>
+               <tr>
+                  <td colspan="4"><div><textarea id="insertguide" style="resize: none; width: 890px; height: 200px; padding: 5px; box-sizing: border-box;" name="s_guide"></textarea></div></td>
+               </tr>
+            </tbody>
+         </table>
+      </form>
+      </div>
+      <div style="padding-top: 40px;">
+         <button th:onclick="AdminSpotInsert()" class="button-65">작성</button>
+         <button type="button" th:onclick="insertpopupClose()" class="button-65">닫기</button>
+      </div>
+   </div>
+</div>
+
+</section>
+</body>
+<script th:inline="javascript">
+$(function(){
+   var msg = [[${msg}]];
+   
+   if(msg != null){
+      alert(msg);
+   }
+});
+/* history.replaceState({}, null, location.pathname); */
+
+
+function readImage(input) {
+    // 인풋 태그에 파일이 있는 경우
+    if(input.files && input.files[0]) {
+        // 이미지 파일인지 검사 (생략)
+        // FileReader 인스턴스 생성
+        const reader = new FileReader()
+        // 이미지가 로드가 된 경우
+        reader.onload = e => {
+            const previewImage = document.getElementById("preview-imageFrm")
+            previewImage.src = e.target.result
+        }
+        // reader가 이미지 읽도록 하기
+        reader.readAsDataURL(input.files[0])
+    }
+}
+// input file에 change 이벤트 부여
+const inputImage = document.getElementById("input-image")
+inputImage.addEventListener("change", e => {
+   readImage(e.target)
+})
+
+function readImageinsert(input) {
+    // 인풋 태그에 파일이 있는 경우
+    if(input.files && input.files[0]) {
+        // 이미지 파일인지 검사 (생략)
+        // FileReader 인스턴스 생성
+        const reader = new FileReader()
+        // 이미지가 로드가 된 경우
+        reader.onload = e => {
+            const previewImage = document.getElementById("preview-imageinsertFrm")
+            previewImage.src = e.target.result
+        }
+        // reader가 이미지 읽도록 하기
+        reader.readAsDataURL(input.files[0])
+    }
+}
+// input file에 change 이벤트 부여
+const inputImageinsert = document.getElementById("input-imageinsert")
+inputImageinsert.addEventListener("change", e => {
+   var files = $("#input-imageinsert").val();
+   
+   if(files != ""){
+      $("#filecheck").val("1");
+   } else if (files == "") {
+      $("#filecheck").val("0");
+   }
+   readImageinsert(e.target)
+})
+
+function setThumbnail(event) {
+   $('img').remove(".simgsampleFrm");
+   for (var image of event.target.files) {
+          var reader = new FileReader();
+
+          reader.onload = function(event) {
+            var img = document.createElement("img");
+            img.setAttribute("src", event.target.result);
+            img.setAttribute("class", "simgsampleFrm");
+            document.querySelector("div#sampleimgFrm").appendChild(img);
+          };   
+          
+          reader.readAsDataURL(image);
+    }
+}
+
+function setThumbnailinsert(event) {
+   $('img').remove(".simgsampleinsertFrm");
+   var files = $("#input-imageMultiinsert").val();
+   
+   console.log(files);
+     
+     if(files != ""){
+        $("#filecheckMulti").val("1");
+     } else if (files == "") {
+        $("#filecheckMulti").val("0");
+     }
+     
+     console.log($("#filecheckMulti").val());
+     
+   for (var image of event.target.files) {
+          var reader = new FileReader();
+
+          reader.onload = function(event) {
+            var img = document.createElement("img");
+            img.setAttribute("src", event.target.result);
+            img.setAttribute("class", "simgsampleinsertFrm");
+            document.querySelector("div#sampleimginsertFrm").appendChild(img);
+          };
+          reader.readAsDataURL(image);
+    }
+}
+
+
+
+var snum;
+
+function popupOpen(num){
+   snum = num;
+   
+   console.log(num);
+   $("#SpotPopupDiv").css({
+        "top": (($(window).height()-$("#SpotPopupDiv").outerHeight())/2+$(window).scrollTop())+"px",
+        "left": (($(window).width()-$("#SpotPopupDiv").outerWidth())/2+$(window).scrollLeft())+"px"
+   });   
+        //팝업창을 가운데로 띄우기 위해 현재 화면의 가운데 값과 스크롤 값을 계산하여 팝업창 CSS 설정
+    $("#popup_mask").css("display","block"); //팝업 뒷배경 display block
+    $("#SpotPopupDiv").css("display","block"); //팝업창 display block
+    $("#Admin_Spot_info").css("display","block"); //팝업창 display block
+    $('img').remove(".simgsample");
+    $("#sampleimg").css("height","160px");
+        
+    $("body").css("overflow","hidden");//body 스크롤바 없애기 
+    
+    var s_num = {"snum" : snum};
+    $.ajax({
+      url: "SpotSnumSelect",
+      type: "post", //json 객체는 post 사용!
+      data: s_num,
+      dataType: "json",
+      success: function(result){
+         var spot = result.spot;
+         var simg = result.simg;
+         
+         $("#spknum").html(spot.s_pk_num); // index가 끝날때까지 
+         $("#stitle").html(spot.s_tittle);
+         $("#saddr").html(spot.s_addr);
+         $("#sinfo").html(spot.s_info);
+         $("#sguide").html(spot.s_guide);
+         
+         simg.forEach((el, i) => {
+             console.log(i);
+             console.log(el);
+             $("#sampleimg").append("<img class='simgsample' src='./upload/" + el.si_sysname + "'>");
+         })
+         
+         document.getElementById("preview-image").src="./upload/" + spot.s_img;
+      
+      },
+      error: function(error){
+         alert("전송실패");
+         console.log(error);
+      }
+   });
+      
+}
+
+function Updatepopup(){
+    $("#Admin_Spot_info").css("display","none"); //팝업창 display block
+    $("#Admin_Spot_updateFrm").css("display","block"); //팝업창 display block
+   
+    $('img').remove(".simgsampleFrm"); // h1태그의 .type01 클래스만 제거
+    $("#sampleimgFrm").css("height","160px");
+    
+    var s_num = {"snum" : snum};
+    $.ajax({
+      url: "SpotSnumSelect",
+      type: "post", //json 객체는 post 사용!
+      data: s_num,
+      dataType: "json",
+      success: function(result){
+         var spot = result.spot;
+         var simg = result.simg;
+         
+         console.log(simg);
+         
+         $("#s_pk_num").html(spot.s_pk_num); // index가 끝날때까지 
+         $("#s_title").val(spot.s_tittle);
+         $("#s_addr").val(spot.s_addr);
+         $("#s_info").val(spot.s_info);
+         $("#s_guide").val(spot.s_guide);
+         $("#s_pk_num1").val(spot.s_pk_num);
+         $("#s_pk_num2").val(spot.s_pk_num);
+         $("#s_imghid").val(spot.s_img);
+         $("#spknumhid").val(spot.s_pk_num);
+         
+         simg.forEach((el, i) => {
+             console.log(i);
+             console.log(el);
+             $("#sampleimgFrm").append("<img class='simgsampleFrm' src='./upload/" + el.si_sysname + "'>");
+         })
+         
+         document.getElementById("preview-imageFrm").src="./upload/" + spot.s_img;
+      
+      },
+      error: function(error){
+         alert("전송실패");
+         console.log(error);
+      }
+   });
+      
+}
+
+function AdminSpotUpdate(){
+    
+
+   if(document.getElementById("s_title").value == ''){
+      alert("관광지 제목을 입력해주십시오.");
+      document.getElementById("s_title").focus();
+      return false;
+   } else if(document.getElementById("s_addr").value == ''){
+      alert("주소를 입력해주십시오.");
+      document.getElementById("s_addr").focus();
+      return false;
+   } else if(document.getElementById("s_info").value == ''){
+      alert("관광지 정보를 입력해주십시오.");
+      document.getElementById("s_info").focus();
+      return false;
+   } else if(document.getElementById("s_guide").value == ''){
+      alert("이용안내를 입력해주십시오.");
+      document.getElementById("s_guide").focus();
+      return false;
+   }
+   
+   var sDto = $(".Admin_Spot_Update_Frm").serializeObject();
+     console.log(sDto);
+    $.ajax({
+      url: "Admin_Spot_Update",
+      type: "post", //json 객체는 post 사용!
+      data: sDto,
+      dataType: "json",
+      success: function(result){
+         
+         console.log(result.res);
+         
+         if(result.res = "ok"){
+            alert("수정성공");
+         } else {
+            alert("수정실패");
+         }
+         
+         location.href = "/Admin_Spot_List";
+         
+      },
+      error: function(error){
+         alert("전송실패");
+         console.log(error);
+      }
+   });
+    
+}
+
+function AdminSpotFileUpdate(){
+    
+   var files = $("#input-image").val();
+   
+   var data = new FormData($('#Admin_Spot_file_Update_Frm')[0]);
+   
+     console.log(data);
+    if(files != ""){   
+        $.ajax({
+          type: "POST",
+           enctype: 'multipart/form-data',
+           url: "Admin_Spot_file_Update",
+           data: data,
+           processData: false,
+           contentType: false,
+           cache: false,
+           success: function (result) { 
+               var spot = result.spot;
+               $("#s_imghid").val(spot.s_img);
+            
+            document.getElementById("preview-imageFrm").src="./upload/" + spot.s_img;
+            document.getElementById("preview-image").src="./upload/" + spot.s_img;
+            
+            alert("성공");
+            document.getElementById("input-image").value = "";
+           },
+           error: function (e) {
+               console.log("ERROR : ", e);
+               alert("오류!");
+            }
+      });
+    } else if (files == "") {
+      alert("대문사진을 선택해주세요.");
+   }
+    
+}
+
+function AdminSpotMultiFileUpdate(){
+   
+   var files = $("#input-imageMulti").val();
+   
+   console.log(files);
+    
+   var data = new FormData($('#Admin_Spot_Multi_file_Update_Frm')[0]);
+   
+     console.log(data);
+     if(files != ""){ 
+       $.ajax({
+          type: "POST",
+           enctype: 'multipart/form-data',
+           url: "Admin_Spot_Multi_file_Update",
+           data: data,
+           processData: false,
+           contentType: false,
+           cache: false,
+           success: function (result) { 
+               var spot = result.spot;
+               var simg = result.simg;
+               $("#s_imghid").val(spot.s_img);
+               $('img').remove(".simgsampleFrm");
+               $('img').remove(".simgsample");
+            
+               simg.forEach((el, i) => {
+                console.log(i);
+                console.log(el);
+                $("#sampleimgFrm").append("<img class='simgsampleFrm' src='./upload/" + el.si_sysname + "'>");
+                $("#sampleimg").append("<img class='simgsample' src='./upload/" + el.si_sysname + "'>");
+               
+            })
+            alert("성공");
+            document.getElementById("input-imageMulti").value = "";
+           },
+           error: function (e) {
+               console.log("ERROR : ", e);
+               alert("오류!");
+            }
+      });
+     } else if (files == "") {
+       alert("상세사진을 선택해주세요.");
+    }
+    
+}
+
+function AdminSpotInsert(){
+    
+   if($("#filecheck").val() == "0"){
+      alert("대문사진을 설정해주세요.");
+      return false;
+   } else if($("#filecheckMulti").val() == "0"){
+      alert("상세사진을 설정해주세요.");
+      return false;
+   } else if(document.getElementById("inserttitle").value == ''){
+      alert("관광지 제목을 입력해주십시오.");
+      document.getElementById("inserttitle").focus();
+      return false;
+   } else if(document.getElementById("insertaddr").value == ''){
+      alert("주소를 입력해주십시오.");
+      document.getElementById("insertaddr").focus();
+      return false;
+   } else if(document.getElementById("insertinfo").value == ''){
+      alert("관광지 정보를 입력해주십시오.");
+      document.getElementById("insertinfo").focus();
+      return false;
+   } else if(document.getElementById("insertguide").value == ''){
+      alert("이용안내를 입력해주십시오.");
+      document.getElementById("insertguide").focus();
+      return false;
+   }
+   
+   var data = new FormData($('#Admin_Spot_Insert_Frm')[0]);
+   
+     console.log(data);
+    $.ajax({
+       type: "POST",
+        enctype: 'multipart/form-data',
+        url: "Admin_Spot_Insert",
+        data: data,
+        processData: false,
+        contentType: false,
+        cache: false,
+        success: function (result) {
+           console.log(result.res);
+         
+         if(result.res == "ok"){
+            alert("작성 성공");
+         } else {
+            alert("작성 실패");
+         }
+         
+           location.href = "/Admin_Spot_List";
+        },
+        error: function (e) {
+            console.log("ERROR : ", e);
+            alert("fail");
+         }
+   });
+    
+}
+
+function AdminSpotDelete(){
+   if (confirm("게시글을 삭제하시겠습니까???")) {
+   
+   var s_num = {"snum" : snum};
+    $.ajax({
+      url: "Admin_Spot_Delete",
+      type: "post", //json 객체는 post 사용!
+      data: s_num,
+      dataType: "json",
+      success: function(result){
+         
+         console.log(result.res);
+         
+             if(result.res == "ok"){
+                alert("삭제 되었습니다.");
+             } else {
+                alert("삭제 실패");
+             }
+         
+         location.href = "/Admin_Spot_List";
+      },
+      error: function(error){
+         alert("전송실패");
+         console.log(error);
+      }
+   });
+   } else {
+      
+   }   
+    
+}
+
+
+function popupClose() {
+    $("#popup_mask").css("display","none"); //팝업창 뒷배경 display none
+    $("#SpotPopupDiv").css("display","none"); //팝업창 display none
+    $("#Admin_Spot_info").css("display","none"); //팝업창 display block
+    $("#Admin_Spot_updateFrm").css("display","none"); //팝업창 display block
+    $("body").css("overflow","auto");//body 스크롤바 생성
+    $('img').remove(".simgsampleinsertFrm");
+    document.getElementById("preview-imageinsertFrm").src="./upload/사진설정.png";
+    document.getElementById("input-imageMultiinsert").value = "";
+    document.getElementById("input-imageinsert").value = "";
+    document.getElementById("input-imageMulti").value = "";
+    document.getElementById("input-image").value = "";
+}
+
+function newpopupClose() {
+    $("#Admin_Spot_info").css("display","block"); //팝업창 display block
+    $("#Admin_Spot_updateFrm").css("display","none"); //팝업창 display block
+    document.getElementById("input-imageMulti").value = "";
+    document.getElementById("input-image").value = "";
+}
+
+function insertpopupClose() {
+   $("#popup_mask").css("display","none"); //팝업창 뒷배경 display none
+    $("#SpotPopupDiv").css("display","none");
+    $("#Admin_Spot_insertFrm").css("display","none"); //팝업창 display block
+    $('img').remove(".simgsampleinsertFrm");
+    document.getElementById("preview-imageinsertFrm").src="./upload/사진설정.png";
+    document.getElementById("input-imageMultiinsert").value = "";
+    document.getElementById("input-imageinsert").value = "";
+}
+
+function insertpopup() {
+   $("#SpotPopupDiv").css({
+        "top": (($(window).height()-$("#SpotPopupDiv").outerHeight())/2+$(window).scrollTop())+"px",
+        "left": (($(window).width()-$("#SpotPopupDiv").outerWidth())/2+$(window).scrollLeft())+"px"
+   });   
+        //팝업창을 가운데로 띄우기 위해 현재 화면의 가운데 값과 스크롤 값을 계산하여 팝업창 CSS 설정
+    $("#popup_mask").css("display","block"); //팝업 뒷배경 display block
+    $("#SpotPopupDiv").css("display","block"); //팝업창 display block
+    $("#Admin_Spot_insertFrm").css("display","block"); //팝업창 display block
+        
+    $("body").css("overflow","hidden");//body 스크롤바 없애기 
+    
+}
+
+</script>
+</html>

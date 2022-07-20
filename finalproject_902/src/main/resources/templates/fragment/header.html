@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>header</title>
+
+   
+</head>
+<body>
+<div th:fragment="header">
+    <header>
+        <div class="Header">
+            <div class="Member">
+                <span class="M3"><a th:href="@{Question_List}" style="text-decoration: none; color: saddlebrown;">고객센터</a></span>
+                <span class="M2" id="inLogin"><a th:href="@{logout}" style="text-decoration: none; color: saddlebrown;">로그아웃</a></span>
+                <span class="M1" id="outLogin"><a th:href="@{login}" style="text-decoration: none; color: saddlebrown;">로그인</a></span>
+                <span class="M1" id="outLogin"><a th:href="@{joinFrm}" style="text-decoration: none; color: saddlebrown;">회원가입</a></span>
+                <span class="M2" id="inLogin"><a th:href="@{mypage}" style="text-decoration: none; color: saddlebrown;">마이페이지</a></span>
+                <span class="M4" id="inLogin"><a th:href="@{company}" style="text-decoration: none; color: saddlebrown;">업체페이지</a></span>
+            </div>
+            <div class="Title"><a th:href="@{/}" style="text-decoration: none; color: saddlebrown;">쩨주옵서예</a></div>
+            <div class="Menu">
+                <span><a href="Lodgment_List?cate='숙박'" onClick="clickCategory('숙박')" style="text-decoration: none; color: saddlebrown;" id="lod">숙박</a></span>
+                <span><a href="Lodgment_List?cate='레저'" onClick="clickCategory('레저')" style="text-decoration: none; color: saddlebrown;" id="act">레져</a></span>
+                <span><a href="Lodgment_List?cate='식당'" onClick="clickCategory('식당')"  style="text-decoration: none; color: saddlebrown;" id="food">식당</a></span>
+                <span><a th:href="@{JejuEvent_List}" style="text-decoration: none; color: saddlebrown;">여행정보</a></span>
+                <span><a th:href="@{Mypage_NowTrip}" style="text-decoration: none; color: saddlebrown;">나의여행</a></span>
+            </div>
+        </div>
+    </header>
+</div>
+
+<div th:fragment="leftmenu">  
+    <div class="Pic_menu">
+    <span  class="center"><a th:href="@{Question_List}" style="text-decoration: none; color: black;">고객센터</a></span><hr>
+    <span  class="m2"><a  th:href="@{Question_List}" style="text-decoration: none; color: black;">자주하는 질문</a></span><hr>
+    <span  class="m3"><a  th:href="@{Notice_List}" style="text-decoration: none; color: black;">공지사항</a></span><hr>
+    <span class="m4"><a  th:href="@{QA_List}" style="text-decoration: none; color: black;">Q & A</a></span><hr>
+    <span  class="m6" style="text-decoration: none; color: black;"><a th:href="@{Myqa_List}" style="text-decoration: none; color: black;"><b>내가 한 질문 답변</b></a><hr></span>
+    </div>
+</div>
+
+<div th:fragment="Admin_Header">
+      <div class="Admin_header" >
+         <div class="header_logo">
+            <h1>관리자 페이지</h1>
+         </div>
+         <div class="Admin_header_2">
+            <span><a href="/">메인페이지</a></span>
+         </div>
+      </div>
+    </div>
+    
+    <!-- 메인 헤더 -->
+   <div th:fragment="Main_Header" class="header">
+      <div class="member">
+         <span class="m1">고객센터</span> <span class="m1">로그인</span> <span
+            class="m1">회원가입</span>
+      </div>
+      <div class="title">쩨주옵서예</div>
+      <div class="menu">
+         <span>숙박</span>
+         <span>레져</span> 
+         <span>식당</span> 
+         <span>여행정보</span> 
+         <span>나의여행</span>
+      </div>
+   </div>
+
+</body>
+</html>

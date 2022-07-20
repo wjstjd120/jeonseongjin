@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>mypage</title>
+<link rel="stylesheet" href="css/mypage.css">
+<link rel="stylesheet" type="text/css" href="css/header2.css">
+<script src="js/jquery-3.6.0.min.js"></script>
+<script th:inline="javascript">
+$(function(){
+	var msg = [[${msg}]];
+	
+	if(msg != null){
+		alert(msg);
+	}
+	
+	//session에 'id'가 없으면 첫 페이지로 강제 이동
+	var logid = [[${session.user}]];   
+	if(logid == null){
+		location.href = "./login";
+	}
+	else{
+		$(".M3").css('display','block');
+		$(".M1").css('display','none');
+	}
+	
+});
+
+$(function(){
+	$('.logout').click(function(){
+		session.invalidate();
+		console.log([[${session.id}]]);
+	//	location.href = "/login";
+	})
+});
+
+</script>
+
+</head>
+<body>
+
+<!-- header 영역 -->
+<header>
+        <div th:include="fragment/header :: header"></div>
+</header>
+<div class="section">
+	<div class="mypage">
+    <div class="Pic_menu">
+    	<div class="menu_div1">
+    		<div class="menu_title1">회원</div>
+    		<div class="menu_member"><a th:href = @{mypage}>내정보</a></div>	
+    		<div class="menu_member"><a th:href = @{Mypage_DealList}>거래내역</a></div>	
+    	</div>
+    	<div class="menu_div2"></div>
+    	<div class="menu_div3">
+    		<div class="menu_title2">여행</div>
+    		<div class="menu_Travel"><a th:href = @{Mypage_NowTrip}>진행중인 여행</a></div>
+    		<div class="menu_Travel"><a th:href = @{Mypage_PastTrip}>지난여행</a></div>
+    		<div class="menu_Travel"><a th:href = @{Favorites_Lodgment}>즐겨찾기</a></div>
+    		<div class="menu_Travel"><a th:href = @{Mypage_Plan}>게시글</a></div>
+    		<div class="menu_Travel"><a th:href = @{Review_Lodgment}>리뷰관리</a></div>
+    	</div>
+    </div>
+	<div class="mypageDiv">
+	
+		<div class="mypage1">
+			<div class="my_profile">
+				<div class="my_img">
+					<p>프로필 이미지</p>
+				</div>
+				<div class="my_ptext">
+			
+					<div class="my_ptext1">
+						<div class="my_ptext2">ID</div>
+						<div class="my_ptext3"> : </div>
+						<div class="my_ptext4">[[${session.user.m_pk_id}]]</div>
+					</div>
+					
+					<div class="my_ptext1">
+						<div class="my_ptext2">생년월일</div>
+						<div class="my_ptext3"> : </div>
+						<div class="my_ptext4">[[${session.user.m_birth}]]</div>
+					</div>
+					
+					<div class="my_ptext1">
+						<div class="my_ptext2">휴대폰 번호</div>
+						<div class="my_ptext3"> : </div>
+						<div class="my_ptext4">[[${session.user.m_phone}]]</div>
+					</div>
+					
+					<div class="my_ptext1">
+						<div class="my_ptext2">E-Mail</div>
+						<div class="my_ptext3"> : </div>
+						<div class="my_ptext4">[[${session.user.m_email}]]</div>
+					</div>
+				
+					<div class="my_ptext1">
+						<div class="my_pbtn"><a th:href="@{Mypage_Update}">수정</a></div>
+						<div class="my_pbtn1"><a th:href="@{Mypage_Resign}">탈퇴</a></div>
+					</div>
+				</div>
+			</div>
+			<div class="my_info">
+				<div class="my_history">
+					<div class="my_history1">
+					 <div class="my_thistory">
+							<div class="my_t_title1"><h3 class="t_text1">최근거래내역</h3><a class="t_text2" th:href="@{Mypage_DealList}">자세히보기</a></div>
+							<div class="my_h_list">
+								<table>
+									<thead> 
+										<tr>
+											<th>거래 시간</th><th>업체명</th><th>종류</th><th>금액</th><th>내용</th>
+										</tr>
+									</thead> 
+									<tbody>
+										<tr th:each = "bList : ${bList}">
+											<td th:text="${bList.bk_paytime}"></td>
+											<td th:text="${bList.c_name}"></td>
+											<td th:text="${bList.c_category}"></td>
+											<td th:text="${bList.bk_price}"></td>
+											<td th:text="${bList.bk_goods}"></td>
+										</tr>
+										
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="my_history2">
+						<div class="my_last_trip">
+							<div class="my_last_t1"><h3 class="l_text1">내가쓴 여행후기</h3><a class="l_text2" th:href= "@{Mypage_PastTrip}">자세히보기</a></div>
+							<div class="my_l_list">
+							
+							<!-- 
+								<table>
+										<thead> 
+											<tr>
+												<th>여행시작날짜</th><th>여행끝나는날짜</th><th>여행제목</th><th>대인관계</th>
+											</tr>
+										</thead> 
+										<tbody>
+											<tr th:each = "tList : ${tList}">
+												<td th:text="${tList.tr_in}"></td>
+												<td th:text="${tList.tr_out}"></td>
+												<td th:text="${tList.tr_title}"></td>
+												<td th:text="${tList.tr_relationship}"></td>
+												
+											</tr>
+											
+										</tbody>
+									</table>
+							 -->
+							
+								
+									<ul>
+										<li>
+											<div class="my_tl2" th:each = "BlogList : ${BlogList}" th:bnum="${BlogList.b_pk_num}" th:tnum="${BlogList.b_fk_tnum}" th:onclick="goFavorites(this.getAttribute('bnum'),('tnum'))">
+												<div class="my_tl1_img" th:text="${BlogList.b_img}"></div>
+												<div class="my_tl1_text1" th:text="${BlogList.tr_title}"></div>
+												<div class="my_tl1_text2" th:text="${BlogList.tr_in}"></div>
+											</div>
+										</li>
+									</ul>
+							<!-- 
+										<li>
+											<div class="my_tl1">
+												<div class="my_tl1_img"></div>
+												<div class="my_tl1_text"></div>
+											</div>
+											
+										</li>
+										<li>
+											<div class="my_tl1">
+												<div class="my_tl1_img"></div>
+												<div class="my_tl1_text"></div>
+											</div>
+											
+										</li>
+										<li>
+											<div class="my_tl1">
+												<div class="my_tl1_img"></div>
+												<div class="my_tl1_text"></div>
+											</div>
+											
+										</li>
+										<li>
+											<div class="my_tl1">
+												<div class="my_tl1_img"></div>
+												<div class="my_tl1_text"></div>
+											</div>
+											
+										</li>
+										<li>
+											<div class="my_tl1">
+												<div class="my_tl1_img"></div>
+												<div class="my_tl1_text"></div>
+											</div>
+											
+										</li>
+									</ul>
+							 -->
+									
+							</div>
+						</div>
+					</div>
+				</div>	
+			</div>
+			
+		</div>
+		
+	</div>
+	</div>
+</div>
+
+<script th:inline="javascript">
+$(function () {
+	
+	var msg = [[${msg}]];
+	
+	if(msg != null){
+		alert(msg);
+	}
+	
+	$(".M4"). hide();
+		
+	mdto = [[${session.user}]];
+	
+	if(mdto != null){
+		$("#inLogin").show();
+		$("#outLogin").hide();
+		$(".M1").css("display","none");
+	}else{
+		$("#inLogin").hide();
+		$("#outLogin").show();
+		
+	}
+	
+	
+	
+	if(mdto.m_category == "사업자"){
+		$(".M4"). show();
+	}
+		
+});
+
+
+/* 지난 여행 div 클릭시 */
+function goFavorites(num){
+	var bnum = {"b_pk_num" : num};
+	var tnum = {"b_fk_tnum" : num};
+	
+	console.log(bnum);
+	console.log(tnum);
+	
+//	location.href = "Favorites_Lodgment";
+}
+ 
+
+</script>
+
+</body>
+</html>

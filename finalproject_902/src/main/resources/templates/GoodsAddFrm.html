@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>page - 상품추가</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<link th:href="@{/css/companyheader.css}" rel="stylesheet" />
+<style type="text/css">
+.layerLimit{
+	overflow: auto;
+	height: 230px;
+}
+.addGoodsFrm{
+	border: 1px solid;
+	width: 1500px;
+	height: 800px;
+	margin: 0 auto;
+	margin-top: 40px;
+	padding: 30px;
+}
+table{
+	width: 100%;
+	border: 1px solid white;
+}
+.roomNa{
+	width: 100%;
+	height: 25px;
+	border: 1px solid white;
+	border-bottom: 1px solid lightgray;
+}
+
+
+
+.button-54 {
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  letter-spacing: 2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: #000;
+  cursor: pointer;
+  border: 3px solid;
+  padding: 0.25em 0.5em;
+  box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 200px;
+  height: 50px;
+  margin-right: 60px;
+}
+
+.button-54:active {
+  box-shadow: 0px 0px 0px 0px;
+  top: 5px;
+  left: 5px;
+}
+
+@media (min-width: 768px) {
+  .button-54 {
+    padding: 0.25em 0.75em;
+  }
+}
+.labelTag{
+	border: 1px solid lightgray;
+	border-radius : 30px;
+	width: 100px;
+	height: 40px;
+	line-height: 40px;
+	text-align: center;
+	float: left;
+}
+.labelTag:hover{
+	background-color: lightgray;
+}
+.labelTag:active {
+  box-shadow: 0px 0px 0px 0px;
+  top: 5px;
+  left: 5px;
+}
+
+</style>
+</head>
+<body>
+
+<th:block th:if="${cdto.c_category == '숙박'}">
+<div class="addGoodsFrm">
+		<h2>숙박 방 추가</h2>
+		<hr>
+		<div style="width: 1000px; margin: 0 auto;">
+		<form th:action="@{roomPlus}" name="lGoodsFrm" method="post" onsubmit="return lodcheck()" enctype="multipart/form-data">
+		<table style="margin-bottom: 30px; margin-top: 20px;">
+			<tr>
+				<td class="layerTd" width="10%">방 이름</td>
+				<td class="layerTd" width="90%"><input type="text" title="방이름" class="roomNa" name="r_name" ></td>
+			</tr>
+			<tr>
+				<td class="layerTd">업체이름</td>
+				<td class="layerTd" id="roomname">
+				<input type="text" class="roomNa" readonly="readonly" th:value="${cdto.c_name}">
+				<input type="hidden" name="r_fk_cnum" th:value="${cdto.c_pk_cnum}">
+				</td>
+			</tr>
+		</table>
+		
+		<table class="layertable">
+			<tr style="height: 100px;">
+				<td style="width: 50%; margin: 0 auto;" class="layerTd">
+				<div style="height: 260px;">
+					<h4 style="text-align: center;">방 대문사진</h4>
+					<br>	
+					<input type="file" class="solfile" title="방 대문사진" name="r_img" id="solimage" accept="image/*" onchange="solImg(event)" >
+					<div class="labelTag"><label for="solimage">사진선택</label></div>
+					<div class="layerSolImg1" style="margin-left: 50px;"></div>
+				</div>
+				</td>
+				
+				<td width="50%" class="layerTd" >
+				<div class="layerLimit">
+					<h4 style="text-align: center;">방 사진(여러장 선택 가능)</h4>
+					<br>
+					<input type="file" title="방사진" id="multiimage" accept="image/*" name="multifile" onchange="multiImg(event);" multiple="multiple">
+					<div class="labelTag"><label for="multiimage">사진선택</label></div>
+					<div id="layerFirst"></div>
+				</div>
+				</td>
+			</tr>
+		</table>
+		<table>
+			<tr height="100px;">
+				<td style="text-align: center; font-size: 30px;" class="layerTd">예약 정보</td>
+				<td style="line-height: 20px; font-size: 20px; text-align: center;" class="layerTd" width="80%">
+					<h4>숙박</h4>	
+					입실시간 : <input type="number" title="입실시간" name="r_in" min="1" max="24">시 부터<br>
+					퇴실시간 : <input type="number" title="퇴실시간" name="r_out" min="1" max="24">시 까지<br>
+					금액 : <input type="number" title="방 가격" max="2100000000" name="r_price">원
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: center; font-size: 19px; height: 200px;" class="layerTd" width="20%">숙소 주의사항 및 옵션</td>
+				<td style="line-height: 20px; font-size: 20px; text-align: center;" class="layerTd"><textarea title="숙소의 주의사항 및 옵션" style="resize: none; width: 80%; font-size: 20px;" name="r_contents" rows="8"></textarea></td>
+			</tr>
+		</table>
+		<div style="width: 525.61px; margin: 0 auto;">
+		<input type="submit" class="button-54" role="button" value="추가하기">
+		<input type="button" class="button-54" role="button"  onclick="showContents()" value="돌아가기">
+		</div>	
+		</form>
+		</div>
+</div>
+</th:block>
+
+<th:block th:if="${cdto.c_category == '레저'}">
+<div class="addGoodsFrm">
+		<h2>레저 상품 추가</h2>
+		<hr>
+		<div style="width: 1000px; margin: 0 auto;">
+		<form th:action="@{aactivityGoodsInsert}" name="aGoodsFrm" method="post" onsubmit="return actcheck()" enctype="multipart/form-data">
+		<table style="margin-bottom: 30px; margin-top: 20px;">
+			<tr>
+				<td class="layerTd" width="10%">레저상품이름</td>
+				<td class="layerTd" width="90%"><input type="text" title="상품이름" class="roomNa" name="at_name" ></td>
+			</tr>
+			<tr>
+				<td class="layerTd">업체이름</td>
+				<td class="layerTd" id="roomname">
+				<input type="text" class="roomNa" readonly="readonly" th:value="${cdto.c_name}">
+				<input type="hidden" name="at_fk_cnum" th:value="${cdto.c_pk_cnum}">
+				</td>
+				
+			</tr>
+		</table>
+		
+		<table class="layertable">
+			<tr style="height: 100px;">
+				<td style="width: 50%; margin: 0 auto;"class="layerTd">
+				<div style="height: 260px;">
+					<h4 style="text-align: center;">상품대표사진</h4>
+					<br>
+					<input type="file" id="solimage" class="solfile" title="상품대표사진" name="at_img" accept="image/*" onchange="solImg(event)" >
+					<div id="solimage"></div>
+					<div class="labelTag"><label for="solimage">사진선택</label></div>
+					<div class="layerSolImg1">
+					
+					</div>
+				</div>
+				</td>
+				<td width="50%" class="layerTd">
+				<div>
+					<h4 style="text-align: center;">상품사진(여러장 선택 가능)</h4>
+					<br>
+					<input type="file" title="상품사진" id="multiimage" accept="image/*" name="multifile" onchange="multiImg(event)" multiple="multiple" >
+					<div class="labelTag"><label for="multiimage">사진선택</label></div>
+					<div class="layerLimit" id="layerFirst"></div>
+				</div>
+				</td>
+			</tr>
+		</table>
+		<table>
+			<tr>
+				<td style="text-align: center; font-size: 19px; height: 200px;" class="layerTd" width="20%">레저 상품 설명 및 주의사항</td>
+				<td style="line-height: 20px; font-size: 20px; text-align: center;" class="layerTd"><textarea title="상품의 설명 및 주의사항" style="resize: none; width: 80%; font-size: 20px;" name="at_contents" rows="8"></textarea></td>
+			</tr>
+			<tr height="100px;">
+				<td style="text-align: center; font-size: 30px;" class="layerTd">예약 정보</td>
+				<td style="line-height: 20px; font-size: 20px; text-align: center;" class="layerTd" width="80%">
+					<h4>상품</h4>	
+					금액 : <input type="number" title="가격" max="2100000000" name="at_price">원<br>					
+					예약 여부 :     
+					무 <input type="radio" name="at_rtch" value="0" checked="checked">
+					유 <input type="radio" name="at_rtch" value="1">
+					<div>
+					체크인시간 : <input type="number" name="at_in" min="1" max="24">시 부터<br>
+					체크아웃시간 : <input type="number" name="at_out" min="1" max="24">시 까지<br>
+					</div>
+				</td>
+			</tr>
+		</table>
+		<div style="width: 525.61px; margin: 0 auto;">
+		<input type="submit" class="button-54" role="button" value="추가하기">
+		<input type="button" class="button-54" role="button"  onclick="showContents()" value="돌아가기">
+		</div>	
+		</form>
+		</div>
+</div>
+</th:block>
+<button onclick="test()">테스트용</button>
+</body>
+<script th:inline="javascript">
+$("#multiimage").hide();
+$("#solimage").hide();
+function test(){
+	var multifile = $("#multiimage")[0].files;
+	
+	var a = 1;
+	console.log(multifile);
+	if(a==1){
+		$("#multiimage").val('');
+	}
+}
+function lodcheck(){
+	
+	//form 태그의 내용 전부 가져오기
+	var frm = document.lGoodsFrm;
+	console.log(frm);
+	
+	var length = frm.length - 6;//submit 버튼 제외
+	console.log(length);
+	
+	for(var i = 0; i < length; i++){
+		if(frm[i].value == "" || frm[i].value == null){
+			alert(frm[i].title + "을(를) 채워주세요");
+			frm[i].focus();
+			return false;
+		}
+	}
+	
+	return true;//모든 칸이 다 채워졌고, 중복 체크도 한 상태
+}
+
+function actcheck(){
+	
+	//form 태그의 내용 전부 가져오기
+	var frm = document.aGoodsFrm;
+	console.log(frm);
+	
+	var length = frm.length - 4;//submit 버튼 제외
+	console.log(length);
+	
+	for(var i = 0; i < length; i++){
+		if(frm[i].value == "" || frm[i].value == null){
+			alert(frm[i].title + "을(를) 채워주세요");
+			frm[i].focus();
+			return false;
+		}
+	}
+	
+	return true;//모든 칸이 다 채워졌고, 중복 체크도 한 상태
+}
+
+
+function showContents(){
+	location.href="company_contents?cnum=" + [[${cdto.c_pk_cnum}]];
+}
+
+
+
+function solImg(event){ // 단독 이미지 미리보기
+	$(".layerSolImg1").html(" ");
+	
+	 var reader = new FileReader();
+	 reader.onload = function(event) {
+     var solimg = document.createElement("img");
+     solimg.setAttribute("src", event.target.result);
+     solimg.setAttribute("class", "layerkd1");
+      
+     document.querySelector(".layerSolImg1").appendChild(solimg);
+     src = event.target.result;
+    };
+    
+    reader.readAsDataURL(event.target.files[0]);
+}
+
+function multiImg(event) { // 여러개 이미지 미리보기
+	var i = 0;
+	$("#layerFirst").html("");
+    for (var image of event.target.files) {
+      var reader = new FileReader();
+      
+      reader.onload = function(event) {
+        var img = document.createElement("img");
+        img.setAttribute("src", event.target.result);
+        img.setAttribute("class", "layerkd");
+        img.setAttribute("id", i+"num");
+        img.setAttribute("onclick", "deleteimg("+ i +")");
+        document.querySelector("#layerFirst").appendChild(img);
+      };
+      i++;
+      reader.readAsDataURL(image);
+    }
+  }
+
+
+</script>
+</html>

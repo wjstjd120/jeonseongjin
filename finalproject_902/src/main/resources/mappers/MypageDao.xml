@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+   
+<mapper namespace="com.openai.jeju.dao.MypageDao">
+
+	<!-- 최근 거래 내역 (개수 제한)가져오기 -->
+	<select id="mypageListSelect" parameterType="String" resultType="IamBasketDto">
+		select * from iambasket  where bk_fk_id=#{bk_fk_id} and bk_paych = 1 order by bk_paytime desc  limit 4 
+	</select>
+	
+	<!-- 거래 내역 가져오기!! -->
+	<select id="DealListSelect" parameterType="IamBasketDto" resultType="IamBasketDto">
+		select * from iambasket where bk_fk_id=#{bk_fk_id} and bk_paych = 1 
+		<if test="c_category != null and c_category != ''">
+		and c_category=#{c_category}
+		</if>
+		<if test="c_name != null and c_name != ''">
+		and c_name like concat('%',#{c_name},'%')
+		</if>
+		order by bk_paytime desc limit ${pageNum}, ${listCnt}  
+	</select>
+
+	<!-- Mypage_DealList 페이지 게시글 개수 가져오기 -->
+	<select id="bcntSelect" parameterType="IamBasketDto" resultType="int">
+		select count(*) from iambasket where bk_fk_id=#{bk_fk_id} and bk_paych = 1
+		<if test="c_category != null and c_category != ''">
+		and c_category=#{c_category}
+		</if>
+		<if test="c_name != null and c_name != ''">
+		and c_name like concat('%',#{c_name},'%')
+		</if>
+	</select>
+	
+	<!-- 마이페이지 지난 여행 목록 (개수 제한)가져오기 -->
+	<select id="mypageBlogSelect" parameterType="String" resultType="PastTripBlogDto">
+		select * from pasttripblog where b_fk_id=#{b_fk_id} and tr_tf = 1 order by b_fk_tnum desc limit 6
+ 	</select>
+
+	<!-- Review_Lodgment 페이지에 이미지가 not null 리뷰리스트 출력 
+	<select id="ReviewListSelect" parameterType="String" resultType="RevDto">
+		select * from rev  where rv_id=#{rv_id} 
+		<if test="c_category != null and c_category !=''">
+		and c_category=#{c_category}
+		</if>
+		order by rv_pk_num desc
+	</select>
+	-->
+	
+	<!-- Review_Lodgment 페이지에 숙박 리뷰리스트 출력 -->
+	<select id="LodgmentListSelect" parameterType="String" resultType="RevDto">
+		select * from rev  where rv_fk_id=#{rv_fk_id} and c_category='숙박' order by rv_pk_num desc
+	</select>
+	
+	<!-- Review_Lodgment 페이지에  해당 숙박 리스트 삭제 -->
+	<delete id="delreview" parameterType="Integer">
+		DELETE FROM review WHERE rv_pk_num =${rv_pk_num}
+	</delete>
+	
+	<!-- Review_Activiry 페이지에 레저 리뷰 리스트 출력 -->
+	<select id="ActiviryListSelect" parameterType="String" resultType="RevDto">
+		select * from rev  where rv_fk_id=#{rv_fk_id} and c_category='레저' order by rv_pk_num desc
+	</select>
+	
+	<!-- Review_Food 페이지에 식당 리뷰 리스트 출력 -->
+	<select id="FoodListSelect" parameterType="String" resultType="RevDto">
+		select * from rev  where rv_fk_id=#{rv_fk_id} and c_category='식당' order by rv_pk_num desc
+	</select>
+	 
+	 <!-- NowTrip 페이지에 여행 리스트 출력 -->
+	 <select id="NowTripListSelect" parameterType="String" resultType="TravelrouteDto">
+	 	select * from travelroute where tr_fk_id=#{tr_fk_id} and tr_tf = 0 order by tr_pk_num desc 
+	 </select>
+	 
+	 
+	 <!-- PastTrip 페이지에 여행완료 체크된 리스트 출력 -->
+	 <select id="pastTripListSelect" parameterType="String" resultType="TravelrouteDto">
+	 	select * from travelroute where tr_fk_id=#{tr_fk_id} and tr_tf =1 order by tr_pk_num desc
+	 </select>
+	 
+	 
+	 
+	 <!--  요친구 오류 생성기 
+	 NowTrip 페이지 달력에 정보를 최신정보로 Insert 를 위한 작업
+	 <insert id="cListInsert" parameterType="EventDto2">
+	 	insert into events(e_id, start, end, e_relationship, e_num, e_pay, title)
+	 	select bk_fk_id, tr_in, tr_out, tr_relationship, tr_pk_num, bk_pay, tr_title
+	 	from nowtrip
+	 	where bk_fk_id = #{bk_fk_id} order by tr_pk_num desc;
+	 </insert>
+	  -->
+	 
+	 
+	 <!-- NowTrip 달력 테스트  -->
+	 <select id="eListSelect" resultType="EventDto2">
+	 <!-- 
+	 	insert into events(e_id, start, end, e_pay)
+	 	select bk_fk_id, bk_in, bk_out, bk_pay
+	 	from nowtrip
+	 	where bk_fk_id = #{bk_fk_id} and e_pay = 1
+	 -->
+		SELECT * FROM events where e_id=#{e_id} and e_tf = 0 order by e_num desc 
+	</select>
+	
+	
+	
+	<select id="bnumblogselect" parameterType="int" resultType="BlogDto">
+		select * from blog where b_fk_tnum=${tr_pk_num}
+	</select>
+	
+	<!-- NowTrip페이지에 여행리스트 정보 클릭시 해당 상세정보를 페이지에 출력 -->
+	 <select id="nowtripinfo" parameterType="Integer" resultType="TravelrouteDto">
+	 	select * from travelroute where tr_pk_num=${tr_pk_num}
+	 </select>
+	 
+	 <!-- NowTrip 페이지에 삭제버튼 실행 -->
+	 <delete id="nowtripbasketDel" parameterType="Integer">
+	 	delete from basket where bk_fk_tnum = #{tr_pk_num};
+	 </delete>
+	 <delete id="nowtripDel" parameterType="Integer">
+	 	delete from travelroute where tr_pk_num = #{tr_pk_num};
+	 </delete>
+	 
+	 <!-- NowTrip 페이지에 여행완료 버튼 실행 -->
+	 <update id="nowtripCheck" parameterType="Integer">
+	 	update travelroute set tr_tf = 1 where tr_pk_num = #{tr_pk_num}
+	 </update>
+	 
+	 <!-- Mypage_Plan페이지에 게시판 리스트 출력 -->
+	 <select id="PlanList" parameterType="ListDto" resultType="BlogDto">
+	 	select * from blog where b_fk_id = #{b_fk_id} order by b_pk_num desc limit ${pageNum}, ${listCnt}
+	 </select>
+	 
+	 <!-- Mypage_Plan페이지에 게시글 개수 구하기 -->
+	 <select id="PlancntSelect" parameterType="ListDto" resultType="int">
+	 	select count(*) from blog where b_fk_id = #{b_fk_id}
+	 </select>
+	 
+	 <!-- Mypage_Plan 페이지에 해당 정보와 일치한 상세내영 팝업창에 출력 -->
+	<select id="planPopup" parameterType="Integer" resultType="LastBlogDto">
+		select * from lastblog where b_pk_num =${b_pk_num}
+	</select>
+	 
+	 <!-- Mypage_Plan 페이지 팝업창에 삭제버튼 실행 -->
+	<delete id="plandel" parameterType="Integer">
+		delete from blog where b_pk_num=${b_pk_num}
+	</delete>
+	 
+	<!-- PastTrip페이지에 여행리스트 정보 클릭시 해당 상세정보를 페이지에 출력 -->
+	 <select id="pasttripinfo" parameterType="Integer" resultType="TravelrouteDto">
+	 	select * from travelroute where tr_pk_num=#{tr_pk_num}
+	 </select>
+	 
+	 <!-- PastTrip 페이지에 삭제버튼 실행 -->
+	 <delete id="pasttripbasketDel" parameterType="Integer">
+	 	delete from basket where bk_fk_tnum = #{tr_pk_num}
+	 </delete>
+	 
+	 <delete id="pasttripblogDel" parameterType="Integer">
+	 	delete from blog where b_fk_tnum = #{tr_pk_num}
+	 </delete>
+	 
+	 <delete id="pasttripbimgDel" parameterType="Integer">
+	 	delete from bimg where bi_fk_num = #{bnum}
+	 </delete>
+	 
+	 	 <delete id="pasttripDel" parameterType="Integer">
+	 	delete from travelroute where tr_pk_num = #{tr_pk_num};
+	 </delete>
+	
+	<!-- Plan_Update 페이지 수정버튼 클릭시 발동 
+	<update id="blogUpdate" parameterType="BlogDto">
+		update blog set b_img =#{b_img}, b_title = #{b_title} ,b_cost = #{b_cost} ,b_contents = #{b_contents} where b_pk_num = #{b_pk_num}
+	</update>
+	
+	 Plan_Update 페이지 수정버튼 클릭시 발동 
+	<update id="bimgUpdate" parameterType="BimgDto">
+		update bimg set bi_oriname = #{bi_oriname}  where bi_fk_num = #{bi_fk_num}
+	</update>
+	-->
+	
+	
+	<!-- Plan_Update 페이지 수정하기 버튼 클릭시 발동 BimgDto 업데이트 -->
+	<update id="bimgUpdate" parameterType="BimgDto">
+		update bimg set bi_oriname = #{bi_oriname}  where bi_fk_num = #{bi_fk_num}
+	</update>
+	
+	
+	
+	
+	
+	
+	<select id="TnumSelectBasketList" parameterType="Integer" resultType="BasketDto">
+		select * from basket where bk_fk_tnum=${tr_pk_num}
+	</select>
+	
+	
+	
+	<select id="getFavorites" parameterType="CompanyDto" resultType="CompanyDto">
+      select distinct c_pk_cnum,c_name,c_category,c_img,fa_pk_num 
+      from company left join favorites 
+      on company.c_pk_cnum = favorites.fa_fk_cnum 
+      where fa_fk_id = #{fa_fk_id} and c_category = #{c_category}
+      <if test='c_type != null and c_type !="" and !(c_type.equals("전체"))'>
+      and c_type=#{c_type}
+      </if>
+   </select>
+   
+   
+   
+   <delete id="jjimDel" parameterType="String">
+      delete favorites from favorites  left join company on favorites.fa_fk_cnum = company.c_pk_cnum where  fa_pk_num = ${fa_pk_num}
+   </delete>
+   
+   
+   
+   
+   
+   
+   
+   <update id="blogUpdate" parameterType="BlogDto">
+		update blog set b_img =#{b_img}, b_title =#{b_title} ,b_cost =#{b_cost} ,b_contents =#{b_contents} where b_pk_num =${b_pk_num}
+	</update>
+	
+	
+	
+	<select id="travelSelect" parameterType="int" resultType="TravelrouteDto">
+		select * from travelroute where tr_pk_num=${trnum}
+	</select>
+	
+</mapper>
+
+
+
+
+

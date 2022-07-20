@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http:www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src='js/main.js'></script>
+<script th:inline="javascript">
+$(function () {
+	
+	var msg = [[${msg}]];
+	
+	if(msg != null){
+		alert(msg);
+	}
+	
+	$(".M4"). hide();
+		
+	mdto = [[${session.user}]];
+	
+	if(mdto != null){
+		$("#inLogin").show();
+		$("#outLogin").hide();
+		$(".M1").css("display","none");
+	}else{
+		$("#inLogin").hide();
+		$("#outLogin").show();
+		
+	}
+	
+	
+	
+	if(mdto.m_category == "사업자"){
+		$(".M4"). show();
+	}
+		
+});
+
+
+</script>
+<link rel="stylesheet" href="css/Mypage_PastTrip.css">
+<link href='css/main.css' rel='stylesheet' />
+</head>
+<body>
+<!-- header 영역 -->
+<header>
+        <div th:include="fragment/header :: header"></div>
+</header>
+    <div class="Pic_menu">
+    	<div class="menu_div1">
+    		<div class="menu_title1"><h2>회원</h2></div>
+    		<div class="menu_member"><a th:href = @{mypage}><h4>-내정보</h4></a></div>	
+    		<div class="menu_member"><a th:href = @{Mypage_DealList}><h4>-거래내역</h4></a></div>	
+    	</div>
+    	<div class="menu_div2"></div>
+    	<div class="menu_div3">
+    		<div class="menu_title2"><h2>여행</h2></div>
+    		<div class="menu_Travel"><a th:href = @{Mypage_NowTrip}><h4>-진행중인 여행</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Mypage_PastTrip}><h4>-지난여행</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Favorites_Lodgment}><h4>-즐겨찾기</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Mypage_Plan}><h4>-게시글</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Review_Lodgment}><h4>-리뷰관리</h4></a></div>
+    	</div>
+    </div>
+    <div class="pasttrip" >
+	    <div class="pasttripDiv" >
+	    	<div class="pt_div">
+		    	<div class="pt_profileDiv"  >
+		    		<div class="pt_profile" >
+		    			<div class="pt_img"></div>
+		    			<div class="pt_text1"> 
+		    				<div class="pt_text1_div1">
+			    				<div class="pt_t1_d1_text1"><h3>제목</h3></div>
+			    				<div class="pt_t1_d1_text2"><h3>:</h3></div>
+			    				<div class="pt_t1_d1_text3"></div>
+		    				</div>
+		    				<div class="pt_text1_div1">
+			    				<div class="pt_t1_d1_text1"><h3>일자</h3></div>
+			    				<div class="pt_t1_d1_text2"><h3>:</h3></div>
+			    				<div class="pt_t1_d1_text3-1"></div>
+			    				<div class="pt_t1_d1_text3-2"></div>
+		    				</div>
+		    				<div class="pt_text1_div1">
+			    				<div class="pt_t1_d1_text1"><h3>예상경비</h3></div>
+			    				<div class="pt_t1_d1_text2"><h3>:</h3></div>
+			    				<div class="pt_t1_d1_text3-3"></div>
+		    				</div>
+		    				<div class="pt_text1_div1">
+			    				<div class="pt_t1_d1_text1"><h3>인원</h3></div>
+			    				<div class="pt_t1_d1_text2"><h3>:</h3></div>
+			    				<div class="pt_t1_d1_text4"></div>
+			    				<div class="pt_t1_d1_btnDiv">
+			    					<div class="pt_t1_d1_btnDiv1">
+			    						<div class="pt_btn1_1"></div>
+			    						<div class="pt_btn1_2"></div>
+			    						<div class="pt_btn1_3"></div>
+			    					</div>
+			    				</div>
+		    				</div>
+		    			</div>
+		    		</div>
+		    		<div class="pt_calendar">
+		    			<div class="pt_c_div" style="overflow: auto;"><div id='calendar'></div></div>
+		    		</div>
+		    	</div>
+		    	<div class="pt_list" >
+		    		<div class="pt_list_div">
+		    			<ul>
+		    				<li>
+		    					<th:block th:each = "nList : ${nList}">
+			    					<div class="pt_l_listDiv" th:trnum="${nList.tr_pk_num}" th:onclick="pasttrip(this.getAttribute('trnum'))"> 
+			    						<div class="pt_list_blank"></div>
+			    						<div class="pt_list_title" th:text="${nList.tr_title}"></div>
+			    						<div class="pt_list_date" th:text="${nList.tr_in}"></div>
+			    						<div class="pt_list_date" th:text="${nList.tr_out}"></div>
+			    					</div>
+		    					</th:block>
+		    				</li>
+		    			</ul>
+		    		</div>
+		    	</div>
+	    	</div>
+	    </div>
+    </div>
+    
+<script th:inline="javascript">
+
+//달력 API
+document.addEventListener('DOMContentLoaded', function() {
+	
+	/*<![CATA[*/
+	/*]]*/
+	
+	var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+    	editable: true,
+    	selectable: true,
+    	
+		/* select: function(info) {
+    		console.log(info.startStr + "," + info.endStr);
+    	},
+    	
+    	dateClick: function() {
+    	    alert('a day has been clicked!');
+    	  }, */
+    
+    	initialView: 'dayGridMonth'
+    });
+    
+    calendar.on('dateClick', function(info) {
+    	  console.log(info.dateStr);
+    	});
+
+    calendar.render();
+  });
+//달력 API END
+
+function pasttripshare(s){
+	console.log(s);
+	
+	alert("준비중입니다.");
+}
+
+
+
+function pasttripDelete(d){
+	console.log(d);
+	var tnum = {"bk_fk_tnum" : d};
+	
+	$.ajax({
+		url : "pasttripDelete",
+		type : "post",
+		data : tnum,
+		dataType : "JSON",
+		success : function(result){
+			console.log(result.res);
+			if(result.res == "ok"){
+				alert("1");
+				location.href="/Mypage_PastTrip";
+			}
+			else{
+				alert("3");
+			}
+		},
+		error : function(error){
+			console.log(error.res);
+			alert("3");
+		}
+	});
+}
+
+function pasttrip(num){
+	var tnum = {"tr_pk_num" : num};
+	
+	console.log(tnum);
+	
+	$.ajax({
+		url : "pasttripinfo",
+		type : "post",
+		data : tnum,
+		dataType : "JSON",
+		success : function(result){
+			
+			var ntinfo = result.ntinfo;
+			var price = result.price;
+			
+			var caldata = result.eList;
+			
+			var deleteTag =
+				'<input type="button" value="삭제" onclick="pasttripDelete(' + ntinfo.tr_pk_num + ')">';
+			var shareTag = 
+				'<input type="button" value="공유" onclick="pasttripshare(' + ntinfo.tr_pk_num + ')">';
+				
+				
+				$(".pt_t1_d1_text3").html(ntinfo.tr_title);
+				$(".pt_t1_d1_text3-1").html(ntinfo.tr_in);
+				$(".pt_t1_d1_text3-2").html(ntinfo.tr_out);
+				$(".pt_t1_d1_text3-3").html(price);
+				$(".pt_t1_d1_text4").html(ntinfo.tr_relationship);
+				$(".pt_img").html(ntinfo.b_img);
+				
+				$(".pt_btn1_3").html(deleteTag);
+				$(".pt_btn1_2").html(shareTag);
+			
+			var calendarEl = document.getElementById('calendar');
+		    var calendar = new FullCalendar.Calendar(calendarEl, {
+		    	editable: true,
+		    	selectable: true,
+		    	
+				/* select: function(info) {
+		    		console.log(info.startStr + "," + info.endStr);
+		    	},
+		    	
+		    	dateClick: function() {
+		    	    alert('a day has been clicked!');
+		    	  }, */
+		    
+		    	initialView: 'dayGridMonth',
+		    	
+		    	events: caldata
+		    });
+		    
+		    calendar.on('dateClick', function(info) {
+		    	  console.log(info.dateStr);
+		    	});
+
+		    calendar.render();
+			
+			console.log(result.ptinfo);
+		},
+		error : function(error){
+			console.log(error.res);
+			alert("3");
+		}
+	});
+}
+
+</script>
+ 
+</body>
+</html>

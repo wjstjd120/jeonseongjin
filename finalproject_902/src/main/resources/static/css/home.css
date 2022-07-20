@@ -1,0 +1,872 @@
+@charset "UTF-8";
+.main_home{
+    background: url("/image/메인홈화면.png");
+    height: 969px;
+    width: 1920px;
+}
+
+* {
+   padding: 0px;
+   margin: 0px;
+    /*
+   border: 1px solid;
+*/
+}
+/*헤더헤덯더ㅔ*/
+header, .Header {
+    height: 80px;
+    width: 1920px;
+}
+
+.Title {
+    float: left;
+    font-size: 50pt;
+    font-weight: 800;
+    margin-left: 40px;
+    margin-top: 20px;
+}
+
+.Title1 {
+    float: right;
+    margin: 200px 320px 0 0;
+    text-shadow: 2.5px 2px 2px grey;
+}
+.Title1>a {
+    font-size: 80pt;
+    font-weight: bold;
+}
+.Title2 {
+    float: right;
+    margin: 330px -585px 0 0;
+    font-size: 45px;
+    color: orange;
+    font-weight: 900;
+    text-shadow: 2.5px 2px 2px grey;
+}
+
+
+.Member {
+    float: right;
+    margin-top: 15px;
+    margin-right: 10px;
+}
+.Member>span{
+	margin-right: 20px;
+}
+.Member>span>a {
+    font-size: 12pt;
+    color: saddlebrown;
+    font-weight: bold;
+}
+
+.M2, .M1, .M3 {
+    float: left;
+}
+
+.Menu {
+    float: left;
+    margin-left: 50px;
+    margin-top: 20px;
+}
+.Menu>span {
+    font-size: 23pt;
+    font-weight: 700;
+    margin-left: 20px;
+}
+.Menu>span>a {
+    color: white;
+}
+/*여기까지*/
+p{
+    text-align: center;
+    font-size: 25pt;
+    padding: 40px 0 20px 0;
+} 
+
+#calendar{
+   widows: 400px;
+   height: 350px;
+}
+th{
+   width: 55px;
+}
+tr{
+   height: 3px;
+}
+
+.weatherinfo {
+    position: fixed;
+    margin: 140px 0px 1300px 1680px;
+    background-color: orangered;
+    opacity: 0.7;
+    padding: 10px;
+    border-radius: 10px;
+}
+.weatherinfo>div {
+    color: white;
+    font-weight: 900;
+}
+.ctitle {
+    color: white;
+    text-shadow: 2px 2px 2px grey;
+}
+.cDate{
+   font-weight: 700;
+}
+.cicon{
+   float: right;
+   margin-top: -50px;
+}
+/*헤더헤더헤더
+
+header{
+    text-align: center;
+}
+
+.Header{
+    width: 100%;
+    height: 150px;
+    border: 1px solid;
+    overflow: hidden;
+}
+.Member{
+    height: 25px;
+    margin-top: 5px;
+}
+.Member>span{
+    float: right;
+    margin-right: 20px;
+    font-size: 13pt;
+}
+.Title{
+    height: 80px;
+    font-size: 40pt;
+    text-align: center;
+    width: 100%;
+}
+.Menu>span{
+    font-size: 20pt;
+    margin: 0 20px 0 20px;
+}
+.Pic_menu{
+    float: left;
+    width: 16%;
+    height: 1200px;
+    border: 1px solid;
+}
+*/
+/*캘린더껴있는 곳*/
+
+/*본격 캘린더*/
+.calendar_container {
+    position: absolute;
+    left: 178px;
+    top: 200px;
+    display: flex;
+    justify-content: space-evenly;
+    width: 350px;
+    background-color: white;
+    border-radius: 30px;
+}
+
+.hide {
+    display:none;
+}
+
+.calendar_container > button {
+    margin-top: 7%;
+    font-weight: bold;
+    height:10px;
+}
+
+.left_button {
+    margin-left:17%;
+    border: transparent;
+}
+
+.right_button {
+    margin-right:12%;
+    border: transparent;
+}
+
+.calendar {
+    display:flex;
+    flex-direction: column;
+    justify-content:center;
+    align-items: center;
+    margin-right:2.5%;
+}
+
+
+.calendar_days > button {
+    width: 35px;
+    height: 30px;
+    border-radius: 100%;
+    background-color: transparent;
+    border: transparent;
+    color: saddlebrown;
+    font-size: 12pt;
+}
+
+table {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.day {
+    text-align: center;
+    font-size: 17px;
+    font-weight: 800;
+    color: saddlebrown;
+}
+.title {
+    color: saddlebrown;
+    font-weight: 900;
+}
+
+
+.day_hover {
+    border: 1px solid black !important;
+}
+
+.day_selected {
+    background-color: orangered !important;
+    color: #ffff;
+}
+
+.gray {
+    background-color: rgb(241, 241, 241) !important;
+}
+
+.weatherinfo{
+   float: right;
+   display: inline-block;
+}
+
+/*캘린더 끝*/
+.container{
+	height: 889px;
+	width: 1290px;
+}
+.main_contents{
+    margin-bottom: 100px;
+    height: 600px;
+    
+}
+ .main_contents_img{
+   width: 100%;
+    height: 600px;
+}
+
+.Schedule {
+    width: 500px;
+    height: 690px;
+    margin-left: 300px;
+    margin-top: -520px;
+    text-align: center;
+	background-color: orangered;
+    opacity: 0.8;
+    border-radius: 30px;
+}
+.Schedule1{
+    display: inline-block;
+    margin-top: 25px;
+    width: 400px;
+   height: 500px;
+}
+/*
+.Schedule_date{
+    width: 400px;
+    height: 30px; 
+}
+*/
+.Schedule_calendar{
+   margin-top: 150px;
+    width: 400px;
+    height: 300px;
+}
+#trin2 {
+    margin-top: 365px;
+}
+.Schedule_name {
+    width: 342px;
+    height: 30px;
+    float: left;
+    margin-left: 30px;
+    border: 1px solid orange;
+    border-radius: 15px;
+    background-color: white;
+    padding-left: 5px;
+    margin-top: 3px;
+}
+.Schedule_name_btn{
+    width: 45px;
+    height: 30px;
+    float: left;
+}
+
+/*인원명 라디오버튼 없애고 그림으로*/
+.s1, .img{
+    width: 85px;
+    height: 85px;
+    
+
+}
+.btn{
+    opacity: 0;
+}
+
+input[type=radio]:checked + .s1{
+    box-shadow: 3px 3px 3px 3px red;
+}
+label{
+    float: left;
+    margin-left: 12px;
+}
+
+.Schedule_go {
+    width: 150px;
+    height: 50px;
+    margin-top: 20px;
+    display: inline-block;
+    font-size: 12pt;
+    border-radius: 10px;
+    background-color: white;
+    border: 0;
+    font-weight: 800;
+    color: saddlebrown;
+}
+
+
+/*추천상품*/
+.md_product{
+    /*overflow: hidden;*/
+    height: 800px;
+    text-align: center;
+    width: 100%;
+}
+.md_product1{
+    display: inline-block;
+    width: 1320px;
+
+}
+
+.md_ad{
+   width: 500px;
+   height: 600px;
+    float: left;
+    background-color: red;
+}
+/*
+.md_company{
+    width: 820px;
+    height: 600px;
+    float: left;
+    margin-left: 20px;
+    margin-right: 280px;
+}
+.md_company1{
+    margin-bottom: 20px;
+}
+
+.md_company1, .md_company2{
+    height: 290px;
+    width: 820px;
+}
+*/
+.md_title1, .md_title2, .md_img1, .md_img2{
+    float: left;
+    height: 290px;
+    width: 400px;
+}
+.md_title1, .md_img2{
+    margin-left: 20px;
+}
+.md_img2, .md_title2{
+    margin-top: 20px;
+}
+
+/* md 추천 상품 끝 */
+
+
+
+/* 부트영역 BEST상품*/
+.best_product{
+    height: 900px;
+    overflow: hidden;
+}
+.demo {
+   padding: 45px 0
+}
+
+.product-grid2 {
+   font-family: 'Open Sans', sans-serif;
+   position: relative
+}
+
+.product-grid2 .product-image2 {
+   overflow: hidden;
+   position: relative
+}
+
+.product-grid2 .product-image2 a {
+   display: block
+}
+
+.product-grid2 .product-image2 img {
+   width: 100%;
+   height: auto
+}
+
+.product-image2 .pic-1 {
+   opacity: 1;
+   transition: all .5s;
+   border-radius: 10%;
+}
+
+.product-grid2:hover .product-image2 .pic-1 {
+   opacity: 0
+}
+
+.product-image2 .pic-2 {
+   width: 100%;
+   height: 100%;
+   opacity: 0;
+   position: absolute;
+   top: 0;
+   left: 0;
+   transition: all .5s;
+   border-radius: 10%;
+}
+
+.product-grid2:hover .product-image2 .pic-2 {
+   opacity: 1
+}
+
+.product-grid2 .social {
+   padding: 0;
+   margin: 0;
+   position: absolute;
+   bottom: 50px;
+   right: 25px;
+   z-index: 1
+}
+
+.product-grid2 .social li {
+   margin: 0 0 10px;
+   display: block;
+   transform: translateX(100px);
+   transition: all .5s
+}
+
+.product-grid2:hover .social li {
+   transform: translateX(0)
+}
+
+.product-grid2:hover .social li:nth-child(2) {
+   transition-delay: .15s
+}
+
+.product-grid2:hover .social li:nth-child(3) {
+   transition-delay: .25s
+}
+
+.product-grid2 .social li a {
+   color: #505050;
+   background-color: #fff;
+   font-size: 17px;
+   line-height: 45px;
+   text-align: center;
+   height: 45px;
+   width: 45px;
+   border-radius: 50%;
+   display: block;
+   transition: all .3s ease 0s
+}
+
+.product-grid2 .social li a:hover {
+   color: #fff;
+   background-color: #3498db;
+   box-shadow: 0 0 10px rgba(0, 0, 0, .5)
+}
+
+.product-grid2 .social li a:after, .product-grid2 .social li a:before {
+   content: attr(data-tip);
+   color: #fff;
+   background-color: #000;
+   font-size: 12px;
+   line-height: 22px;
+   border-radius: 3px;
+   padding: 0 5px;
+   white-space: nowrap;
+   opacity: 0;
+   transform: translateX(-50%);
+   position: absolute;
+   left: 50%;
+   top: -30px
+}
+
+.product-grid2 .social li a:after {
+   content: '';
+   height: 15px;
+   width: 15px;
+   border-radius: 0;
+   transform: translateX(-50%) rotate(45deg);
+   top: -22px;
+   z-index: -1
+}
+
+.product-grid2 .social li a:hover:after, .product-grid2 .social li a:hover:before
+   {
+   opacity: 1
+}
+
+.product-grid2 .add-to-cart {
+   color: #fff;
+   background-color: #404040;
+   font-size: 15px;
+   text-align: center;
+   width: 100%;
+   padding: 10px 0;
+   display: block;
+   position: absolute;
+   left: 0;
+   bottom: -100%;
+   transition: all .3s
+}
+
+.product-grid2 .add-to-cart:hover {
+   background-color: #3498db;
+   text-decoration: none
+}
+
+.product-grid2:hover .add-to-cart {
+   bottom: 0
+}
+
+.product-grid2 .product-new-label {
+   background-color: #3498db;
+   color: #fff;
+   font-size: 17px;
+   padding: 5px 10px;
+   position: absolute;
+   right: 0;
+   top: 0;
+   transition: all .3s
+}
+
+.product-grid2:hover .product-new-label {
+   opacity: 0
+}
+
+@media screen and (max-width:990px) {
+   .product-grid2 {
+      margin-bottom: 30px
+   }
+}
+
+.row1 {
+
+   margin-right: 30px;
+   width: 330px;
+   float: left;
+}
+
+.row2 {
+   width: 330px;
+   float: left;
+   margin-left: 10px;
+}
+.row3 {
+
+   margin-left: 30px;
+   width: 330px;
+   float: right;
+}
+
+.row4 {
+   width: 330px;
+   float: right;
+   margin-right: 10px;
+}
+.best_product{
+    text-align: center;
+}
+.room, .active{
+    width: 1380px;
+    display: inline-block;
+}
+
+
+/* best 상품 영역 */
+.event{
+    height: 800px;
+    text-align: center;
+}
+.event_1{
+    width: 1325px;
+    height:  620px;
+    display: inline-block;
+
+}
+.main_event{
+    width: 800px;
+    height: 300px;
+    float: left;
+}
+.best_event>div{
+    width: 390px;
+    height: 300px;
+}
+.best_event1, .best_event2{
+    float: left;
+    margin-top: 20px;
+}
+.best_event2{
+    margin-left: 20px;
+}
+.event_slider{
+    width: 500px;
+    height: 620px;
+    float: right;
+}
+  /* 블로그 후기글*/
+.blog{
+    text-align: center;
+}
+.blog_1{
+    display: inline-block;
+    width: 1330px;
+    height: 550px;
+}
+.main_blog{
+    background-color: aqua;
+    width: 440px;
+    height: 440px;
+    float: left;
+    border-radius: 5%;
+}
+.mini_blog1, .mini_blog2{
+    width: 220px;
+    height: 220px;
+    float: left;
+    background-color: red;
+    border-radius: 10%;
+}
+
+/* 사이트만의 주요 기능 */
+.function{
+    text-align: center;
+}
+.main_function{
+    display: inline-block; 
+    width: 1330px;
+    height: 400px;
+    border-radius: 30px;
+}
+.main_function>p{
+    font-size: 25pt;
+}
+.main_function>div{
+    width: 400px;
+    height: 280px;
+    float: left;
+    margin-left: 32px;
+}
+.jejuplean{
+    width: 300px;
+    height: 30px;
+    position: absolute;
+    margin-top: 230px;
+    margin-left: -350px;
+    border-radius: 20px;
+
+}
+.img1{
+    position: relative;
+}
+
+/*사이트 주요기능 더미 
+.function1, .function2, .function3{
+    width: 400px;
+    height: 300px;
+    text-align: center;
+    float: left;
+}
+
+.function_img1{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    position: relative;
+    background-color: orange;
+    display: inline-block;
+}
+.function_text1{
+    width: 300px;
+    height: 200px;
+    position: absolute;
+    background-color :brown;
+    margin-top: 50px;
+    margin-left: 50px;
+    border-radius: 20px;
+    text-align: center;
+
+}
+.button1{
+    background-color: orange;
+    border-radius: 20px;
+    height: 35px;
+    width: 230px;
+    align-self: center;
+    display: inline-block;
+}
+.text1{
+    font-size: 18pt;
+    font-weight: 900;
+    padding-bottom: 0;
+    padding-top: 50px;
+}
+.text2{
+    padding-top: 0%;
+    font-size: 18pt;
+    font-weight: 500;
+    padding-bottom: 0;
+}
+.text3{
+    font-size: 10pt;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+*/
+
+/* 하단 메뉴 */
+.last{
+    width: 100%;
+    height: 500px;
+    text-align: center;
+}
+.last1{
+    width: 1330px;
+    height: 300px;
+    margin-top: 100px;
+    display: inline-block;
+}
+.jeju_noties, .jeju_qa, .board{
+    width: 400px;
+    height: 300px;
+    float: left;
+}
+.jeju_qa, .board{
+    margin-left: 65px;
+}
+.jeju_noties, .jeju_qa{
+    text-align: center;
+}
+.jeju_noties_up, .jeju_qa_up{
+    margin-top: 5px;
+    width: 360px;
+    height: 50px;
+    display: inline-block;
+}
+.jeju_noties_up>p ,.jeju_qa_up>p{
+    float: left ;
+    font-size: 18pt;
+    margin-top: -35px;
+}
+.jeju_noties_up>a, .jeju_qa_up>a{
+    float: right;
+    margin-top: 5px;
+}
+.jeju_noties_td, .jeju_qa_td{
+    width: 90%;
+    margin-left: 20px;
+
+}
+
+
+
+table.jeju_noties_td td, table.jeju_qa_td td{
+    text-align: left;
+    margin-left: 20px;
+    font-size: 14pt;
+    border-bottom: 1px solid;
+  
+}
+
+
+/*6개 이미지 들어가는 바*/
+.board{
+    text-align: center;
+}
+.board1{
+    margin-top: 18px;
+
+}
+.board1, .board2{
+    width: 350px;
+    height: 130px;
+    background-color: #000;
+    display: inline-block;
+}
+.board1>div, .board2>div{
+    width: 110px;
+    height: 110px;
+    background-color: antiquewhite;
+    float: left;
+    margin-top: 10px;
+}
+.qa, .many_qa, .my_qa, .refund{
+    margin-left: 10px;
+}
+
+/*푸터푸터푸터*/
+/*푸터 공간잡아보기*/
+Footer{
+    height: 250px;
+    background-color: green;
+    text-align: center;
+}
+.Footer{
+    width: 80%;
+    height: 200px;
+    display: inline-block;
+
+
+}
+.Foter1{
+    float: left;
+    margin-top: 70px;
+}
+.Footer_text1{
+    font-size: 35pt;
+    font-weight: 700;
+
+}
+.Footer_text2{
+    font-size: 20pt;
+    font-weight: 600;
+
+}
+.Footer_text3{
+    text-align: left;
+    margin-left: 350px;
+    margin-top: 85px;
+}
+.Solo, .Terms, .Store, .Admin{
+    float: left;
+    font-size: 15pt;
+    font-weight: 800;
+    cursor: pointer;
+   /* border-bottom: 1px solid;
+    background-color: antiquewhite;*/
+}
+.Terms, .Store, .Admin{
+    margin-left: 15px;
+}
+.Footer_menu{
+    margin-left: 350px;
+    margin-top: 5px;
+
+}

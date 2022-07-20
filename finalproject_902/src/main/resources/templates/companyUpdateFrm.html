@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http:www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>page - 업체 수정 페이지</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<style type="text/css">
+* {
+	padding: 0;
+	margin: 0;
+}
+
+.joinFrm {
+	width: 550px;
+	height: 680px;
+	margin: 0 auto;
+	margin-top: 120px;
+	float: left;
+}
+
+#popupDiv { /* 팝업창 css */
+	top: 0px;
+	position: absolute;
+	background-color: #FFFFFF;
+	width: 900px;
+	height: 700px;
+	display: none;
+	border: 1px solid #FFFFFF;
+	z-index: 10;
+}
+
+#popup_mask { /* 팝업 배경 css */
+	position: fixed;
+	width: 100%;
+	height: 1000px;
+	top: 0px;
+	left: 0px;
+	display: none;
+	background-color: #000;
+	opacity: 0.6;
+}
+
+table {
+	text-align: center;
+	width: 100%;
+}
+
+input[type=text], input[type=password], input[type=email] {
+	width: 100%;
+	height: 40px;
+	border: 1px solid lightgray;
+	border-radius: 20px;
+	padding-left: 20px;
+	margin-bottom: 20px;
+}
+
+input[type=button] {
+	width: 70%;
+	height: 40px;
+	border: 1px solid lightgray;
+	border-radius: 20px;
+	margin-left: 70px;
+	margin-bottom: 20px;
+	background-color: white;
+}
+
+input[type=button]:hover {
+	background-color: #dcdcdc;
+}
+
+input[type=button]:active {
+	box-shadow: 1px 1px 0 rgb(0, 0, 0, 0.5);
+	position: relative;
+	top: 2px;
+}
+
+button {
+	width: 120px;
+	height: 40px;
+	border: 1px solid lightgray;
+	margin-left: 70px;
+	margin-bottom: 20px;
+	background-color: white;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+button:hover {
+	background-color: #dcdcdc;
+}
+
+button:active {
+	box-shadow: 1px 1px 0 rgb(0, 0, 0, 0.5);
+	position: relative;
+	top: 2px;
+}
+
+.clickImg {
+	border: 1px solid lightgray;
+	border-radius: 20px;
+	width: 100px;
+	height: 40px;
+	line-height: 40px;
+	margin-bottom: 20px;
+}
+
+.clickImg:hover {
+	background-color: #dcdcdc;
+}
+
+.clickImg:active {
+	box-shadow: 1px 1px 0 rgb(0, 0, 0, 0.5);
+	position: relative;
+	top: 2px;
+}
+/* CSS */
+.button-48 {
+	appearance: none;
+	background-color: #FFFFFF;
+	border-width: 0;
+	box-sizing: border-box;
+	color: #000000;
+	cursor: pointer;
+	display: inline-block;
+	font-family: Clarkson, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: 500;
+	letter-spacing: 0;
+	line-height: 1em;
+	opacity: 1;
+	outline: 0;
+	padding: 1.5em 2.2em;
+	position: relative;
+	text-align: center;
+	text-decoration: none;
+	text-rendering: geometricprecision;
+	text-transform: uppercase;
+	transition: opacity 300ms cubic-bezier(.694, 0, 0.335, 1),
+		background-color 100ms cubic-bezier(.694, 0, 0.335, 1), color 100ms
+		cubic-bezier(.694, 0, 0.335, 1);
+	user-select: none;
+	-webkit-user-select: none;
+	touch-action: manipulation;
+	vertical-align: baseline;
+	white-space: nowrap;
+	width: 200px;
+	margin-left: 175px;
+	margin-top: 20px;
+}
+
+.button-48:before {
+	animation: opacityFallbackOut .5s step-end forwards;
+	backface-visibility: hidden;
+	background-color: #EBEBEB;
+	clip-path: polygon(-1% 0, 0 0, -25% 100%, -1% 100%);
+	content: "";
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	transform: translateZ(0);
+	transition: clip-path .5s cubic-bezier(.165, 0.84, 0.44, 1),
+		-webkit-clip-path .5s cubic-bezier(.165, 0.84, 0.44, 1);
+	width: 100%;
+}
+
+.button-48:hover:before {
+	animation: opacityFallbackIn 0s step-start forwards;
+	clip-path: polygon(0 0, 101% 0, 101% 101%, 0 101%);
+}
+
+.button-48:after {
+	background-color: #FFFFFF;
+}
+
+.button-48 span {
+	z-index: 1;
+	position: relative;
+}
+
+#file-upload, #multifile-upload {
+	background: #C8FFFF;
+}
+
+.short {
+	width: 20%;
+}
+
+.long {
+	width: 100%;
+}
+
+.ctd {
+	margin-bottom: 20px;
+}
+
+.box2 {
+	border: 1px solid lightgray;
+	border-radius: 20px;
+	width: 120px;
+	height: 40px;
+	line-height: 40px;
+	margin-bottom: 20px;
+	margin-left: 19px;
+}
+
+.box3 {
+	border: 1px solid lightgray;
+	border-radius: 20px;
+	width: 100px;
+	height: 40px;
+	line-height: 40px;
+	margin-bottom: 20px;
+	margin-right: 19px;
+}
+
+.box4 {
+	width: 100%;
+	height: 40px;
+	background-color: lightgray;
+	margin-bottom: 20px;
+	border: 1px solid lightgray;
+	border-radius: 20px;
+	margin-left: 10px;
+	padding-left: 10px;
+	line-height: 40px;
+}
+
+.imgbox {
+	width: 400px;
+	height: 500px;
+	margin: 0 auto;
+	margin-top: 30px;
+	padding: 20px;
+}
+
+.layerkd {
+	width: 200px;
+	height: 200px;
+	margin-left: 50px;
+	cursor: pointer;
+	margin-top: 20px;
+}
+.s1{
+    width: 120px;
+    height: 120px;
+   	text-align: center;
+   	line-height: 85px; 
+
+}
+.btn{
+    opacity: 0;
+}
+
+
+input[type=checkbox]:checked + .s1{
+    box-shadow: 3px 3px 3px 3px lightgray;
+}
+label{
+    float: left;
+    margin-left: 12px;
+}
+
+.Schedule_go{
+    width: 150px;
+    height: 30px;
+    margin-top: 10px;
+    display: inline-block;
+}
+
+</style>
+</head>
+<body>
+	<div style="margin: 0 auto; width: 1656px;">
+		<div class="joinFrm">
+			<div class="imgbox">
+				<h2 style="text-align: center;">기존 대문 사진</h2>
+				<div id="cimg_sol"
+					style="height: 300px; overflow: auto; margin-left: 40px">
+					<img th:src="@{/upload/}+${cdto.c_img}" class="layerkd">
+				</div>
+			</div>
+		</div>
+		<div class="joinFrm">
+			<form th:action="@{companyUpdate}" method="post"
+				enctype="multipart/form-data" name="cjoinFrm"
+				onsubmit="return joincheck()">
+				<table>
+					<tr>
+						<td colspan="2"><h2>쩨주옵서예</h2></td>
+					</tr>
+					<tr>
+						<td colspan="2"><span>WELCOME TO JEJU - COMPANYUPDATE</span>
+							<input type="hidden" name="c_pk_cnum"
+							th:value="${cdto.c_pk_cnum}"> <input type="hidden"
+							name="c_img" th:value="${cdto.c_img}"></td>
+					</tr>
+					<tr>
+						<td colspan="2"><input type="text" class="frm"
+							id="m_nickname" title="아이디" name="c_fk_id" readonly="readonly"
+							th:value="${session.user.m_pk_id}" placeholder="회원아이디"></td>
+					</tr>
+					<tr>
+						<td colspan="2"><input type="text" class="frm" id="c_type"
+							title="업체특징" name="c_type" placeholder="업체특징"
+							th:value="${cdto.c_type}"></td>
+					</tr>
+					<tr>
+						<td colspan="2"><input type="text" class="frm" id="c_phone"
+							title="업체전화번호" name="c_phone" placeholder="업체전화번호"
+							th:value="${cdto.c_phone}"></td>
+					</tr>
+				</table>
+				<table>
+					<tr>
+						<td class="short"><input type="file" class="frm" id="c_img"
+							title="업체대문사진" name="c_img" placeholder="사진받기"
+							onchange="solImg(event)">
+							<div class="clickImg">
+								<label for="c_img">사진선택</label>
+							</div> <input type="hidden" id="fileCheck" name="fileCheck" value="0">
+						</td>
+						<td class="long"><div id="file-upload" class="box4">선택된
+								사진이 없습니다.</div></td>
+					</tr>
+					<tr>
+						<td class="short"><input type="file" class="frm" title="업체사진"
+							id="c_multiimg" name="c_multiimg" placeholder="사진받기"
+							onchange="multiImg(event)" multiple="multiple">
+							<div class="clickImg">
+								<label for="c_multiimg">사진선택</label>
+							</div> <input type="hidden" id="multifileCheck" title="업체사진"
+							name="multifileCheck" value="0"></td>
+						<td class="long"><div id="multifile-upload" class="box4">선택된
+								사진이 없습니다.</div></td>
+					</tr>
+				</table>
+				<button class="button-48" role="button">
+					<span class="text"> Update </span>
+				</button>
+				<br>
+				<button type="button" class="button-48" role="button"
+					th:songjan="${cdto.c_category}"
+					th:onclick="optionCheck(this.getAttribute('songjan'))">
+					<span class="text"> OptionCheck </span>
+				</button>
+				<br>
+				<button type="button" class="button-48" role="button"
+					onclick="back()">
+					<span class="text"> Back </span>
+				</button>
+			</form>
+		</div>
+		<div class="joinFrm">
+			<div class="imgbox">
+				<h2 style="text-align: center;">업체 사진</h2>
+				<h6 style="text-align: center;">(누르면 삭제됩니다)</h6>
+				<div style="height: 300px; overflow: auto; margin-left: 40px">
+					<span id="cimg_legend"> <th:block th:each="data:${ciList}">
+							<img th:src="@{/upload/}+${data.ci_sysname}"
+								th:cnum="${cdto.c_pk_cnum}" th:sysname="${data.ci_sysname}"
+								th:onclick="del(this.getAttribute('cnum'),this.getAttribute('sysname'))"
+								class="layerkd">
+						</th:block>
+					</span> <span class="addImgTag"></span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="popupDiv">
+		
+		<div class="Schedule_people">
+		<th:block th:if="${#strings.equals(cdto.c_category,'숙박')}">
+				<th:block th:if="${#strings.equals(lodto.l_cityview,'1')}">
+				<label> <input type="radio" class="btn"
+					name="tr_relationship" value="l_cityview">
+					<div class="s1">
+						시티뷰✔
+					</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(lodto.l_cityview,'0')}">
+				<label> <input type="radio" class="btn"
+					name="tr_relationship" value="l_cityview">
+					<div class="s1">
+						시티뷰
+					</div>
+				</label>
+				</th:block>
+				
+				
+				<th:block th:if="${#strings.equals(lodto.l_seeview,'1')}">
+				<label> <input type="checkbox" class="btn"
+					name="tr_relationship" value="l_seeview">
+					<div class="s1">
+						바다뷰✔
+					</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(lodto.l_seeview,'0')}">
+				<label> <input type="checkbox" class="btn"
+					name="tr_relationship" value="l_seeview">
+					<div class="s1">
+						바다뷰
+					</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(lodto.l_skyview,'1')}">
+				<label> <input type="checkbox" class="btn"
+					name="tr_relationship" value="l_skyview">
+					<div class="s1">
+						하늘뷰✔
+					</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(lodto.l_skyview,'0')}">
+				<label> <input type="checkbox" class="btn"
+					name="tr_relationship" value="l_skyview">
+					<div class="s1">
+						하늘뷰
+					</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(lodto.l_outdoor,'1')}">
+				<label> <input type="checkbox" class="btn"
+					name="tr_relationship" value="l_outdoor">
+					<div class="s1">
+						야외테라스✔
+					</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(lodto.l_outdoor,'0')}">
+				<label> <input type="checkbox" class="btn"
+					name="tr_relationship" value="l_outdoor">
+					<div class="s1">
+						야외테라스
+					</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(lodto.l_petok,'1')}">
+				<label> <input type="checkbox" class="btn"
+					name="tr_relationship" value="l_petok">
+					<div class="s1">
+						애견동반✔
+					</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(lodto.l_petok,'0')}">
+				<label> <input type="checkbox" class="btn"
+					name="tr_relationship" value="l_petok">
+					<div class="s1">
+						애견동반
+					</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(lodto.l_bbq,'1')}">
+				<label> <input type="checkbox" class="btn"
+					name="tr_relationship" value="l_bbq">
+					<div class="s1">
+						바베큐✔
+					</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(lodto.l_bbq,'0')}">
+				<label> <input type="checkbox" class="btn"
+					name="tr_relationship" value="l_bbq">
+					<div class="s1">
+						바베큐
+					</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(lodto.l_cooking,'1')}">
+				<label> <input type="checkbox" class="btn"
+					name="tr_relationship" value="l_cooking">
+					<div class="s1">
+						취사✔
+					</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(lodto.l_cooking,'0')}">
+				<label> <input type="checkbox" class="btn"
+					name="tr_relationship" value="l_cooking">
+					<div class="s1">
+						취사
+					</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(lodto.l_pool,'1')}">
+				<label> <input type="checkbox" class="btn"
+					name="tr_relationship" value="l_pool">
+					<div class="s1">
+						수영장✔
+					</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(lodto.l_pool,'0')}">
+				<label> <input type="checkbox" class="btn"
+					name="tr_relationship" value="l_pool">
+					<div class="s1">
+						수영장
+					</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(lodto.l_spa,'1')}">
+				<label> <input type="checkbox" class="btn"
+					name="tr_relationship" value="l_spa">
+					<div class="s1">
+						스파✔
+					</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(lodto.l_spa,'0')}">
+				<label> <input type="checkbox" class="btn"
+					name="tr_relationship" value="l_spa">
+					<div class="s1">
+						스파
+					</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(lodto.l_wallpool,'1')}">
+				<label> <input type="checkbox" class="btn"
+					name="tr_relationship" value="l_wallpool">
+					<div class="s1">
+						월풀✔
+					</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(lodto.l_wallpool,'0')}">
+				<label> <input type="checkbox" class="btn"
+					name="tr_relationship" value="l_wallpool">
+					<div class="s1">
+						월풀
+					</div>
+				</label>
+				</th:block>
+				
+				<th:block th:if="${#strings.equals(lodto.l_garaoke,'1')}">
+				<label> <input type="checkbox" class="btn"
+					name="tr_relationship" value="l_garaoke">
+					<div class="s1">
+						노래방✔
+					</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(lodto.l_garaoke,'0')}">
+				<label> <input type="checkbox" class="btn"
+					name="tr_relationship" value="l_garaoke">
+					<div class="s1">
+						노래방
+					</div>
+				</label>
+				</th:block>
+				 
+		</th:block>
+		
+		<th:block th:if="${#strings.equals(cdto.c_category,'레저')}">
+				<th:block th:if="${#strings.equals(aodto.a_waterpark,'1')}">	
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_waterpark">
+				<div class="s1">
+					워터파크✔
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_waterpark,'0')}">	
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_waterpark">
+				<div class="s1">
+					워터파크
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_spa,'1')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_spa">
+				<div class="s1">
+					스파/온천✔
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_spa,'0')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_spa">
+				<div class="s1">
+					스파/온천
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_surfing,'1')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_surfing">
+				<div class="s1">
+					서핑/카약✔
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_surfing,'0')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_surfing">
+				<div class="s1">
+					서핑/카약
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_snowcooling,'1')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_snowcooling">
+				<div class="s1">
+					스노쿨링✔
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_snowcooling,'0')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_snowcooling">
+				<div class="s1">
+					스노쿨링
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_rafting,'1')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_rafting">
+				<div class="s1">
+					래프팅/보트✔
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_rafting,'0')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_rafting">
+				<div class="s1">
+					래프팅/보트
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_aquarium,'1')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_aquarium">
+				<div class="s1">
+					아쿠아리움✔
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_aquarium,'0')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_aquarium">
+				<div class="s1">
+					아쿠아리움
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_flowers,'1')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_flowers">
+				<div class="s1">
+					수목원✔
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_flowers,'0')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_flowers">
+				<div class="s1">
+					수목원
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_zoo,'1')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_zoo">
+				<div class="s1">
+					동물원✔
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_zoo,'0')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_zoo">
+				<div class="s1">
+					동물원
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_shooting,'1')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_shooting">
+				<div class="s1">
+					사격✔
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_shooting,'0')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_shooting">
+				<div class="s1">
+					사격
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_horse,'1')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_horse">
+				<div class="s1">
+					승마✔
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_horse,'0')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_horse">
+				<div class="s1">
+					승마
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_paragliding,'1')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_paragliding">
+				<div class="s1">
+					패러글라이딩✔
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_paragliding,'0')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_paragliding">
+				<div class="s1">
+					패러글라이딩
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_zipline,'1')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_zipline">
+				<div class="s1">
+					짚라인✔
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_zipline,'0')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_zipline">
+				<div class="s1">
+					짚라인
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_bike,'1')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_bike">
+				<div class="s1">
+					레일바이크✔
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_bike,'0')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_bike">
+				<div class="s1">
+					레일바이크
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_cart,'1')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_cart">
+				<div class="s1">
+					카트✔
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_cart,'0')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_cart">
+				<div class="s1">
+					카트
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_atv,'1')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_atv">
+				<div class="s1">
+					ATV✔
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_atv,'0')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_atv">
+				<div class="s1">
+					ATV
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_tourpass,'1')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_tourpass">
+				<div class="s1">
+					투어패스✔
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_tourpass,'0')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_tourpass">
+				<div class="s1">
+					투어패스
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_yort,'1')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_yort">
+				<div class="s1">
+					유람선/요트✔
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_yort,'0')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_yort">
+				<div class="s1">
+					유람선/요트
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_cablecar,'1')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_cablecar">
+				<div class="s1">
+					케이블카✔
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_cablecar,'0')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_cablecar">
+				<div class="s1">
+					케이블카
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_shipfishing,'1')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_shipfishing">
+				<div class="s1">
+					선상낚시✔
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_shipfishing,'0')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_shipfishing">
+				<div class="s1">
+					선상낚시
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_fishinglounge,'1')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_fishinglounge">
+				<div class="s1">
+					낚시터✔
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_fishinglounge,'0')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_fishinglounge">
+				<div class="s1">
+					낚시터
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_showpainting,'1')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_showpainting">
+				<div class="s1">
+					전시✔
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_showpainting,'0')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_showpainting">
+				<div class="s1">
+					전시
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_show,'1')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_show">
+				<div class="s1">
+					공연✔
+				</div>
+				</label>
+				</th:block>
+				<th:block th:if="${#strings.equals(aodto.a_show,'0')}">
+				<label> <input type="checkbox" class="btn"
+				name="tr_relationship" value="a_show">
+				<div class="s1">
+					공연
+				</div>
+				</label>
+				</th:block>
+		</th:block>
+		</div>
+		
+		<input type="button" value="수정하기" style="margin-left: 200px; width: 500px;" onclick="updateOption()">
+		<input type="button" id="popCloseBtn" value="끄기"
+			style="margin-left: 200px; width: 500px;">
+			
+	</div>
+
+
+	<div id="popup_mask"></div>
+
+</body>
+<script th:inline="javascript">
+$("input[type=file]").hide();
+console.log([[${cdto.c_category}]]);
+var ckOk = false;
+
+function updateOption(){
+	var arr = [];
+	var cate = [[${cdto.c_category}]];
+	var cnum = [[${cdto.c_pk_cnum}]]
+	
+	$('input:checkbox[name=tr_relationship]').each(function (index) {
+		if($(this).is(":checked")==true){
+	    	arr.push($(this).val());
+	    }
+	});
+	
+	console.log(arr);
+	
+	var objParams = {"arrList" : arr};
+	objParams.cate = cate;
+	objParams.cnum = cnum;
+    console.log(objParams);
+    
+    //ajax 호출
+    $.ajax({
+        url: "optionSend",
+        type: "post",
+        data: objParams,
+        dataType: "json",
+        success: function(retVal){
+        	alert(retVal.msg);
+        	
+        	var lodto = retVal.lodto;
+        	var aodto = retVal.aodto;
+        	
+        	var optionTag="";
+        	
+        	if(lodto != null){
+        		if(lodto.l_cityview == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='l_cityview'><div class='s1'>시티뷰✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='l_cityview'><div class='s1'>시티뷰</div></label>";
+        		}
+        		
+        		if(lodto.l_seeview == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='l_seeview'><div class='s1'>바다뷰✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='l_seeview'><div class='s1'>바다뷰</div></label>";
+        		}
+        		
+        		if(lodto.l_skyview == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='l_skyview'><div class='s1'>하늘뷰✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='l_skyview'><div class='s1'>하늘뷰</div></label>";
+        		}
+        		
+        		if(lodto.l_outdoor == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='l_outdoor'><div class='s1'>야외테라스✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='l_outdoor'><div class='s1'>야외테라스</div></label>";
+        		}
+        		
+        		if(lodto.l_petok == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='l_petok'><div class='s1'>애견동반✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='l_petok'><div class='s1'>애견동반</div></label>";
+        		}
+        		
+        		if(lodto.l_bbq == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='l_bbq'><div class='s1'>바베큐✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='l_bbq'><div class='s1'>바베큐</div></label>";
+        		}
+        		
+        		if(lodto.l_cooking == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='l_cooking'><div class='s1'>취사✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='l_cooking'><div class='s1'>취사</div></label>";
+        		}
+        		
+        		if(lodto.l_pool == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='l_pool'><div class='s1'>수영장✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='l_pool'><div class='s1'>수영장</div></label>";
+        		}
+        		
+        		if(lodto.l_spa == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='l_spa'><div class='s1'>스파✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='l_spa'><div class='s1'>스파</div></label>";
+        		}
+        		
+        		if(lodto.l_wallpool == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='l_wallpool'><div class='s1'>월풀✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='l_wallpool'><div class='s1'>월풀</div></label>";
+        		}
+        		
+        		if(lodto.l_garaoke == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='l_garaoke'><div class='s1'>노래방✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='l_garaoke'><div class='s1'>노래방</div></label>";
+        		}
+        	}
+        	
+        	if(aodto != null){
+        		if(aodto.a_waterpark == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_waterpark'><div class='s1'>워터파크✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_waterpark'><div class='s1'>워터파크</div></label>";
+        		}
+        		
+        		if(aodto.a_spa == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_spa'><div class='s1'>스파/온천✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_spa'><div class='s1'>스파/온천</div></label>";
+        		}
+        		
+        		if(aodto.a_surfing == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_surfing'><div class='s1'>서핑/카약✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_surfing'><div class='s1'>서핑/카약</div></label>";
+        		}
+        		
+        		if(aodto.a_snowcooling == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_snowcooling'><div class='s1'>스노쿨링✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_snowcooling'><div class='s1'>스노쿨링</div></label>";
+        		}
+        		
+        		if(aodto.a_rafting == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_rafting'><div class='s1'>래프팅/보트✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_rafting'><div class='s1'>래프팅/보트</div></label>";
+        		}
+        		
+        		if(aodto.a_aquarium == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_aquarium'><div class='s1'>아쿠아리움✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_aquarium'><div class='s1'>아쿠아리움</div></label>";
+        		}
+        		
+        		if(aodto.a_flowers == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_flowers'><div class='s1'>수목원✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_flowers'><div class='s1'>수목원</div></label>";
+        		}
+        		
+        		if(aodto.a_zoo == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_zoo'><div class='s1'>동물원✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_zoo'><div class='s1'>동물원</div></label>";
+        		}
+        		
+        		if(aodto.a_shooting == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_shooting'><div class='s1'>사격✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_shooting'><div class='s1'>사격</div></label>";
+        		}
+        		
+        		if(aodto.a_horse == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_horse'><div class='s1'>승마✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_horse'><div class='s1'>승마</div></label>";
+        		}
+        		
+        		if(aodto.a_paragliding == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_paragliding'><div class='s1'>패러글라이딩✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_paragliding'><div class='s1'>패러글라이딩</div></label>";
+        		}
+        		
+        		if(aodto.a_zipline == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_zipline'><div class='s1'>짚라인✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_zipline'><div class='s1'>짚라인</div></label>";
+        		}
+        		
+        		if(aodto.a_bike == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_bike'><div class='s1'>레일바이크✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_bike'><div class='s1'>레일바이크</div></label>";
+        		}
+        		
+        		if(aodto.a_cart == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_cart'><div class='s1'>카트✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_cart'><div class='s1'>카트</div></label>";
+        		}
+        		
+        		if(aodto.a_atv == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_atv'><div class='s1'>ATV✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_atv'><div class='s1'>ATV</div></label>";
+        		}
+        		
+        		if(aodto.a_tourpass == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_tourpass'><div class='s1'>투어패스✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_tourpass'><div class='s1'>투어패스</div></label>";
+        		}
+        		
+        		if(aodto.a_yort == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_yort'><div class='s1'>유람선/요트✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_yort'><div class='s1'>유람선/요트</div></label>";
+        		}
+        		
+        		if(aodto.a_cablecar == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_cablecar'><div class='s1'>케이블카✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_cablecar'><div class='s1'>케이블카</div></label>";
+        		}
+        		
+        		if(aodto.a_shipfishing == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_shipfishing'><div class='s1'>선상낚시✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_shipfishing'><div class='s1'>선상낚시</div></label>";
+        		}
+        		
+        		if(aodto.a_fishinglounge == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_fishinglounge'><div class='s1'>낚시터✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_fishinglounge'><div class='s1'>낚시터</div></label>";
+        		}
+        		
+        		if(aodto.a_showpainting == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_showpainting'><div class='s1'>전시✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_showpainting'><div class='s1'>전시</div></label>";
+        		}
+        		
+        		if(aodto.a_show == "1"){
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_show'><div class='s1'>공연✔</div></label>";		
+        		}else{
+        			optionTag += "<label><input type='checkbox' class='btn' name='tr_relationship' value='a_show'><div class='s1'>공연</div></label>";
+        		}
+        	}
+        	
+        	console.log(optionTag);
+        	
+        	$(".Schedule_people").html(optionTag);
+        },
+        error: function(request, status, error){
+            console.log("AJAX_ERROR");
+        }
+    });
+	
+}
+
+function optionCheck(cate){
+	console.log(cate);
+	
+	$("#popupDiv").css({
+		"top" : (($(window).height() - $("#popupDiv").outerHeight()) / 2 
+			+ $(window).scrollTop())
+			+ "px","left" : (($(window).width() - $("#popupDiv").outerWidth()) / 2
+			+ $(window).scrollLeft())
+			+ "px"
+			//팝업창을 가운데로 띄우기 위해 현재 화면의 가운데 값과 스크롤 값을 계산하여 팝업창 CSS 설정
+	});
+	$("#popup_mask").css("display","block"); //팝업 뒷배경 display block
+	$("#popupDiv").css("display","block"); //팝업창 display block
+	$("body").css("overflow", "hidden");//body 스크롤바 없애기
+	
+	// <img style="float: left; margin-right: 20px; " width="200px;" height="200px;" th:src="@{/upload/}+${cdto.c_img}">
+	// var imgtag = "<img class='layerkd' th:src='" +[[@{/upload/}]] + [[${cdto.c_img}]] + "'>"
+	// $("#cImg").html(imgtag);
+}
+$("#popCloseBtn").click(function(event) {
+	$("#popup_mask").css("display", "none"); //팝업창 뒷배경 display none
+	$("#popupDiv").css("display", "none"); //팝업창 display none
+	$("body").css("overflow", "auto");//body 스크롤바 생성
+	
+	
+	
+});
+
+
+
+function del(cnum, sysname){
+	var cheee = confirm("삭제하시겠습니까?");
+	var obj = {"cnum" : cnum};
+	obj.sysname = sysname;
+	if(cheee){
+	$.ajax({
+		url : "delCimg",
+		type : "post",
+		data : obj,
+		datatype : "json",
+		success: function(result){
+			var ciiList = result.ciList;
+			var cimgTag = "";
+			
+			for(var i = 0; i<ciiList.length; i++){
+				cimgTag +=
+					'<img src="/upload/' + ciiList[i].ci_sysname + '" onclick="del(\'' + cnum + '\',\'' + ciiList[i].ci_sysname + '\')" class="layerkd">'
+			}
+			
+			cimgTag +="<span class='ssdffe'></span>"
+			
+			$("#cimg_legend").html(cimgTag);
+			
+		},
+		error: function(result){
+			
+		}
+	});
+	}
+	
+}
+
+function back(){
+	location.href="company_contents?cnum="+[[${cdto.c_pk_cnum}]];
+}
+
+
+$("#c_img").on("change",function(){
+	var files = $("#c_img")[0].files;
+	console.log(files)
+		
+	if(files.length == 0){
+		$("#file-upload").html("선택된 사진이 없습니다.");
+		return;
+	}
+	
+	var sfilename = files[0].name;
+	
+	console.log("파일이름 : " + sfilename);
+	$("#file-upload").html(sfilename);
+	
+	$("#fileCheck").val(1);
+	console.log($("#fileCheck").val());
+	
+	
+	//fileCheck 부분 변경
+	if(sfilename == ""){//파일 취소 시
+		$("#filecheck").val(0);
+		$("#multifile-upload").val("파일선택");
+	}
+	else {//파일 선택 시
+		$("#filecheck").val(1);
+	}
+	console.log($("#filecheck").val());
+	
+});
+
+
+
+
+$("#c_multiimg").on("change", function(){
+	//파일 입력창에서 선택한 파일 목록 가져오기
+	var files = $("#c_multiimg")[0].files;
+	console.log($("#c_multiimg"));
+	console.log(files);
+	
+	var fileName = "";
+	
+	if(files.length > 1){//하나 이상의 파일 선택 시
+		fileName = files[0].name + " 외 "
+			+ (files.length - 1) + "개"
+	}
+	else if(files.length == 1){
+		fileName = files[0].name;
+	}
+	
+	$("#multifile-upload").html(fileName);
+	
+	//fileCheck 부분 변경
+	if(fileName == ""){//파일 취소 시
+		$("#multifileCheck").val(0);
+		$("#multifile-upload").html("선택된 사진이 없습니다");
+	}
+	else {//파일 선택 시
+		$("#multifileCheck").val(1);
+	}
+	console.log($("#multifileCheck").val());
+	
+});
+
+function solImg(event){ // 단독 이미지 미리보기
+	$("#cimg_sol").html("");
+	
+	 var reader = new FileReader();
+	 reader.onload = function(event) {
+    var solimg = document.createElement("img");
+    solimg.setAttribute("src", event.target.result);
+    solimg.setAttribute("onclick", "deletesolimg()");
+    solimg.setAttribute("id", "solImg");
+    solimg.setAttribute("class", "layerkd");
+     
+    document.querySelector("#cimg_sol").appendChild(solimg);
+    src = event.target.result;
+   };
+   
+   reader.readAsDataURL(event.target.files[0]);
+}
+
+
+function multiImg(event) { // 여러개 이미지 미리보기
+	$(".addImgTag").html("");
+   for (var image of event.target.files) {
+     
+	   var reader = new FileReader();
+       reader.onload = function(event) {
+       var img = document.createElement("img");
+       img.setAttribute("src", event.target.result);
+       img.setAttribute("class", "layerkd");
+       document.querySelector(".addImgTag").appendChild(img);
+     };
+     reader.readAsDataURL(image);
+   }
+ }
+
+
+</script>
+</html>

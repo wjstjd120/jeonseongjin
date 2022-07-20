@@ -1,0 +1,359 @@
+@charset "UTF-8";
+
+/*공통 레이아웃*/
+*{
+    padding: 0%;
+    margin: 0%;
+   /*
+    border: 1px solid;
+    */
+}
+
+/* header 레이아웃 */
+
+header{
+    text-align: center;
+    
+}
+
+.Header{
+    width: 100%;
+    height: 150px;
+/*    border: 1px solid;*/
+    overflow: hidden;
+}
+.Member{
+    height: 25px;
+    margin-top: 5px;
+}
+.Member>span{
+    float: right;
+    margin-right: 20px;
+    font-size: 13pt;
+}
+.Title{
+    height: 80px;
+    font-size: 40pt;
+    text-align: center;
+    width: 100%;
+}
+.Menu>span{
+    font-size: 20pt;
+    margin: 0 20px 0 20px;
+}
+
+.Pic_menu{
+    float: left;
+    /*width: 320px;*/
+    width: 16%;
+    height: 100%;
+/*    border: 1px solid;*/
+    box-sizing: border-box;
+    position: fixed;
+}
+
+/* 픽 메뉴의 내용*/
+/* 회원정보 div */
+.menu_div1{
+	width: 65%;
+	height: 300px;
+	float: right;
+	background-color: red;
+}
+
+.menu_title1{
+	width: 100%;
+	height: 50px;
+	margin-top: 50px;
+	text-align: left;
+	line-height: 50px;
+	background-color: lightyellow;
+}
+
+.menu_member{
+	width: 100%;
+	height: 40px;
+	text-align: left;
+	line-height: 40px;
+	float: left;
+	background-color: lightgreen;
+}
+
+.menu_div3{
+	width: 65%;
+	height: 400px;
+	float: right;
+	background-color: yellow;
+}
+
+.menu_title2{
+	width: 100%;
+	height: 50px;
+	text-align: left;
+	line-height: 50px;
+	background-color: lightyellow;
+}
+
+.menu_Travel{
+	width: 100%;
+	height: 40px;
+	text-align: left;
+	line-height: 40px;
+	float: left;
+	background-color: lightgreen;
+}
+
+.mypage_update {
+	float: left;
+	width: 84%;
+	margin-left:16%;
+	background-color: skyblue;
+	text-align: center;
+/*
+	border: 1px solid green;
+	box-sizing: border-box;
+*/
+}
+
+.mypagediv {
+	width: 1280px;
+	height: 783px;  /*화면에 보이는 높이*/ 
+	background-color: yellow;
+	display: inline-block;
+}
+
+.m_update {
+	width: 1230px;
+	height: 750px;
+	background-color: lightgreen;
+	margin: 20px auto;
+}
+
+.m_u_title {
+	width: 1230px;
+	height: 35px;
+	background-color: red;
+	text-align: left;
+	line-height: 35px;
+}
+
+.m_u_frm {
+	width: 1150px;
+	height: 700px;
+	background-color: lightyellow;
+	margin: 0 auto;
+}
+
+.m_frm1 {
+	width: 575px;
+	height: 45px;
+	background-color: yellow;
+	float: left;
+	line-height: 45px;
+}
+
+.m_frm2 {
+	width: 575px;
+	height: 45px;
+	background-color: lightblue;
+	float: left;
+	line-height: 45px;
+}
+
+.m_frm_div {
+	width: 900px;
+	height: 600px;
+	margin: 0 auto;
+	
+	background-color: red;
+	
+}
+
+.m_info {
+	width: 900px;
+	height: 270px;
+	background-color: lightgreen;
+	border-bottom: 2px solid;
+	box-sizing: border-box;
+}
+
+.m_frm_img {
+	width: 200px;
+	height: 200px;
+	float: left;
+	background-color: blue;
+}
+
+.m_frm_m {
+	width: 700px;
+	height: 200px;
+	float: left;
+	background-color: purple;
+}
+
+.m_1{
+	width: 700px;
+	height: 50px;
+	line-height: 50px;
+	background-color: green;
+}
+
+.m_1_1 {
+	width: 100px;
+	height: 50px;
+	line-height: 50px;
+	background-color: lightblue;
+	float: left;
+	margin-left: 20px;
+}
+
+.m_1_2 {
+	width: 30px;
+	height: 50px;
+	line-height: 50px;
+	background-color: lightyellow;
+	float: left;
+}
+
+.m_1_3 {
+	width: 550px;
+	height: 50px;
+	line-height: 50px;
+	float: left;
+	background-color: purple;
+}
+
+.agreement_div {
+	width: 900px;
+	height: 330px;
+	background-color: lightblue;
+}
+
+.agreement_title {
+	width: 900px;
+	height: 60px;
+	text-align: left;
+	border-bottom: 2px solid black;
+	box-sizing: border-box;
+	line-height: 60px;
+}
+
+.agreement_text {
+	text-align: left;
+	padding-top: 15px;
+}
+
+.agreement_menu {
+	width: 900px;
+	height: 70px;
+	background-color: lightyellow;
+}
+
+.a_menu {
+	float: left;
+	margin: 30px 0 0 0;
+	/*background-color: yellow;*/
+}
+
+.c_box {
+	margin: 0 10px 0 60px;
+}
+
+.agreement_btn {
+	width: 900px;
+	height: 140px;
+	background-color: lightgreen;
+	border-bottom: 2px solid black;
+	box-sizing: border-box;
+}
+
+.a_box1 {
+	width: 100px;
+	height: 140px;
+	float: right;
+	background-color: white;
+	border-bottom: 2px solid black;
+	box-sizing: border-box;
+}
+
+.a_box2 {
+	width: 100px;
+	height: 140px;
+	float: right;
+	background-color: white;
+	border-bottom: 2px solid black;
+	box-sizing: border-box;
+}
+
+.a_0 {
+	width: 100px;
+	height: 70px;
+	background-color: white;
+}
+
+.a_btn1 {
+	width: 100px;
+	height: 50px;
+	line-height: 50px;
+	background-color: red;	
+}
+
+.a_btn2 {
+	width: 100px;
+	height: 50px;
+	line-height: 50px;
+	background-color: green;
+}
+
+.m_frm_btn {
+	width: 900px;
+	height: 80px;
+	background: purple;
+	margin: 0 auto;
+}
+
+.m_btn1 {
+	width: 450px;
+	height: 80px;
+	float: left;
+	background-color: yellow;
+}
+
+.m_btn01 {
+	width: 100px;
+	height: 80px;
+	float: right;
+	background-color: red;
+	margin-right: 25px;
+}
+
+.m_btn1_lo {
+	width: 100px;
+	height: 50px;
+	background-color: lightgreen;
+	margin-top: 20px;
+	line-height: 50px;
+}
+
+.m_btn2 {
+	width: 450px;
+	height: 80px;
+	float: left;
+	background-color: blue;
+}
+
+.m_btn02 {
+	width: 100px;
+	height: 80px;
+	float: left;
+	background-color: red;
+	margin-left: 25px;
+}
+
+.m_btn2_lo {
+	width: 100px;
+	height: 50px;
+	background-color: lightgreen;
+	margin-top: 20px;
+	line-height: 50px;
+}

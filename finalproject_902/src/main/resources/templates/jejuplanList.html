@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http:www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+   <title>page -jejuplanlist</title>
+    <link th:href="@{/css/jejuplan.css}" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="css/home.css">
+    <script src="https://kit.fontawesome.com/2cc77ea41b.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+ <style type="text/css">
+ .viewimg {
+   width: 100%;
+   height: 100%;
+   border-radius: 10px;
+}
+</style>
+</head>
+<body>
+    <header>
+        <div th:include="fragment/header :: header"></div>
+    </header>
+    <div class="plan_menu"><br><br><hr>
+        <span class="pm2" onclick="location.href='JejuEvent_List'">제주행사</span><hr>
+        <span class="pm3" onclick="location.href='jejutourList'">제주관광지</span><hr>
+    </div>  
+    <div class="planboard">
+	    <div class="pboard">후기게시판</div>
+	    
+	    <select class="plantcw">
+	        <option value="b_title">제목</option>
+	        <option value="b_contents">글내용</option>
+	        <option value="b_fk_id">작성자</option>
+	    </select>
+	    <input type="text" id="keyword" class="plansearch">
+	    
+	    <div>
+	        <button  id="search" class="fa-solid fa-magnifying-glass"style="margin-top: 60px;margin-right: 110px;
+	        width: 40px;height: 30px;"></button>
+	    </div>
+	 	<input type="button" value="글 작성" class="planwritefrm" onclick="location.href='jejuplanWrite'">
+    </div>
+    <div style='background:rgba(0,0,0,0.8); height:3px; margin-left:17.5%; margin-right: 3%;'></div>
+    <div class="con">
+     	 <th:block th:if="${pList != null}">
+         <ul id="listimg">
+         </ul>
+	</div>
+
+<div class="planlastnumber" th:utext="${paging}"></div>
+</body>
+<script th:inline="javascript">
+$(function () {
+	
+	var msg = [[${msg}]];
+	
+	if(msg != null){
+		alert(msg);
+	}
+	
+	$(".M4"). hide();
+		
+	mdto = [[${session.user}]];
+	
+	if(mdto != null){
+		$("#inLogin").show();
+		$("#outLogin").hide();
+		$(".M1").css("display","none");
+	}else{
+		$("#inLogin").hide();
+		$("#outLogin").show();
+		
+	}
+	
+	
+	
+	if(mdto.m_category == "사업자"){
+		$(".M4"). show();
+	}
+		
+});
+
+
+
+
+
+	   var pList = [[${pList}]];
+	   console.log(pList);
+	   
+	   
+	   var listtag = "";
+	   for(var i = 0; i<pList.length; i++){
+	      listtag+=
+	         "<li class='planimg'><a href='jejuplan?jnum="+pList[i].b_pk_num+"'> <img src='/upload/"+pList[i].b_img +"' class='viewimg' style=overflow: auto; weigth:100%;height:100%;></li>"
+	         +"<li class='blogtittle'>" + pList[i].b_title+" | "+pList[i].b_fk_id+ "</li>"
+	      if(i == 3){
+	         listtag += "<br>";
+	         }
+	      }
+	   $("#listimg").html(listtag);
+	
+	   
+	   //검색 기능 수행 코드
+		$("#search").click(function() {
+			var keyword = $("#keyword").val();
+			if(keyword == ""){
+				alert("검색어를 입력하세요.");
+				return;
+			}
+			
+			var select = $(".plantcw").val();
+			console.log(select, keyword);
+			location.href="jejuplanList?colname=" + select
+					+ "&keyword=" + keyword
+					+ "&pageNum=1";
+			//검색하자마자 첫페이지가 나와야 하기 때문에 &pageNum= 에 1을 넣어줘야한다!(정해져있기때문)
+		});
+</script>
+</html>

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link href='css/jejucss.css' rel='stylesheet'>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="js/jquery.serializeObject.js"></script>
+<title>메인페이지</title>
+<style>
+  .member_listtable {
+    border-collapse: collapse;
+  }
+  .member_listtable>thead tr {
+    background-color: #1e96ff;
+    color: #ffffff;
+  }
+  .member_listtable>tbody tr:nth-child(2n) {
+    background-color: #bbdefb;
+  }
+  .member_listtable>tbody tr:nth-child(2n+1) {
+    background-color: #e3f2fd;
+  }
+</style>
+</head>
+<body>
+<header>   
+   <div th:replace="fragment/Header :: Admin_Header"></div>
+</header>
+
+<section>
+   <div th:replace="fragment/Menubar :: Admin_Menubar"></div>
+   <div class="contents_holder">   
+      <div class="member_searchbar">
+         <div class="member_title"><h3>게시글 검색</h3></div>
+         <form th:action="@{Admin_Complaint_List}" method="get">
+         <div class="member_searchtag">
+            <div class="searchMark">
+               <input type="image" src="image/mark2.png" alt="제출버튼" style="width: 70px; height: 70px;">
+            </div>
+            <div class="searchbar_Minputbox">
+               <div class="searchbar_Mtags">
+                  <span class="cssnot">답변 상태 : </span>
+                  <span><input type="checkbox" name="pr" value="미답변">미답변</span>
+                  <span><input type="checkbox" name="co" value="답변완료">답변완료</span>
+               </div>
+               <div>
+                  <div class="searchbar_Mselect">
+                     <select name="colname">
+                        <option value="co_title" selected>제목</option>
+                        <option value="co_contents">내용</option>
+                        <option value="co_fk_id">아이디</option>
+                     </select>
+                  </div>
+                  <div class="searchbar_Minput">
+                     <input type="text" name="keyword">
+                     <span>작성일 : </span>
+                     <input class="ageinput" type="date" name="sage"> -
+                     <input class="ageinput" type="date" name="eage">
+                  </div>
+               </div>
+            </div>
+         </div>
+         </form>
+      </div>
+      <div class="member_listbar">
+         <div>
+         </div>
+         <div>
+            <table class="member_listtable">
+               <thead>   
+                  <tr>
+                     <td style="width: 10%">번호</td>
+                     <td style="width: 10%">작성자</td>
+                     <td style="width: 20%">제목</td>
+                     <td style="width: 15%">작성일</td>
+                     <td style="width: 5%">답변상태</td>
+                     <td style="width: 10%">관리</td>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr th:each="complaint : ${coList}">
+                     <td th:text="${complaint.co_pk_conum}"></td>
+                     <td th:text="${complaint.co_fk_id}"></td>
+                     <td th:text="${complaint.co_title}"></td>
+                     <td th:text="${complaint.co_date}"></td>
+                     <td th:text="${complaint.co_check}"></td>
+                     <td><input type="button" class="adminBtn" th:npknum="${complaint.co_pk_conum}" th:onclick="popupOpen(this.getAttribute('npknum'))" value="관리"></td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+      <div class="paging" th:utext="${paging}"></div>
+   </div>
+   
+   
+<div id ="popup_mask" ></div> <!-- 팝업 배경 DIV -->
+
+<div id="ComplaintPopupDiv"> <!-- 팝업창 -->
+   <div>
+      <img src="image/closebtn.gif" class="popup_closebtn" th:onclick='popupClose()'>
+      <h1 class="popuptitle">건의사항 관리</h1>
+   </div>
+   <div id="Admin_Complaint_info" style="overflow: auto;">
+         <div style="padding-bottom: 40px;">
+         <div style="padding-bottom: 20px;"><strong>작성정보</strong></div>
+            <table>
+               <tbody>
+                  <tr>
+                     <td style="width: 60px;">제목 : </td>
+                     <td colspan="3" id="co_titleFrm" style="width: 900px;"></td>
+                  </tr>
+                  <tr>
+                     <td>작성자 : </td>
+                     <td id="co_fk_idFrm" style="width: 300px;"></td>
+                     <td style="width: 70px;">등록날짜 : </td>
+                     <td id="co_dateFrm"></td>
+                  </tr>
+                  <tr>
+                     <td colspan="4" style="padding-top: 20px;">글 내용</td>
+                  </tr>
+                  <tr>
+                     <td colspan="4">
+                        <div id="co_contentsFrm" style="min-height: 200px; border: 1px solid black; box-sizing: border-box; border-radius: 4px; padding: 5px; background-color: white;"></div>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+         <div>
+         <div style="padding-bottom: 20px;"><strong>답변</strong></div>
+            
+            <table>
+               <tbody>
+                  <tr>
+                     <td style="width: 70px;">등록날짜 : </td>
+                     <td id="co_re_dateFrm" style="width: 890px;"></td>
+                  </tr>
+                  <tr>
+                     <td colspan="2" style="padding-top: 20px;">답변내용 내용</td>
+                  </tr>
+                  <tr>
+                     <td colspan="2">
+                        <div id="co_replyFrm" style="min-height: 200px; border: 1px solid black; box-sizing: border-box; border-radius: 4px; padding: 5px; background-color: white;"></div>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>      
+         <div style="padding-top: 40px;">
+            <button th:onclick="Updatepopup()" id="popupbtn" class="button-65"></button>
+            <button type="button" th:onclick="popupClose()" class="button-65">닫기</button>
+         </div>   
+   </div>
+   <div id="Admin_Complaint_updateFrm" style="overflow: auto;">
+         <div style="padding-bottom: 40px;">
+         <div style="padding-bottom: 20px;"><strong>작성정보</strong></div>
+            <table>
+               <tbody>
+                  <tr>
+                     <td style="width: 60px;">제목 : </td>
+                     <td colspan="3" id="co_title" style="width: 900px;"></td>
+                  </tr>
+                  <tr>
+                     <td>작성자 : </td>
+                     <td id="co_fk_id" style="width: 300px;"></td>
+                     <td style="width: 70px;">등록날짜 : </td>
+                     <td id="co_date"></td>
+                  </tr>
+                  <tr>
+                     <td colspan="4" style="padding-top: 20px;">글 내용</td>
+                  </tr>
+                  <tr>
+                     <td colspan="4">
+                        <div id="co_contents" style="min-height: 200px; border: 1px solid black; box-sizing: border-box; border-radius: 4px; padding: 5px; background-color: white;"></div>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+         <div>
+         <div style="padding-bottom: 20px;"><strong>답변</strong></div>
+            <form id="Admin_Complaint_Update_Frm">
+            <input type="hidden" name="co_pk_conum" id="co_pk_conum">
+            <table>
+               <tbody>
+                  <tr>
+                     <td style="width: 70px;">등록날짜 : </td>
+                     <td id="co_re_date"></td>
+                  </tr>
+                  <tr>
+                     <td colspan="2" style="padding-top: 20px;">답변 내용</td>
+                  </tr>
+                  <tr>
+                     <td colspan="2"><textarea id="co_reply" name="co_reply" style="resize: none; width: 890px; height: 500px; padding: 5px; box-sizing: border-box;"></textarea></td>
+                  </tr>
+               </tbody>
+            </table>
+            </form>
+         </div>         
+         <div style="padding-top: 40px;">
+            <button th:onclick="AdminComplaintUpdate()" id="updatebtn" class="button-65"></button>
+            <button type="button" th:onclick="newpopupClose()" class="button-65">이전</button>
+         </div>   
+   </div>
+</div>
+
+</section>
+</body>
+<script th:inline="javascript">
+$(function(){
+   var msg = [[${msg}]];
+   
+   if(msg != null){
+      alert(msg);
+   }
+   
+});
+
+var pkid;
+
+/* history.replaceState({}, null, location.pathname); */
+function popupOpen(num){
+   conum = num;
+   
+   console.log(num);
+   $("#ComplaintPopupDiv").css({
+        "top": (($(window).height()-$("#ComplaintPopupDiv").outerHeight())/2+$(window).scrollTop())+"px",
+        "left": (($(window).width()-$("#ComplaintPopupDiv").outerWidth())/2+$(window).scrollLeft())+"px"
+   });   
+        //팝업창을 가운데로 띄우기 위해 현재 화면의 가운데 값과 스크롤 값을 계산하여 팝업창 CSS 설정
+    $("#popup_mask").css("display","block"); //팝업 뒷배경 display block
+    $("#ComplaintPopupDiv").css("display","block"); //팝업창 display block
+    $("#Admin_Complaint_info").css("display","block"); //팝업창 display block
+        
+    $("body").css("overflow","hidden");//body 스크롤바 없애기 
+    
+    var co_num = {"conum" : conum};
+    $.ajax({
+      url: "ComplaintConumSelect",
+      type: "post", //json 객체는 post 사용!
+      data: co_num,
+      dataType: "json",
+      success: function(result){
+         var complaint = result.complaint;
+         
+         $("#co_titleFrm").html(complaint.co_title); // index가 끝날때까지 
+         $("#co_fk_idFrm").html(complaint.co_fk_id);
+         $("#co_contentsFrm").html(complaint.co_contents);
+         $("#co_dateFrm").html(complaint.co_date);
+         $("#co_re_dateFrm").html(complaint.co_re_date);
+         $("#co_replyFrm").html(complaint.co_reply);
+         
+         if(complaint.co_check == 0){
+            $("#popupbtn").html("답변하기");
+         } else {
+            $("#popupbtn").html("답변수정하기");
+         }
+      
+      },
+      error: function(error){
+         alert("전송실패");
+         console.log(error);
+      }
+   });
+      
+}
+
+function Updatepopup(){
+   
+   $("#Admin_Complaint_info").css("display","none"); //팝업창 display block
+    $("#Admin_Complaint_updateFrm").css("display","block"); //팝업창 display block
+    
+    var co_num = {"conum" : conum};
+    $.ajax({
+      url: "ComplaintConumSelect",
+      type: "post", //json 객체는 post 사용!
+      data: co_num,
+      dataType: "json",
+      success: function(result){
+         var complaint = result.complaint;
+         
+         $("#co_pk_conum").val(complaint.co_pk_conum);
+         $("#co_title").html(complaint.co_title); // index가 끝날때까지 
+         $("#co_fk_id").html(complaint.co_fk_id);
+         $("#co_contents").html(complaint.co_contents);
+         $("#co_date").html(complaint.co_date);
+         $("#co_re_date").html(complaint.co_re_date);
+         $("#co_reply").val(complaint.co_reply);
+         
+         if(complaint.co_check == 0){
+            $("#updatebtn").html("답변하기");
+         } else {
+            $("#updatebtn").html("답변수정하기");
+         }
+      
+      },
+      error: function(error){
+         alert("전송실패");
+         console.log(error);
+      }
+   });
+      
+}
+
+function AdminComplaintUpdate(){
+    
+   var coDto = $("#Admin_Complaint_Update_Frm").serializeObject();
+   console.log(coDto);
+    $.ajax({
+      url: "Admin_Complaint_Update",
+      type: "post", //json 객체는 post 사용!
+      data: coDto,
+      dataType: "json",
+      success: function(result){
+         
+         console.log(result.res);
+         
+         if(result.res = "ok"){
+            alert("수정성공");
+         } else {
+            alert("수정실패");
+         }
+         
+         location.href = "/Admin_Complaint_List";
+         
+      },
+      error: function(error){
+         alert("전송실패");
+         console.log(error);
+      }
+   });
+    
+}
+
+function AdminComplaintDelete(){
+   if (confirm("게시글을 삭제하시겠습니까???")) {
+   
+   var co_num = {"conum" : conum};
+    $.ajax({
+      url: "Admin_Complaint_Delete",
+      type: "post", //json 객체는 post 사용!
+      data: co_num,
+      dataType: "json",
+      success: function(result){
+         
+         console.log(result.res);
+         
+             if(result.res == "ok"){
+                alert("삭제 되었습니다.");
+             } else {
+                alert("삭제 실패");
+             }
+         
+         location.href = "/Admin_Complaint_List";
+      },
+      error: function(error){
+         alert("전송실패");
+         console.log(error);
+      }
+   });
+   } else {
+      
+   }   
+    
+}
+   
+
+   
+   
+function popupClose() {
+     $("#popup_mask").css("display","none"); //팝업창 뒷배경 display none
+     $("#ComplaintPopupDiv").css("display","none"); //팝업창 display none
+     $("#Admin_Complaint_info").css("display","none");
+     $("body").css("overflow","auto");//body 스크롤바 생성
+}
+
+function newpopupClose() {
+    $("#Admin_Complaint_info").css("display","block"); //팝업창 display block
+    $("#Admin_Complaint_updateFrm").css("display","none"); //팝업창 display block
+}
+
+</script>
+</html>

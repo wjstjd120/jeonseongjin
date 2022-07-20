@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http:www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link th:href="@{/css/lodgment_list.css}" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="css/home.css">
+<title>page - Main 업체리스트</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=cdm31eairf"></script>
+
+<script type="text/javascript" 
+   src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cc32ca8f3557bccc8f047702e569e85c&libraries=services"></script>
+
+<style type="text/css">
+.viewimg {
+   width: 100%;
+   height: 100%;
+   border-radius: 10px;
+}
+#popupDiv { /* 팝업창 css */
+   top: 0px;
+   position: absolute;
+   background-color: white;
+   width: 900px;
+   height: 700px;
+   display: none;
+   border: 1px solid black;
+   z-index: 10;
+   overflow: auto;
+}
+#popupDiva{ /* 팝업창 css */
+   top: 0px;
+   position: absolute;
+   background-color: white;
+   width: 900px;
+   height: 700px;
+   display: none;
+   border: 1px solid black;
+}
+#popup_mask { /* 팝업 배경 css */
+   position: fixed;
+   width: 100%;
+   height: 1200px;
+   top: 0px;
+   left: 0px;
+   display: none;
+   background-color: #000;
+   opacity: 0.6;
+}
+.lodlipop{
+    border: 1px solid black;
+    height: 700px;
+    width: 900px;
+    margin: 0 auto;
+    position: relative;
+    text-align: center;
+}
+.lodlibtn, .acitvbtn{
+    text-align: center;
+    margin-top: 50px;
+}
+.lodsubmit{
+   margin-left: 40px;
+}
+.lodreset, .lodsubmit, .actsubmit, .actreset {
+    font-size: 20px;
+    font-weight: 500;
+    width: 100px;
+    height: 35px;
+    background-color: white;
+    border: 1px solid;
+    margin-top: 70px;
+    cursor: pointer;
+}
+#popCloseBtn, #AcpopCloseBtn{
+   float: right;
+   font-size: 30px;
+   margin:20px 20px 0 0;
+   background-color: white;
+   border-style : none;
+   cursor: pointer;
+}
+a{
+   text-decoration: none;
+   color: black;
+}
+.activmenu{
+   margin-left: 40px;
+}
+.lodmenu{
+   margin: 30px 0 0 100px;
+}
+img{
+   cursor: pointer;
+}
+/*인원명 라디오버튼 없애고 그림으로*/
+.s1, .img{
+    width: 85px;
+    height: 85px;
+}
+.btn{
+    opacity: 0;
+    margin-bottom: 30px;
+}
+
+input[type=checkbox]:checked > .s1 > img{
+    box-shadow: 3px 3px 3px 3px red;
+}
+label{
+    float: left;
+    margin-left: 12px;
+    margin-top: -15px;
+}
+
+.Schedule_go{
+    width: 150px;
+    height: 30px;
+    margin-top: 10px;
+    display: inline-block;
+}
+</style>
+
+<script th:inline="javascript">
+var mdto;
+var tdto;
+$(function () {
+   $(".M4"). hide();
+      
+   mdto = [[${session.user}]];
+   tdto = [[${session.tdto}]];
+   if(mdto != null){
+      $("#inLogin").show();
+      $("#outLogin").hide();
+      $(".M1").css("display","none");
+   }else{
+      $("#inLogin").hide();
+      $("#outLogin").show();
+      
+   }
+   
+   if(mdto.m_category == "사업자"){
+      $(".M4"). show();
+   }
+   
+   var msg = [[${msg}]];
+   
+   if(msg != null){
+      alert(msg);
+   }
+      
+});
+
+function goLodgment(j){
+   if(tdto == null){
+      alert("여행일정을 만들어주세요!");
+      return;
+   }
+   location.href="Lodgment?cnum=" + j;
+}
+
+function goCompanyFrm(){
+   if(mdto == null){
+      var cc = confirm("로그인을 해주세요. 로그인하러 가시겠습니까?");
+      if(cc){
+         location.href="login";
+      }else{
+         location.href="/";
+      }
+   }else{
+      location.href="companyFrm";
+   }
+}
+
+function payUpdate(num){
+   var nowTime= new Date().getTime();
+   
+   var obj = {"bk_paych" : 1};
+   obj.bk_pk_num = num;
+   console.log("야 왜 이거 안된 ㅑㅋㅋ");
+   console.log(obj);
+   
+   $.ajax({
+      url: "payUpdate",
+      type: "post",
+      data: obj,
+      datatype: "json",
+      success: function(result){
+        
+      },
+      error: function(result){
+         alert("통신실패");
+      }
+   });
+   
+}
+
+function payment(goods, price, num){
+   var ckOk = false;
+   
+   
+   
+   var IMP = window.IMP; // 생략 가능
+    // 예: imp00000000
+   console.log(IMP);
+
+   //가맹점 식별코드
+   IMP.init("imp13557790");
+   IMP.request_pay({
+       pg : 'kakaopay',
+       pay_method : 'card',
+       merchant_uid : 'merchant_' + new Date().getTime(),
+       name : goods , //결제창에서 보여질 이름
+       amount : price, //실제 결제되는 가격
+       buyer_email : mdto.m_email, // 사용자 이메일을 받아야하는 값
+       buyer_name : mdto.m_name, // 사용자 이름 받아야하는 값
+       buyer_tel : mdto.m_phone, // 사용자 전화번호 받아야하는 값
+       buyer_addr : mdto.m_addr, // 사용자 주소 
+   }, function(rsp) {
+      console.log(rsp);
+       if (rsp.success) {
+          var msg = '결제가 완료되었습니다.';
+          payUpdate(num);
+          location.href = "Lodgment_List?cate=" + [[${cate}]];
+    
+       } else {
+           var msg = '결제에 실패하였습니다.';
+            msg += '에러내용 : ' + rsp.error_msg;
+            location.href = "Lodgment_List?cate=" + [[${cate}]];
+       }
+       console.log(msg);
+       alert(msg);
+      });
+   }
+</script>
+
+
+</head>
+<body>
+   <header>
+      <div th:include="fragment/header :: header"></div>
+   </header>
+
+   <div class="Basket">
+      <div class="Basket1">
+         <th:block th:if="${session.tdto != null}">
+         <div class="Bk_top">
+         
+            <th:block th:if="${#strings.equals(session.tdto.tr_relationship,'혼자')}">
+               <div class="Bk_img">
+                  <img style="width: 90px; height: 90px;" alt="인원">
+               </div>
+            </th:block>
+            
+            <th:block th:if="${#strings.equals(session.tdto.tr_relationship,'단체')}">
+               <div class="Bk_img">
+                  <img style="width: 90px; height: 90px;" alt="인원">
+               </div>
+            </th:block>
+            
+            <th:block th:if="${#strings.equals(session.tdto.tr_relationship,'커플')}">
+               <div class="Bk_img">
+                  <img style="width: 90px; height: 90px;" alt="인원">
+               </div>
+            </th:block>
+            
+            <th:block th:if="${#strings.equals(session.tdto.tr_relationship,'가족')}">
+               <div class="Bk_img">
+                  <img style="width: 90px; height: 90px;" alt="인원">
+               </div>
+            </th:block>
+            
+            <div class="Bk_name">[[${session.tdto.tr_title}]]</div>
+            <div class="Bk_date">
+               <div class="Bk_date1">여행시작 : [[${session.tdto.tr_in}]]</div>
+               <div class="Bk_date1">여행끝 : [[${session.tdto.tr_out}]]</div>
+            </div>
+         
+         </div>
+         
+         </th:block>
+         <th:block th:if="${session.tdto == null}">
+            <div class="Bk_top" style="line-height: 95px;"> 
+            여행을 선택해주세요~
+            </div>
+         </th:block>
+         <div class="contain">
+            <th:block th:if="${not #lists.isEmpty(lList)}">
+                  <div class="Lodgment_bk">
+                     <div class="Lodgment">숙박</div>
+                     <table class="Lodgment_bk1" style="border: 1px solid; margin: 0 auto;">
+                        <th:block th:each="data:${lList}">
+                           <tr>
+                              <td width="60%">[[${data.c_name}]]</td>
+                              <td rowspan="2" width="40%">
+                                 <div class="Lodgment_btn">
+                                    <div class="L_del">
+                                       <button th:songjan="${data.bk_pk_num}" th:onclick="lBasketDel(this.getAttribute('songjan'))">
+                                          <img style="width: 60x; height: 50px;" alt="삭제">
+                                       </button>
+                                    </div>
+                                    <div class="L_sel">
+                                       <th:block th:if="${#strings.equals(data.bk_paych,'0')}">
+                                          <button th:goods="${data.bk_goods}" th:price="${data.bk_price}" th:bk_pk_num="${data.bk_pk_num}"
+                                             th:onclick="payment(this.getAttribute('goods'), this.getAttribute('price'),this.getAttribute('bk_pk_num'))">
+                                             <img style="width: 60px; height: 50px;" alt="결제">
+                                          </button>
+                                       </th:block>
+                                       <th:block th:if="${#strings.equals(data.bk_paych,'1')}">
+                                             <img style="width: 60px; height: 50px;" alt="결제완료">
+                                       </th:block>
+                                    </div>
+                                 </div>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>[[${data.bk_goods}]] [[${data.bk_price}]]</td>
+                           </tr>   
+                        </th:block>   
+                     </table>
+                  </div>
+            </th:block>
+         
+            
+            <th:block th:if="${#lists.isEmpty(lList)}">
+               <div class="Lodgment_bk">
+                  <div class="Lodgment">숙박</div>
+                  <table class="Lodgment_bk1" style="border: 1px solid; margin: 0 auto;">
+                     <tr>
+                        <td>정해진 상품이 없습니당!</td>                     
+                     </tr>
+                  </table>
+               </div>
+            </th:block>
+         </div>
+         
+         <div class="contain">   
+            <th:block th:if="${not #lists.isEmpty(aList)}">
+                  <div class="Lodgment_bk" style="overflow: auto;">
+                     <div class="Lodgment">레져</div>
+                     <table class="Lodgment_bk1" style="border: 1px solid; margin: 0 auto;">
+                        <th:block th:each="data:${aList}">
+                           <tr>
+                              <td width="60%">[[${data.c_name}]]</td>
+                              
+                              <td rowspan="2" width="40%">
+                                 <div class="Lodgment_btn">
+                                 
+                                    <th:block th:if="${data.bk_name != null}">
+                                       <div class="L_del">
+                                          <button th:songjan="${data.bk_pk_num}" th:onclick="aBasketDel(this.getAttribute('songjan'))">
+                                             <img style="width: 110x; height: 50px;" alt="삭제">
+                                          </button>
+                                       </div>
+                                    </th:block>
+                                    <th:block th:if="${data.bk_name == null}">
+                                       <div class="L_del" style="width : 120PX;">
+                                          <button th:songjan="${data.bk_pk_num}" th:onclick="aBasketDel(this.getAttribute('songjan'))">
+                                             <img style="width: 60x; height: 50px;" alt="삭제">
+                                          </button>
+                                       </div>
+                                    </th:block>
+                                    
+                                    <th:block th:if="${data.bk_name != null}">
+                                       <div class="L_sel">
+                                          <th:block th:if="${#strings.equals(data.bk_paych,'0')}">
+                                             <button th:goods="${data.bk_goods}" th:price="${data.bk_price}" th:bk_pk_num="${data.bk_pk_num}"
+                                             th:onclick="payment(this.getAttribute('goods'), this.getAttribute('price'),this.getAttribute('bk_pk_num'))">
+                                                <img style="width: 60px; height: 50px;" alt="결제">
+                                             </button>
+                                          </th:block>
+                                          <th:block th:if="${#strings.equals(data.bk_paych,'1')}">
+                                                <img style="width: 60px; height: 50px;" alt="결제완료">
+                                          </th:block>
+                                       </div>
+                                    </th:block>
+                                    
+                                 </div>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>[[${data.bk_goods}]] [[${data.bk_price}]]</td>
+                           </tr>
+                        </th:block>
+                     </table>
+                  </div>
+               </th:block>
+         
+            <th:block th:if="${#lists.isEmpty(aList)}">
+               <div class="Lodgment_bk">
+                     <div class="Lodgment">레저</div>
+                     <table class="Lodgment_bk1" style="border: 1px solid; margin: 0 auto;">
+                        <tr>
+                           <td>정해진 상품이 없습니당!</td>                     
+                        </tr>
+                     </table>
+                  </div>
+            </th:block>
+         </div>
+         
+         <div class="contain">   
+            <th:block th:if="${not #lists.isEmpty(fList)}">
+                  <div class="Lodgment" style="overflow: auto;">식당</div>
+                  <table class="Lodgment_bk1" style="border: 1px solid; margin: 0 auto;">
+                     <th:block th:each="data:${fList}">
+                        <tr>
+                           <td width="60%">[[${data.c_name}]]</td>
+                           <td width="40%">
+                              <div class="L_del" style="margin-left: 60px;">
+                                 <button th:songjan="${data.bk_pk_num}" th:onclick="fBasketDel(this.getAttribute('songjan'))">
+                                    <img style="width: 60x; height: 50px;" alt="삭제">
+                                 </button>
+                              </div>
+                           </td>
+                        </tr>
+                     </th:block>   
+                  </table>
+            </th:block>
+         
+            <th:block th:if="${#lists.isEmpty(fList)}">
+               <div class="Lodgment_bk">
+                     <div class="Lodgment">식당</div>
+                     <table class="Lodgment_bk1" style="border: 1px solid; margin: 0 auto;">
+                        <tr>
+                           <td>정해진 식당이 없습니당!</td>                     
+                        </tr>
+                     </table>
+                  </div>
+            </th:block>
+         </div>
+         
+         <div class="Basket_sel">
+            <div class=" "></div>
+         </div>
+
+      </div>
+   </div>
+   <div class="map_top">
+      <div class="map" style="z-index: 5;">
+         <th:block th:if="${#strings.equals(cate,'숙박') || #strings.equals(cate,'레저')}">
+            <button 
+            style="z-index: 6; margin-left: 500px; margin-top:-10px; width: 300px; height: 30px; position: absolute;"
+            onclick="clicker()">옵션</button>
+         </th:block>
+         
+         
+           
+         
+      
+         <div class="map1" id="navermap">
+         
+         
+            <div id="navermap" style="width: 1300px; height: 770px;"></div>
+         
+         
+         </div>
+      
+      
+      </div>
+   </div>
+
+   <div class="lodgementlist">
+      <ul id="listimg">
+         <th:block th:if="${cList != null}">
+            <th:block th:each="data:${cList}">
+               <li class="lodgementimg">
+                  <img th:src="@{/upload/} + ${data.c_img}" class="viewimg" th:songjan="${data.c_pk_cnum}" th:onclick="goLodgment(this.getAttribute('songjan'))">
+               </li>
+               <li class="lodgementtitle">
+                  [[${data.c_name}]]
+               </li>
+            </th:block>
+         </th:block>
+      </ul>
+   </div>
+   
+ <div id="popupDiv">
+      <div id="c_contents">
+         <input type="button" id="popCloseBtn" value="X">
+         <th:block th:if="${#strings.equals(cate,'숙박')}">
+         <h2 style="text-align: center; margin: 20px;">숙박옵션</h2>
+            <ul class="activmenus" style="list-style: none;">
+         <li class="lodmenu">
+            <label>
+                   <input type="checkbox" class="btn" name="tr_relationship" value="시티뷰">
+                    <div class="s1">
+                       <img class="img" src="image/시티뷰.png" id="cityview">
+                       <img class="img" src="image/시티뷰1.png" id="cityview1">
+                    </div>
+                 </label>
+         </li>
+         
+         <li class="lodmenu">
+            <label>
+                   <input type="checkbox" class="btn" name="tr_relationship" value="바다뷰">
+                    <div class="s1">
+                       <img class="img" src="image/바다뷰.png" id="seaview">
+                       <img class="img" src="image/바다뷰1.png" id="seaview1">
+               </div>
+                 </label>
+         </li>
+         
+         <li class="lodmenu">
+            <label>
+                   <input type="checkbox" class="btn" name="tr_relationship" value="하늘뷰">
+                    <div class="s1">
+                       <img class="img" src="image/하늘뷰.png" id="skyview">
+                       <img class="img" src="image/하늘뷰1.png" id="skyview1">
+                    </div>
+                 </label>
+         </li>
+         
+         <li class="lodmenu">
+            <label>
+                   <input type="checkbox" class="btn" name="tr_relationship" value="스파">
+                    <div class="s1">
+                       <img class="img" src="image/스파.png" id="spa">
+                       <img class="img" src="image/스파1.png" id="spa1">
+                    </div>
+                 </label>
+         </li>
+         
+         <li class="lodmenu">
+            <label>
+                   <input type="checkbox" class="btn" name="tr_relationship" value="월풀">
+                    <div class="s1">
+                       <img class="img" src="image/월풀.png" id="whirlpool">
+                       <img class="img" src="image/월풀1.png" id="whirlpool1">
+                    </div>
+                 </label>
+         </li>
+         
+         <li class="lodmenu">
+            <label>
+                   <input type="checkbox" class="btn" name="tr_relationship" value="수영장">
+                    <div class="s1">
+                       <img class="img" src="image/수영장.png" id="pool">
+                       <img class="img" src="image/수영장1.png" id="pool1">
+                    </div>
+                 </label>
+         </li>
+         
+         <li class="lodmenu">
+            <label>
+                   <input type="checkbox" class="btn" name="tr_relationship" value="BBQ">
+                    <div class="s1">
+                       <img class="img" src="image/BBQ.png" id="BBQ">
+                       <img class="img" src="image/BBQ1.png" id="BBQ1">
+                    </div>
+                 </label>
+         </li>
+         
+         <li class="lodmenu">
+            <label>
+                   <input type="checkbox" class="btn" name="tr_relationship" value="취사">
+                    <div class="s1">
+                       <img class="img" src="image/취사.png" id="cook">
+                       <img class="img" src="image/취사1.png" id="cook1">
+                    </div>
+                 </label>
+         </li>
+         
+         <li class="lodmenu">
+            <label>
+                   <input type="checkbox" class="btn" name="tr_relationship" value="노래방">
+                    <div class="s1">
+                       <img class="img" src="image/노래방.png" id="sing">
+                       <img class="img" src="image/노래방1.png" id="sing1">
+                    </div>
+                 </label>
+         </li>
+         
+         <li class="lodmenu">
+            <label>
+                   <input type="checkbox" class="btn" name="tr_relationship" value="애견동반">
+                    <div class="s1">
+                       <img class="img" src="image/애견동반.png" id="petok">
+                       <img class="img" src="image/애견동반1.png" id="petok1">
+                    </div>
+                 </label>
+         </li>
+         
+         <li class="lodmenu">
+            <label>
+                   <input type="checkbox" class="btn" name="tr_relationship" value="야외테라스">
+                    <div class="s1">
+                       <img class="img" src="image/야외테라스.png" id="terrace">
+                       <img class="img" src="image/야외테라스1.png" id="terrace1">
+                    </div>
+                 </label>
+         </li>
+      </ul>
+         </th:block>
+         
+          <th:block th:if="${#strings.equals(cate,'레저')}">
+         <h2 style="text-align: center; margin: 20px;">레저옵션</h2>
+            <ul class="activmenus" style="list-style: none;">
+         <li class="activmenu">
+                     
+                           <label>
+                               <input type="checkbox" class="btn" name="tr_relationship" value="워터파크">
+                               <div class="s1">
+                                  <img class="img" src="image/워터파크.png" id="waterpark">
+                                  <img class="img" src="image/워터파크1.png" id="waterpark1">
+                               </div>
+                           </label>
+
+               </li>
+               
+               <li class="activmenu">
+                     
+                           <label>
+                               <input type="checkbox" class="btn" name="tr_relationship" value="스파온천">
+                               <div class="s1">
+                                  <img class="img" src="image/스파온천.png" id="spaon">
+                                  <img class="img" src="image/스파온천1.png" id="spaon1">
+                               </div>
+                           </label>
+
+               </li>
+               
+               <li class="activmenu">
+                     
+                           <label>
+                               <input type="checkbox" class="btn" name="tr_relationship" value="서핑카약">
+                               <div class="s1">
+                                  <img class="img" src="image/서핑카약.png" id="surffing">
+                                  <img class="img" src="image/서핑카약1.png" id="surffing1">
+                               </div>
+                           </label>
+
+               </li>
+               
+               <li class="activmenu">
+                     
+                           <label>
+                               <input type="checkbox" class="btn" name="tr_relationship" value="스노쿨링">
+                               <div class="s1">
+                                  <img class="img" src="image/스노쿨링.png" id="snowcooling">
+                                  <img class="img" src="image/스노쿨링1.png" id="snowcooling1">
+                               </div>
+                           </label>
+
+               </li>
+               
+               <li class="activmenu">
+                     
+                           <label>
+                               <input type="checkbox" class="btn" name="tr_relationship" value="리프팅보트">
+                               <div class="s1">
+                                  <img class="img" src="image/리프팅보트.png" id="raftingboat">
+                                  <img class="img" src="image/리프팅보트1.png" id="raftingboat1">
+                               </div>
+                           </label>
+
+               </li>
+               
+               <li class="activmenu">
+                           <label>
+                               <input type="checkbox" class="btn" name="tr_relationship" value="아쿠아리움">
+                               <div class="s1">
+                                  <img class="img" src="image/아쿠아리움.png" id="aquarium">
+                                  <img class="img" src="image/아쿠아리움1.png" id="aquarium1">
+                               </div>
+                           </label>
+
+               </li>
+               
+               <li class="activmenu">
+                           <label>
+                               <input type="checkbox" class="btn" name="tr_relationship" value="수목원">
+                               <div class="s1">
+                                  <img class="img" src="image/수목원.png" id="wood">
+                                  <img class="img" src="image/수목원1.png" id="wood1">
+                               </div>
+                           </label>
+               </li>
+               
+               <li class="activmenu">
+                           <label>
+                               <input type="checkbox" class="btn" name="tr_relationship" value="동물원">
+                               <div class="s1">
+                                  <img class="img" src="image/동물원.png" id="zoo">
+                                  <img class="img" src="image/동물원1.png" id="zoo1">
+                               </div>
+                           </label>
+               </li>
+               
+               <li class="activmenu">
+                           <label>
+                               <input type="checkbox" class="btn" name="tr_relationship" value="사격">
+                               <div class="s1">
+                                  <img class="img" src="image/사격.png" id="shooting">
+                                  <img class="img" src="image/사격1.png" id="shooting1">
+                               </div>
+                           </label>
+               </li>
+               
+               <li class="activmenu">
+                           <label>
+                               <input type="checkbox" class="btn" name="tr_relationship" value="승마">
+                               <div class="s1">
+                                  <img class="img" src="image/승마.png" id="horse">
+                                  <img class="img" src="image/승마1.png" id="horse1">
+                               </div>
+                           </label>
+               </li>
+               
+               <li class="activmenu">
+                           <label>
+                               <input type="checkbox" class="btn" name="tr_relationship" value="패러글라이딩">
+                               <div class="s1">
+                                  <img class="img" src="image/패러글라이딩.png" id="paragliding">
+                                  <img class="img" src="image/패러글라이딩1.png" id="paragliding1">
+                               </div>
+                           </label>
+               </li>
+               
+               <li class="activmenu">
+                           <label>
+                               <input type="checkbox" class="btn" name="tr_relationship" value="짚라인">
+                               <div class="s1">
+                                  <img class="img" src="image/짚라인.png" id="zipline">
+                                  <img class="img" src="image/짚라인1.png" id="zipline1">
+                               </div>
+                           </label>
+               </li>
+               
+               <li class="activmenu">
+                           <label>
+                               <input type="checkbox" class="btn" name="tr_relationship" value="레일바이크">
+                               <div class="s1">
+                                  <img class="img" src="image/레일바이크.png" id="railbike">
+                                  <img class="img" src="image/레일바이크1.png" id="railbike1">
+                               </div>
+                           </label>
+               </li>
+               
+               <li class="activmenu">
+                           <label>
+                               <input type="checkbox" class="btn" name="tr_relationship" value="카트">
+                               <div class="s1">
+                                  <img class="img" src="image/카트.png" id="cart">
+                                  <img class="img" src="image/카트1.png" id="cart1">
+                               </div>
+                           </label>
+               </li>
+               
+               <li class="activmenu">
+                           <label>
+                               <input type="checkbox" class="btn" name="tr_relationship" value="ATV">
+                               <div class="s1">
+                                  <img class="img" src="image/ATV.png" id="ATV">
+                                  <img class="img" src="image/ATV1.png" id="ATV1">
+                               </div>
+                           </label>
+               </li>
+               
+               <li class="activmenu">
+                           <label>
+                               <input type="checkbox" class="btn" name="tr_relationship" value="투어패스">
+                               <div class="s1">
+                                  <img class="img" src="image/투어패스.png" id="tourpass">
+                                  <img class="img" src="image/투어패스1.png" id="tourpass1">
+                               </div>
+                           </label>
+               </li>
+               
+               <li class="activmenu">
+                           <label>
+                               <input type="checkbox" class="btn" name="tr_relationship" value="유람선요트">
+                               <div class="s1">
+                                  <img class="img" src="image/유람선요트.png" id="yoat">
+                                  <img class="img" src="image/유람선요트1.png" id="yoat1">
+                               </div>
+                           </label>
+               </li>
+               
+               <li class="activmenu">
+                           <label>
+                               <input type="checkbox" class="btn" name="tr_relationship" value="케이블카">
+                               <div class="s1">
+                                  <img class="img" src="image/케이블카.png" id="cablecar">
+                                  <img class="img" src="image/케이블카1.png" id="cablecar1">
+                               </div>
+                           </label>
+               </li>
+               
+               <li class="activmenu">
+                           <label>
+                               <input type="checkbox" class="btn" name="tr_relationship" value="선상낚시">
+                               <div class="s1">
+                                  <img class="img" src="image/선상낚시.png" id="boatfishing">
+                                  <img class="img" src="image/선상낚시1.png" id="boatfishing1">
+                               </div>
+                           </label>
+               </li>
+               
+               <li class="activmenu">
+                           <label>
+                               <input type="checkbox" class="btn" name="tr_relationship" value="낚시터">
+                               <div class="s1">
+                                  <img class="img" src="image/낚시터.png" id="fishing">
+                                  <img class="img" src="image/낚시터1.png" id="fishing1">
+                               </div>
+                           </label>
+               </li>
+               
+               <li class="activmenu">
+                           <label>
+                               <input type="checkbox" class="btn" name="tr_relationship" value="전시">
+                               <div class="s1">
+                                  <img class="img" src="image/전시.png" id="showing">
+                                  <img class="img" src="image/전시1.png" id="showing1">
+                               </div>
+                           </label>
+               </li>
+               
+               <li class="activmenu">
+                           <label>
+                               <input type="checkbox" class="btn" name="tr_relationship" value="공연">
+                               <div class="s1">
+                                  <img class="img" src="image/공연.png" id="show">
+                                  <img class="img" src="image/공연1.png" id="show1">
+                               </div>
+                           </label>
+               </li>
+      </ul>
+         </th:block>
+         <div style="width: 300px; height: 70px; margin: 0 auto;">
+            <button onclick="optionCheck()" class="lodsubmit">적용하기</button>
+            <input type="reset" class="lodreset">
+         </div>
+      </div>
+   </div>
+
+         <div style="width: 300px; height: 70px; margin: 0 auto;">
+            <button onclick="optionCheck()" class="lodsubmit">적용하기</button>
+            <input type="reset" class="lodreset">
+         </div>
+      </div>
+   </div>
+   <div id="popup_mask"></div>
+   
+</body>
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+<script th:inline="javascript">
+function optionCheck(){
+   var arr = [];
+   var cate = [[${cate}]];
+   
+   $('input:checkbox[name=tr_relationship]').each(function (index) {
+      if($(this).is(":checked")==true){
+          arr.push($(this).val());
+       }
+   });
+   
+   var obj = {"arrList" : arr};
+   
+   if(arr.length == 0){
+      alert("적용완료");
+      location.href="Lodgment_List?cate='"+[[${cate}]]+"'";
+      return;
+   }
+   
+   obj.cate = cate;
+   console.log(arr.length);
+   console.log(cate);
+   $.ajax({
+       url: "optionCheck",
+           type: "post",
+           data: obj,
+           dataType: "json",
+           success: function(retVal){
+              var cList = retVal.cList;
+              var listTag = "";
+              console.log(cList);
+              
+              for(var i = 0; i<cList.length; i++){
+                 listTag +=
+                    "<li class='lodgementimg'>"
+                    + '<img src="/upload/' + cList[i].c_img + '" class="viewimg" onclick="goLodgment(\''+ cList[i].c_pk_cnum +'\' )" >'
+                    + "</li>"
+                    + "<li class='lodgementtitle'>"
+                    + cList[i].c_name
+                    + "</li>"
+              }
+              
+              var mapOptions = {
+            	      center : new naver.maps.LatLng(33.3816666, 126.5414666),
+            	      zoom : 11,
+            	      minZoom : 11
+            	   }
+            	   var map = new naver.maps.Map("navermap",mapOptions);
+
+            var marker;
+
+
+            let markers = new Array();
+              
+               markers = new Array();
+               var y;
+               var x;
+               var mapOptions = {
+                     center : new naver.maps.LatLng(33.3816666, 126.5414666),
+                     zoom : 11,
+                     minZoom : 11
+                  }
+               var map = new naver.maps.Map("navermap",mapOptions);
+               var geocoder = new kakao.maps.services.Geocoder();
+               
+               for (var i = 0;i < cList.length; i++){
+                  geocoder.addressSearch(cList[i].c_addr, function(result, status) {
+                     
+                     var polylinePath =[new naver.maps.LatLng(result[0].y, result[0].x)];
+                     
+                     markers.push(marker = new naver.maps.Marker({
+                          position: polylinePath[polylinePath.length-1],
+                          map: map
+                      }));   
+                  });
+               }
+              
+              
+              $("#listimg").html(listTag);
+              
+              
+              $("#popup_mask").css("display", "none"); //팝업창 뒷배경 display none
+              $("#popupDiv").css("display", "none"); //팝업창 display none
+              $("body").css("overflow", "auto");//body 스크롤바 생성
+           },
+           error: function(result){
+              
+           }
+   });
+   
+}
+
+function fBasketDel(j){
+   var checkc = confirm("장바구니에서 빼시겠습니까?");
+   console.log(j);
+   
+   var obj = {"bk_pk_num" : j};
+   
+   if(checkc){
+      $.ajax({
+         url: "fBasketDel",
+         type : "post",
+         data : obj,
+         datatype : "json",
+         success: function (result){
+            alert("장바구니에서 삭제하였습니다.");
+            
+            location.href="Lodgment_List?cate=" + [[${cate}]];
+         },
+         error : function (result){
+            
+         }
+      });
+   }
+}
+
+
+function aBasketDel(j){
+   var checkc = confirm("장바구니에서 빼시겠습니까?");
+   console.log(j);
+   
+   var obj = {"bk_pk_num" : j};
+   
+   if(checkc){
+      $.ajax({
+         url: "aBasketDel",
+         type : "post",
+         data : obj,
+         datatype : "json",
+         success: function (result){
+            alert("장바구니에서 삭제하였습니다.");
+            
+            location.href="Lodgment_List?cate=" + [[${cate}]];
+         },
+         error : function (result){
+            
+         }
+      });
+   }
+}
+
+
+
+function lBasketDel(j){
+   console.log(j);
+   var checkc = confirm("장바구니에서 빼시겠습니까?");
+   
+   var obj = {"bk_pk_num" : j};
+   console.log(obj);
+   
+   if(checkc){
+      $.ajax({
+         url: "lBasketDel",
+         type : "post",
+         data : obj,
+         datatype : "json",
+         success: function (result){
+            alert("장바구니에서 삭제하였습니다.");
+            var bList = result.bList;
+            console.log(bList);
+            
+            location.href="Lodgment_List?cate=" + [[${cate}]];
+         },
+         error : function (result){
+            
+         }
+      });
+   }
+}
+
+
+function clicker(){
+   $("#popupDiv").css({
+      "top" : (($(window).height() - $("#popupDiv").outerHeight()) / 2 
+         + $(window).scrollTop())
+         + "px","left" : (($(window).width() - $("#popupDiv").outerWidth()) / 2
+         + $(window).scrollLeft())
+         + "px"
+         //팝업창을 가운데로 띄우기 위해 현재 화면의 가운데 값과 스크롤 값을 계산하여 팝업창 CSS 설정
+   });
+   $("#popup_mask").css("display","block"); //팝업 뒷배경 display block
+   $("#popupDiv").css("display","block"); //팝업창 display block
+   $("body").css("overflow", "hidden");//body 스크롤바 없애기
+}
+
+
+
+$("#popCloseBtn").click(function(event) {
+   $("#popup_mask").css("display", "none"); //팝업창 뒷배경 display none
+   $("#popupDiv").css("display", "none"); //팝업창 display none
+   $("body").css("overflow", "auto");//body 스크롤바 생성
+});
+
+function clickerr(j){
+   cnum=j;   
+
+      $("#popupDiva").css({
+         "top" : (($(window).height() - $("#popupDiva").outerHeight()) / 2 
+            + $(window).scrollTop())
+            + "px","left" : (($(window).width() - $("#popupDiva").outerWidth()) / 2
+            + $(window).scrollLeft())
+            + "px"
+            //팝업창을 가운데로 띄우기 위해 현재 화면의 가운데 값과 스크롤 값을 계산하여 팝업창 CSS 설정
+      });
+      $("#popup_mask").css("display","block"); //팝업 뒷배경 display block
+      $("#popupDiva").css("display","block"); //팝업창 display block
+      $("body").css("overflow", "hidden");//body 스크롤바 없애기
+   }
+</script>
+
+
+
+
+<script th:inline="javascript">
+
+/*
+function aaa() {
+   var y;
+   var x;
+   var addr = $("#addr").val();
+   var geocoder = new kakao.maps.services.Geocoder();
+   geocoder.addressSearch(addr, function(result, status) {
+
+       // 정상적으로 검색이 완료됐으면 
+        if (status === kakao.maps.services.Status.OK) {
+
+           var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+         y = result[0].y;
+         x = result[0].x;
+         
+         console.log("x좌표값 : " + x + " y좌표값 : " + y);
+         
+       } else{
+       console.log("검색X");
+       }
+   });
+   
+} 
+*/
+
+
+</script>
+
+<script th:inline="javascript">
+
+var mapOptions = {
+	      center : new naver.maps.LatLng(33.3816666, 126.5414666),
+	      zoom : 11,
+	      minZoom : 11
+	   }
+	   var map = new naver.maps.Map("navermap",mapOptions);
+
+var marker;
+
+
+let markers = new Array();
+
+
+
+  
+         markers = new Array();
+         var cList = [[${cList}]];
+         console.log(cList);
+         var y;
+         var x;
+         var mapOptions = {
+               center : new naver.maps.LatLng(33.3816666, 126.5414666),
+               zoom : 11,
+               minZoom : 11
+            }
+         var map = new naver.maps.Map("navermap",mapOptions);
+         var geocoder = new kakao.maps.services.Geocoder();
+         
+         for (var i = 0;i < cList.length; i++){
+            geocoder.addressSearch(cList[i].c_addr, function(result, status) {
+               
+               var polylinePath =[new naver.maps.LatLng(result[0].y, result[0].x)];
+               
+               markers.push(marker = new naver.maps.Marker({
+                    position: polylinePath[polylinePath.length-1],
+                    map: map
+                }));   
+            });
+         }
+    
+
+
+
+</script>
+
+
+<script th:inline="javascript">
+function check(){
+   for(var i = 0; i<markers.length; i++){
+   console.log(infowindows.length);
+   }
+}   
+
+
+$(document).ready(function(){
+    $("#waterpark").show();
+    $("#waterpark1").hide();
+
+    /*img1을 클릭했을 때 img2를 보여줌*/
+    $("#waterpark").click(function(){
+        $("#waterpark").hide();
+        $("#waterpark1").show();
+    });
+
+    /*img2를 클릭했을 때 img1을 보여줌*/
+    $("#waterpark1").click(function(){
+        $("#waterpark").show();
+        $("#waterpark1").hide();
+    });
+    
+    $("#spaon").show();
+    $("#spaon1").hide();
+    
+    $("#spaon").click(function(){
+        $("#spaon").hide();
+        $("#spaon1").show();
+    });
+
+    $("#spaon1").click(function(){
+        $("#spaon").show();
+        $("#spaon1").hide();
+    });
+    
+    $("#surffing").show();
+    $("#surffing1").hide();
+    
+    $("#surffing").click(function(){
+        $("#surffing").hide();
+        $("#surffing1").show();
+    });
+
+    $("#surffing1").click(function(){
+        $("#surffing").show();
+        $("#surffing1").hide();
+    });
+    
+    $("#snowcooling").show();
+    $("#snowcooling1").hide();
+    
+    $("#snowcooling").click(function(){
+        $("#snowcooling").hide();
+        $("#snowcooling1").show();
+    });
+
+    $("#snowcooling1").click(function(){
+        $("#snowcooling").show();
+        $("#snowcooling1").hide();
+    });
+    
+    $("#raftingboat").show();
+    $("#raftingboat1").hide();
+    
+    $("#raftingboat").click(function(){
+        $("#raftingboat").hide();
+        $("#raftingboat1").show();
+    });
+
+    $("#raftingboat1").click(function(){
+        $("#raftingboat").show();
+        $("#raftingboat1").hide();
+    });
+    
+    $("#aquarium").show();
+    $("#aquarium1").hide();
+    
+    $("#aquarium").click(function(){
+        $("#aquarium").hide();
+        $("#aquarium1").show();
+    });
+
+    $("#aquarium1").click(function(){
+        $("#aquarium").show();
+        $("#aquarium1").hide();
+    });
+    
+    $("#wood").show();
+    $("#wood1").hide();
+    
+    $("#wood").click(function(){
+        $("#wood").hide();
+        $("#wood1").show();
+    });
+
+    $("#wood1").click(function(){
+        $("#wood").show();
+        $("#wood1").hide();
+    });
+    
+    $("#zoo").show();
+    $("#zoo1").hide();
+    
+    $("#zoo").click(function(){
+        $("#zoo").hide();
+        $("#zoo1").show();
+    });
+
+    $("#zoo1").click(function(){
+        $("#zoo").show();
+        $("#zoo1").hide();
+    });
+    
+    $("#shooting").show();
+    $("#shooting1").hide();
+    
+    $("#shooting").click(function(){
+        $("#shooting").hide();
+        $("#shooting1").show();
+    });
+
+    $("#shooting1").click(function(){
+        $("#shooting").show();
+        $("#shooting1").hide();
+    });
+    
+    $("#horse").show();
+    $("#horse1").hide();
+    
+    $("#horse").click(function(){
+        $("#horse").hide();
+        $("#horse1").show();
+    });
+
+    $("#horse1").click(function(){
+        $("#horse").show();
+        $("#horse1").hide();
+    });
+    
+    $("#paragliding").show();
+    $("#paragliding1").hide();
+    
+    $("#paragliding").click(function(){
+        $("#paragliding").hide();
+        $("#paragliding1").show();
+    });
+
+    $("#paragliding1").click(function(){
+        $("#paragliding").show();
+        $("#paragliding1").hide();
+    });
+    
+    $("#zipline").show();
+    $("#zipline1").hide();
+   
+    $("#zipline").click(function(){
+        $("#zipline").hide();
+        $("#zipline1").show();
+    });
+
+    $("#zipline1").click(function(){
+        $("#zipline").show();
+        $("#zipline1").hide();
+    });
+    
+    $("#railbike").show();
+    $("#railbike1").hide();
+   
+    $("#railbike").click(function(){
+        $("#railbike").hide();
+        $("#railbike1").show();
+    });
+
+    $("#railbike1").click(function(){
+        $("#railbike").show();
+        $("#railbike1").hide();
+    });
+    
+    $("#cart").show();
+    $("#cart1").hide();
+   
+    $("#cart").click(function(){
+        $("#cart").hide();
+        $("#cart1").show();
+    });
+
+    $("#cart1").click(function(){
+        $("#cart").show();
+        $("#cart1").hide();
+    });
+    
+    $("#ATV").show();
+    $("#ATV1").hide();
+   
+    $("#ATV").click(function(){
+        $("#ATV").hide();
+        $("#ATV1").show();
+    });
+
+    $("#ATV1").click(function(){
+        $("#ATV").show();
+        $("#ATV1").hide();
+    });
+    
+    $("#tourpass").show();
+    $("#tourpass1").hide();
+   
+    $("#tourpass").click(function(){
+        $("#tourpass").hide();
+        $("#tourpass1").show();
+    });
+
+    $("#tourpass1").click(function(){
+        $("#tourpass").show();
+        $("#tourpass1").hide();
+    });
+    
+    $("#yoat").show();
+    $("#yoat1").hide();
+   
+    $("#yoat").click(function(){
+        $("#yoat").hide();
+        $("#yoat1").show();
+    });
+
+    $("#yoat1").click(function(){
+        $("#yoat").show();
+        $("#yoat1").hide();
+    });
+    
+    $("#cablecar").show();
+    $("#cablecar1").hide();
+   
+    $("#cablecar").click(function(){
+        $("#cablecar").hide();
+        $("#cablecar1").show();
+    });
+
+    $("#cablecar1").click(function(){
+        $("#cablecar").show();
+        $("#cablecar1").hide();
+    });
+    
+    $("#boatfishing").show();
+    $("#boatfishing1").hide();
+   
+    $("#boatfishing").click(function(){
+        $("#boatfishing").hide();
+        $("#boatfishing1").show();
+    });
+
+    $("#boatfishing1").click(function(){
+        $("#boatfishing").show();
+        $("#boatfishing1").hide();
+    });
+    
+    $("#fishing").show();
+    $("#fishing1").hide();
+   
+    $("#fishing").click(function(){
+        $("#fishing").hide();
+        $("#fishing1").show();
+    });
+
+    $("#fishing1").click(function(){
+        $("#fishing").show();
+        $("#fishing1").hide();
+    });
+    
+    $("#showing").show();
+    $("#showing1").hide();
+   
+    $("#showing").click(function(){
+        $("#showing").hide();
+        $("#showing1").show();
+    });
+
+    $("#showing1").click(function(){
+        $("#showing").show();
+        $("#showing1").hide();
+    });
+    
+    $("#show").show();
+    $("#show1").hide();
+   
+    $("#show").click(function(){
+        $("#show").hide();
+        $("#show1").show();
+    });
+
+    $("#show1").click(function(){
+        $("#show").show();
+        $("#show1").hide();
+    });
+    
+    $("#cityview").show();
+    $("#cityview1").hide();
+   
+    $("#cityview").click(function(){
+        $("#cityview").hide();
+        $("#cityview1").show();
+    });
+
+    $("#cityview1").click(function(){
+        $("#cityview").show();
+        $("#cityview1").hide();
+    });
+    
+    $("#seaview").show();
+    $("#seaview1").hide();
+   
+    $("#seaview").click(function(){
+        $("#seaview").hide();
+        $("#seaview1").show();
+    });
+
+    $("#seaview1").click(function(){
+        $("#seaview").show();
+        $("#seaview1").hide();
+    });
+    
+    $("#skyview").show();
+    $("#skyview1").hide();
+   
+    $("#skyview").click(function(){
+        $("#skyview").hide();
+        $("#skyview1").show();
+    });
+
+    $("#skyview1").click(function(){
+        $("#skyview").show();
+        $("#skyview1").hide();
+    });
+    
+    $("#spa").show();
+    $("#spa1").hide();
+   
+    $("#spa").click(function(){
+        $("#spa").hide();
+        $("#spa1").show();
+    });
+
+    $("#spa1").click(function(){
+        $("#spa").show();
+        $("#spa1").hide();
+    });
+    
+    $("#whirlpool").show();
+    $("#whirlpool1").hide();
+   
+    $("#whirlpool").click(function(){
+        $("#whirlpool").hide();
+        $("#whirlpool1").show();
+    });
+
+    $("#whirlpool1").click(function(){
+        $("#whirlpool").show();
+        $("#whirlpool1").hide();
+    });
+    
+    $("#pool").show();
+    $("#pool1").hide();
+   
+    $("#pool").click(function(){
+        $("#pool").hide();
+        $("#pool1").show();
+    });
+
+    $("#pool1").click(function(){
+        $("#pool").show();
+        $("#pool1").hide();
+    });
+    
+    $("#BBQ").show();
+    $("#BBQ1").hide();
+   
+    $("#BBQ").click(function(){
+        $("#BBQ").hide();
+        $("#BBQ1").show();
+    });
+
+    $("#BBQ1").click(function(){
+        $("#BBQ").show();
+        $("#BBQ1").hide();
+    });
+    
+    $("#cook").show();
+    $("#cook1").hide();
+   
+    $("#cook").click(function(){
+        $("#cook").hide();
+        $("#cook1").show();
+    });
+
+    $("#cook1").click(function(){
+        $("#cook").show();
+        $("#cook1").hide();
+    });
+    
+    $("#sing").show();
+    $("#sing1").hide();
+   
+    $("#sing").click(function(){
+        $("#sing").hide();
+        $("#sing1").show();
+    });
+
+    $("#sing1").click(function(){
+        $("#sing").show();
+        $("#sing1").hide();
+    });
+    
+    $("#petok").show();
+    $("#petok1").hide();
+   
+    $("#petok").click(function(){
+        $("#petok").hide();
+        $("#petok1").show();
+    });
+
+    $("#petok1").click(function(){
+        $("#petok").show();
+        $("#petok1").hide();
+    });
+    
+    $("#terrace").show();
+    $("#terrace1").hide();
+   
+    $("#terrace").click(function(){
+        $("#terrace").hide();
+        $("#terrace1").show();
+    });
+
+    $("#terrace1").click(function(){
+        $("#terrace").show();
+        $("#terrace1").hide();
+    });
+    
+    $(document).ready(function(){
+           //btn_reset 을 클릭했을때의 함수
+           $( ".lodreset").click(function () {
+               $("#cityview").show();
+              $("#cityview1").hide();
+              
+              $("#seaview").show();
+              $("#seaview1").hide();
+              
+              $("#skyview").show();
+              $("#skyview1").hide();
+              
+              $("#spa").show();
+              $("#spa1").hide();
+              
+              $("#whirlpool").show();
+              $("#whirlpool1").hide();
+              
+              $("#pool").show();
+              $("#pool1").hide();
+              
+              $("#BBQ").show();
+              $("#BBQ1").hide();
+              
+              $("#cook").show();
+              $("#cook1").hide();
+              
+              $("#sing").show();
+              $("#sing1").hide();
+              
+              $("#petok").show();
+              $("#petok1").hide();
+              
+              $("#terrace").show();
+              $("#terrace1").hide();
+              
+               $("#waterpark").show();
+              $("#waterpark1").hide();
+              
+              $("#spaon").show();
+              $("#spaon1").hide();
+              
+              $("#surffing").show();
+              $("#surffing1").hide();
+              
+              $("#snowcooling").show();
+              $("#snowcooling1").hide();
+              
+              $("#raftingboat").show();
+              $("#raftingboat1").hide();
+              
+              $("#aquarium").show();
+              $("#aquarium1").hide();
+              
+              $("#wood").show();
+              $("#wood1").hide();
+              
+              $("#zoo").show();
+              $("#zoo1").hide();
+              
+              $("#shooting").show();
+              $("#shooting1").hide();
+              
+              $("#horse").show();
+              $("#horse1").hide();
+              
+              $("#paragliding").show();
+              $("#paragliding1").hide();
+              
+              $("#zipline").show();
+              $("#zipline1").hide();
+              
+              $("#railbike").show();
+              $("#railbike1").hide();
+              
+              $("#cart").show();
+              $("#cart1").hide();
+              
+              $("#ATV").show();
+              $("#ATV1").hide();
+              
+              $("#tourpass").show();
+              $("#tourpass1").hide();
+              
+              $("#yoat").show();
+              $("#yoat1").hide();
+              
+              $("#cablecar").show();
+              $("#cablecar1").hide();
+              
+              $("#boatfishing").show();
+              $("#boatfishing1").hide();
+              
+              $("#fishing").show();
+              $("#fishing1").hide();
+              
+              $("#showing").show();
+              $("#showing1").hide();
+              
+              $("#show").show();
+              $("#show1").hide();
+           });
+       });
+});
+
+</script>
+</html> 

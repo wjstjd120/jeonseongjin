@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Mypage_PwdUpdate</title>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script th:inline="javascript">
+$(function(){
+	var msg = [[${msg}]];
+	
+	if(msg != null){
+		alert(msg);
+	}
+	
+	//session에 'id'가 없으면 첫 페이지로 강제 이동
+	var logid = [[${session.user}]];   
+	if(logid == null){
+		location.href = "./login";
+	}
+	else{
+		$(".M3").css('display','block');
+		$(".M1").css('display','none');
+	}
+	
+	
+	 $(".newp").hide();
+
+	$('#checkPwd').on("click",function(){
+		var checkPassword = $('#m_pass').val();
+		var pwd = [[${session.pwd}]]
+
+		if(!checkPassword || checkPassword.trim() === ""){
+			alert("비밀번호를 입력하세요.");
+		}
+		var objdata = {"pw":checkPassword};
+	
+	$.ajax({
+		url:"pwCheck", //맵핑 밸류값
+		type:"post",
+		data:objdata,
+		success: function(result){
+			//var pwd = [[${session.pwd}]]
+			
+			console.log(result.res);
+			//var rr = result.m_pass;
+			if(result.res = "ok"){
+				alert("성공");
+				//document.getElementById("new_pwd").style.visibility = "visible"; // show
+				$(".newp").show();
+				
+			}else{
+				alert("실패");
+			}
+		},
+		error: function(error){
+			alert("전송실패");
+			console.log(error);
+		}
+	});	
+		
+		
+	});
+		
+});
+
+$(function(){
+	$('.logout').click(function(){
+		session.invalidate();
+		console.log([[${session.id}]]);
+	//	location.href = "/login";
+	})
+});
+</script>
+<link rel="stylesheet" href="css/Mypage_PwdUpdate.css">
+</head>
+<body>
+
+<!-- header 영역 -->
+<header>
+        <div class="Header">
+            <div class="Member">
+                <span class="M2">고객센터</span>
+                <span class="M2"><a th:href="@{/}">메인페이지</a></span>
+                <span class="M1"><a th:href="@{login}">로그인</a></span>
+                <span class="M1"><a th:href="@{join}">회원가입</a></span>
+                <span class="M3" style="display: none"><a th:href="@{login}" class="logout">로그아웃</a></span>
+            </div>
+            <div class="Title">제주옵서예</div>
+            <div class="Menu">
+                <span>숙박</span>
+                <span>레져</span>
+                <span>식당</span>
+                <span>여행정보</span>
+                <span>나의여행</span>
+            </div>
+        </div>
+</header>
+    <div class="Pic_menu">
+    	<div class="menu_div1">
+    		<div class="menu_title1"><h2>회원</h2></div>
+    		<div class="menu_member"><a th:href = @{mypage}><h4>-내정보</h4></a></div>	
+    		<div class="menu_member"><a th:href = @{Mypage_DealList}><h4>-거래내역</h4></a></div>	
+    	</div>
+    	<div class="menu_div2"></div>
+    	<div class="menu_div3">
+    		<div class="menu_title2"><h2>여행</h2></div>
+    		<div class="menu_Travel"><a th:href = @{Mypage_NowTrip}><h4>-진행중인 여행</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Mypage_PastTrip}><h4>-지난여행</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Favorites_Lodgment}><h4>-즐겨찾기</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Mypage_Plan}><h4>-게시글</h4></a></div>
+    		<div class="menu_Travel"><a th:href = @{Review_Lodgment}><h4>-리뷰관리</h4></a></div>
+    	</div>
+    </div>
+    
+<div class="mypage_update">
+	<div class="mypagediv">
+		<div class="m_update">
+			<div class="m_u_title"><h3>회원정보 수정</h3></div>
+			<div class="m_u_frm">
+				
+					<div class="m_frm1"><a th:href="@{Mypage_Update}">개인정보 수정</a></div>
+					<div class="m_frm2"><a>비밀번호 수정</a></div>
+		
+				<div class="m_frm_div">
+					<div class="m_d0"></div>
+					<div class="m_d1">비밀번호 수정</div>
+					<div class="m_d2">
+					<form th:action="@{PwdCheck}" method="post">
+						<div class="m_d2_text1">현재 비밀번호 : <input type="password" placeholder="사용중인 비밀번호" id="m_pass" name="m_pass" ></div>
+						<div class="m_check_d">
+							<div class="m_d2_check"><button type="button" id="checkPwd" >확인</button></div>
+						</div>
+					</form>
+					</div>
+				
+					<div class="m_d3 newp" id="new_pwd">새 비밀번호 : <input type="password" id="newPass" name="new_pass"  placeholder="새 비밀번호 입력" onchange="isSame()"></div>
+					<div class="m_d4 newp" id="new_pwd">새 비밀번호 확인 : <input type="password" placeholder="새 비밀번호 확인" id="newPassCheck" name="newPassCheck" onchange="isSame()">&nbsp;&nbsp;<span id="same"></span></div>
+					
+					
+						
+					
+				
+				</div>
+				<div class="m_frm_btn">
+					<div class="m_btn1">
+						<div class="m_btn01">
+								<div class="m_btn1_lo">
+									<input type="button" disabled="disabled"  onclick="updateNewPass()" id="updatePwd" value="수정" >
+								</div>
+		
+							</div>
+							
+					</div>
+					<div class="m_btn2">
+						<div class="m_btn02">
+							<div class="m_btn2_lo"><input type="button" onclick="Cancell()" id="cencell" value="취소"></div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+<script th:inline="javascript">
+
+
+
+function isSame(){
+	
+	var pw = $("#newPass").val();
+	var confirmPW = $("#newPassCheck").val();
+	if(pw!='' && confirmPW!=''){
+		if(pw==confirmPW){
+			document.getElementById('same').innerHTML='비밀번호가 일치합니다.';
+			document.getElementById('same').style.color='blue';
+			const target = document.getElementById('updatePwd');
+			target.disabled = false;  // 입력한 새로운 비밀번호 일치시 수정 버튼 활성화
+			
+		}
+		else{
+			document.getElementById('same').innerHTML='비밀번호가 일치하지 않습니다.';
+			document.getElementById('same').style.color='red';
+			const target = document.getElementById('updatePwd');
+			target.disabled = true;  // 입력한 새로운 비밀번호 불일치시 수정 버튼 비활성화
+		}
+	}
+}
+
+
+
+function updateNewPass() {
+	var newpass = $("#newPass").val();
+	
+	var obj = {"pw" : newpass};
+	
+	$.ajax({
+		url : "pwUpdate",
+		type : "post",
+		data : obj,
+//		datatype : "json",
+		success:function(result){
+		
+			if(result.res = "ok"){
+				alert("성공");
+				//document.getElementById("new_pwd").style.visibility = "visible"; // show
+				location.href = "Mypage_Update";
+				
+			}else{
+				alert("실패");
+			}
+			
+		},
+		error:function(error){
+			alert("전송실패");
+		}
+	});
+}
+
+
+function Cancell(){
+	if(confirm("비밀번호 수정을 취소하고 홈 화면으로 돌아가시겠습니까?") == true){
+		//true 는 확인을 눌렀을때
+		console.log("true");
+		location.href = "/";  //mapge.html로 이동하기
+	}
+	else {
+		console.log("false");
+		//false 는 취소를 눌렀을때
+	}
+}
+
+
+</script>
+
+
+<!-- 
+
+
+/*
+function print(){
+	var t1 = document.getElementById('t1').value;
+	
+	document.getElementById("result").innerText = t1;
+}
+
+function p_check(){
+	var m_pass = $('#m_pass').val();
+	$.ajax({
+		url:'/user/passCheck',
+		type:'post',
+		data:{m_pass:m_pass},
+		success:function(cnt){ //컨트롤러에서 넘어온 cnt 값을 받는다
+			if(cnt != 0){
+				
+			}
+		},
+		error:function(){
+			alert("에러입니다");
+		}
+	});
+};
+*/
+	/*
+	else{
+		$.ajax({
+			type:'GET',
+			url:'/rest/checkPwd',
+			data:{'checkPassword':checkPassword},
+			datatype:"text"
+		}).done(function(result){
+			console.log(result);
+			if(result){
+				console.log("비밀번호 일치");
+			}
+			else if(!result){
+				console.log("비밀번호 틀림");
+				//비밀번호가 일치하지않으면.
+				alert("비밀번호가 맞지 않습니다.");
+			}
+		}).fail(function(error){
+			alert(JSON.stringify(error));
+		})
+	}
+	*/
+//});
+/*
+$('#checkPwd').click(function(){
+	var pwd = $('#m_pass').val();
+	if(session.getAttribute("m_pass").equals(pwd)){
+		document.all.new_pwd.style.display="none";
+	}else{
+		document.all.new_pwd.style.display="";
+	}
+}
+*/
+ -->
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="css/qano.css">
+<link rel="stylesheet" type="text/css" href="css/header2.css">
+<script src="js/jquery-3.6.0.min.js"></script>
+<title>Q&A목록</title>
+<style type="text/css">
+.writefrm:hover{
+   background-color: lightgray;
+}
+</style>
+<script th:inline="javascript">
+var mdto;
+$(function(){
+var msg = [[${msg}]];
+   
+   if(msg != null){
+      alert(msg);
+   }
+   mdto = [[${session.user}]];
+   console.log(mdto);
+   
+   if(mdto != null){
+      $("#inLogin").show();
+      $("#outLogin").hide();
+      $(".M1").css("display","none");
+   }else{
+      $("#inLogin").hide();
+      $("#outLogin").show();
+      $(".m6").hide();
+      }   
+   
+   $(".M4"). hide();
+   
+   
+   if(mdto != null){
+      $("#inLogin").show();
+      $("#outLogin").hide();
+      $(".M1").css("display","none");
+   }else{
+      $("#inLogin").hide();
+      $("#outLogin").show();
+      
+   }
+   
+   
+   
+   if(mdto.m_category == "사업자"){
+      $(".M4"). show();
+   }
+    
+
+   
+   
+   
+
+});
+function writeFrm(){
+   if(mdto != null) {
+       location.href= "QA_Write"
+   }
+   
+   if(mdto == null) {
+       alert("로그인 후 이용 가능합니다");
+    }   
+   
+}
+
+
+</script>
+
+</head>
+<body>
+   <header>
+      <div th:include="fragment/header::header"></div>
+    </header>
+
+
+       <div class="main_container1">
+         <div class="main_container">
+            <div class="Pic_menu">
+               <!--     
+                <div   class="center"><a th:href="@{Question_List}" class="rara" style="text-decoration: none; color: black;">고객센터</a></div>
+   -->
+                <div  class="m2"><a  th:href="@{Question_List}"  class="rara" style="text-decoration: none;">자주하는 질문</a></div>
+                <div  class="m3"><a  href="/Notice_List"  class="rara" style="text-decoration: none;">공지사항</a></div>
+                <div class="m4"><a  th:href="@{QA_List}"  class="rara" style="text-decoration: none;">Q & A</a></div>
+                <div  class="m5"><a th:href="@{Myqa_List}"  class="rara"  style="text-decoration: none;">내가 한 질문 답변</a></div>
+             </div>
+         <div class= "container">
+             <div class="qnalist">Q&A</div>
+            <table>
+               <thead>
+                  <tr>
+                     <th>글번호</th>
+                     <th>제목</th>
+                     <th>작성자(아이디)</th>
+                     <th>작성일</th>
+                     <th>답변여부</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr th:each="qa : ${cList}">
+                     <td th:text="${qa.co_pk_conum}"></td>
+                     <td th:text="${qa.co_title}"></td>
+                     <td th:text="${qa.co_fk_id}"></td>
+                     <td th:text="${#dates.format(qa.co_date, 'yyyy-MM-dd')}"></td>
+                     <td th:text="${qa.co_check}"></td>
+                  </tr>
+               </tbody>
+            </table>
+            <div class="lastnumber">
+               <div th:utext="${paging}"></div>
+               <button type="button" class="writefrm" onclick="writeFrm()">글쓰기</button>
+               <a class="adminqa" href="adminqatest" style="display: none;">관리자</a>
+            </div>
+         </div>
+      </div>
+   </div>
+
+</body>
+<script th:inline="javascript"> 
+
+      
+      
+</script>
+</html>

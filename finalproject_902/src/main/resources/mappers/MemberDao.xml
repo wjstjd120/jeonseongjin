@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.openai.jeju.dao.MemberDao">
+
+<insert id="memberInsert"
+parameterType="MemberDto">
+insert into member value (#{m_pk_id},#{m_pass},#{m_name},#{m_gender},#{m_nickname},#{m_birth},#{m_phone},#{m_addr},#{m_email}, default)
+</insert>
+
+<select id="pwdSelect" parameterType="String"
+		resultType="String">
+		SELECT m_pass FROM member WHERE m_pk_id=#{m_pk_id}
+	</select>
+	
+	<select id="memberSelect" parameterType="String"
+		resultType="MemberDto">
+		SELECT * FROM member WHERE m_pk_id=#{m_pk_id}
+	</select>
+	
+	<select id="IdCheck"
+	parameterType="String"
+	resultType="Integer">
+		select count(*) from member where m_pk_id=#{m_pk_id}
+	</select>
+	
+	<select id="NickCheck"
+	parameterType="String"
+	resultType="Integer">
+		select count(*) from member where m_nickname=#{m_nickname}
+	</select>
+	
+	<delete id="memberDelete"
+	parameterType="String">
+		delete from member where m_pk_id = #{m_pk_id}
+	</delete>
+	
+	
+	
+	<select id = "PwdCheck" parameterType="String" resultType="int">
+		SELECT COUNT(m_pass) FROM member WHERE m_pass=#{m_pass}
+	</select>
+	
+	
+	<!-- 비밀번호 업데이트 -->
+	<update id="pwUpdate"
+	parameterType="MemberDto">
+		UPDATE member SET m_pass=#{m_pass} WHERE m_pk_id=#{m_pk_id} 
+	</update>
+	
+	<!-- 개인정보 업데이트 -->
+	<update id="memberUpdate" parameterType="MemberDto">
+		UPDATE member SET m_birth=#{m_birth}, m_email=#{m_email} WHERE m_pk_id=#{m_pk_id}
+	</update>
+	
+	<update id="upgradeMember"
+   parameterType="String">
+   update member set m_category="사업자" where m_pk_id=#{id}
+   </update>
+   
+   
+   <update id="memberBlack"
+   parameterType="String">
+   update member set m_category="블랙리스트" where m_pk_id=#{id}
+   </update>
+   
+   
+   
+	
+</mapper>  

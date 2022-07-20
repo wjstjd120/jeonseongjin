@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>page - 상품수정</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<link th:href="@{/css/companyheader.css}" rel="stylesheet" />
+<style type="text/css">
+.layerLimit{
+	overflow: auto;
+	width: 500px;
+	height: 300px;
+}
+.addGoodsFrm{
+	border: 1px solid;
+	width: 1500px;
+	height: 800px;
+	margin: 0 auto;
+	margin-top: 40px;
+	padding: 30px;
+	position: relative;
+}
+table{
+	width: 100%;
+	border: 1px solid white;
+}
+.roomNa{
+	width: 100%;
+	height: 25px;
+	border: 1px solid white;
+	border-bottom: 1px solid lightgray;
+}
+
+
+
+.button-54 {
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  letter-spacing: 2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: #000;
+  cursor: pointer;
+  border: 3px solid;
+  padding: 0.25em 0.5em;
+  box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 200px;
+  height: 50px;
+  margin-right: 60px;
+}
+
+.button-54:active {
+  box-shadow: 0px 0px 0px 0px;
+  top: 5px;
+  left: 5px;
+}
+
+@media (min-width: 768px) {
+  .button-54 {
+    padding: 0.25em 0.75em;
+  }
+}
+#nomalimg:hover{
+	cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<th:block th:if="${rdto != null}">
+		
+<div class="addGoodsFrm">
+		<h2>숙박 방 업데이트</h2>
+		<hr>
+		<div style="width: 1000px; margin: 0 auto;">
+		<form th:action="@{roomUpdate}" name="lGoodsFrm" method="post" enctype="multipart/form-data">
+		<table style="margin-bottom: 30px; margin-top: 20px;">
+			<tr>
+				<td class="layerTd" width="10%">방 이름</td>
+				<td class="layerTd" width="90%"><input type="text" title="방이름" class="roomNa" name="r_name" th:value="${rdto.r_name}" ></td>
+			</tr>
+			<tr>
+				<td class="layerTd">업체이름</td>
+				<td class="layerTd" id="roomname">
+				<input type="text" class="roomNa" readonly="readonly" th:value="${cdto.c_name}">
+				<input type="hidden" name="r_fk_cnum" th:value="${cdto.c_pk_cnum}">
+				<input type="hidden" name="r_pk_num" th:value="${rdto.r_pk_num}">
+				<input type="hidden" name="sysname" th:value="${rdto.r_img}">
+				<input type="hidden" name="r_hidden" th:value="${rdto.r_hidden}">
+				</td> 
+			</tr>
+		</table>
+		
+		<table style="width: 250px; height: 400px; position:absolute; border: 1px solid; right: 30px;">
+				<tr style="height: 100px;">
+					<th>
+					기존사진<br>
+					(사진을 누르면 삭제됩니다)
+					</th>
+				</tr>
+				<tr>
+					<td>
+				<div id="rimg_legend" style="height:300px; overflow: auto; margin-left: 40px">
+					<th:block th:each="data:${rimgList}">
+						<img id="nomalimg" th:src="@{/upload/}+${data.ri_sysname}" th:roomNum=${rdto.r_pk_num} th:number="${data.ri_sysname}" th:onclick="del(this.getAttribute('number'),this.getAttribute('roomNum'))" class="layerkd">
+					</th:block>	
+					</div>
+					</td>
+				</tr>
+			</table>
+			
+		<table style="width: 250px; height: 300px; position:absolute; border: 1px solid; left: 20px;">
+				<tr style="height: 100px;">
+					<th>
+					기존사진
+					</th>
+				</tr>
+				<tr>
+					<td>
+				<div id="rimg_legend" style="height:300px; overflow: auto; margin-left: 40px">
+						<img  th:src="@{/upload/}+${rdto.r_img}"  class="layerkd">
+					</div>
+					</td>
+				</tr>
+			</table>	
+		
+		<table class="layertable">
+			<tr style="height: 100px;">
+				<td style="width: 50%; margin: 0 auto;" class="layerTd">
+				<span>대문사진</span>
+				<br>
+				<input type="file" class="solfile" title="방 대문사진" name="r_img" id="solimage" accept="image/*" onchange="solImg(event)" >
+				<input type="hidden" id="filecheck" name="filecheck" value="0">
+				<div  class="layerSolImg"></div>
+				</td>
+				<td width="50%" class="layerTd" >
+				<div class="layerLimit">
+				<input type="file" title="방사진" id="multiimage" accept="image/*" name="multifile" onchange="multiImg(event);" multiple="multiple" >
+				<input type="hidden" id="multifilecheck" name="multifilecheck" value="0">
+				<div  id="layerFirst"></div>
+				</div>
+				</td>
+			</tr>
+		</table>
+		<table>
+			<tr height="100px;">
+				<td style="text-align: center; font-size: 30px;" class="layerTd">예약 정보</td>
+				<td style="line-height: 20px; font-size: 20px; text-align: center;" class="layerTd" width="80%">
+					<h4>숙박</h4>	
+					입실시간 : <input type="number" title="입실시간" name="r_in" min="1" max="24" th:value="${rdto.r_in}">시 부터<br>
+					퇴실시간 : <input type="number" title="퇴실시간" name="r_out" min="1" max="24" th:value="${rdto.r_out}">시 까지<br>
+					금액 : <input type="number" title="방 가격" name="r_price" max="2100000000" th:value="${rdto.r_price}">원
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: center; font-size: 19px; height: 200px;" class="layerTd" width="20%">숙소 주의사항 및 옵션</td>
+				<td style="line-height: 20px; font-size: 20px; text-align: center;" class="layerTd"><textarea title="숙소의 주의사항 및 옵션" style="resize: none; width: 80%; font-size: 20px;" name="r_contents" rows="8">[[${rdto.r_contents}]]</textarea></td>
+			</tr>
+		</table>
+		<div style="width: 525.61px; margin: 0 auto;">
+		<input type="submit" class="button-54" role="button" value="수정하기">
+		<input type="button" class="button-54" role="button"  onclick="showContents()" value="돌아가기">
+		</div>	
+		</form>
+		</div>
+</div>
+</th:block>
+
+
+<th:block th:if="${adto != null}">
+<div class="addGoodsFrm">
+		<h2>레저 상품 업데이트</h2>
+		<hr>
+		<div style="width: 1000px; margin: 0 auto;">
+		<form th:action="@{aactivityGoodsUpdate}" name="aGoodsFrm" method="post" enctype="multipart/form-data">
+			
+		<table style="margin-bottom: 30px; margin-top: 20px;">
+			<tr>
+				<td class="layerTd" width="10%">레저상품이름</td>
+				<td class="layerTd" width="90%"><input type="text" title="상품이름" class="roomNa" name="at_name" th:value="${adto.at_name}" ></td>
+			</tr>
+			<tr>
+				<td class="layerTd">업체이름</td>
+				<td class="layerTd" id="roomname">
+				<input type="text" class="roomNa" readonly="readonly" th:value="${cdto.c_name}">
+				<input type="hidden" name="at_fk_cnum" readonly="readonly" th:value="${adto.at_fk_cnum}">
+				<input type="hidden" name="at_pk_num" th:value="${adto.at_pk_num}">
+				<input type="hidden" name="asysname" th:value="${adto.at_img}">
+				<input type="hidden" name="at_hidden" th:value="${adto.at_hidden}">
+				</td>
+				
+			</tr>
+		</table>
+		
+		
+		
+		<table style="width: 250px; height: 400px; position:absolute; border: 1px solid; right: 30px;">
+				<tr style="height: 100px;">
+					<th>
+					기존사진<br>
+					(사진을 누르면 삭제됩니다)
+					</th>
+				</tr>
+				<tr>
+					<td>
+				<div id="aimg_legend" style="height:300px; overflow: auto; margin-left: 40px">
+				
+					<th:block th:each="data:${aimgList}">
+					
+						<img id="nomalimg" th:src="@{/upload/}+${data.ai_sysname}" th:roomNum=${adto.at_pk_num} th:number="${data.ai_sysname}" th:onclick="adel(this.getAttribute('number'),this.getAttribute('roomNum'))" class="layerkd">
+					
+					</th:block>	
+					
+					</div>
+					</td>
+				</tr>
+		</table>
+		
+		<table style="width: 250px; height: 300px; position:absolute; border: 1px solid; left: 20px;">
+				<tr style="height: 100px;">
+					<th>
+					기존사진
+					</th>
+				</tr>
+				<tr>
+					<td>
+					<div id="aimg_legend" style="height:300px; overflow: auto; margin-left: 40px">
+						<img  th:src="@{/upload/}+${adto.at_img}"  class="layerkd">
+					</div>
+					</td>
+				</tr>
+			</table>
+		
+		
+		
+		<table class="layertable">
+			<tr style="height: 100px;">
+				<td style="width: 50%; margin: 0 auto;" class="layerTd">
+				<span>상품대표사진</span>
+				<br>
+				<input type="file" class="solfile" title="상품대표사진" name="at_img" id="solimage" accept="image/*" onchange="solImg(event)" >
+				<input type="hidden" name="filecheck" id="filecheck" value="0">
+				<div class="layerSolImg"></div>
+				</td>
+				
+				<td width="50%" class="layerTd" >
+				<div class="layerLimit">
+				<input type="file" title="상품사진" id="multiimage" accept="image/*" name="multifile" onchange="multiImg(event);" multiple="multiple" >
+				<input type="hidden" id="multifilecheck" name="multifilecheck" value="0">
+				<div  id="layerFirst"></div>
+				</div>
+				</td>
+			</tr>
+		</table>
+		
+		<table>
+			<tr>
+				<td style="text-align: center; font-size: 19px; height: 200px;" class="layerTd" width="20%">레저 상품 설명 및 주의사항</td>
+				<td style="line-height: 20px; font-size: 20px; text-align: center;" class="layerTd"><textarea title="상품의 설명 및 주의사항" style="resize: none; width: 80%; font-size: 20px;" name="at_contents" rows="8">[[${adto.at_contents}]]</textarea></td>
+			</tr>
+			<tr height="100px;">
+				<td style="text-align: center; font-size: 30px;" class="layerTd">예약 정보</td>
+				<td style="line-height: 20px; font-size: 20px; text-align: center;" class="layerTd" width="80%">
+					<h4>상품</h4>	
+					금액 : <input type="number" name="at_price" max="2100000000" th:value="${adto.at_price}">원<br>					
+					예약 여부 :     
+					무 <input type="radio" name="at_rtch" value="0" checked="checked">
+					유 <input type="radio" name="at_rtch" value="1" >
+					
+					<th:block th:if="${adto.at_rtch=1}">
+						<div id="rtch">
+						체크인시간 : <input type="number" name="at_in" min="1" max="24" th:value="${adto.at_in}">시 부터<br>
+						체크아웃시간 : <input type="number" name="at_out" min="1" max="24" th:value="${adto.at_out}">시 까지<br>
+						</div>
+					</th:block>
+					
+					<th:block th:if="${adto.at_rtch=0}">
+						<div id="rtch">
+						체크인시간 : <input type="number" name="at_in" min="1" max="24" value=0>시 부터<br>
+						체크아웃시간 : <input type="number" name="at_out" min="1" max="24" value=0>시 까지<br>
+						</div>
+					</th:block>
+					
+				</td>
+			</tr>
+		</table>
+		<div style="width: 525.61px; margin: 0 auto;">
+		<input type="submit" class="button-54" role="button" value="수정하기">
+		<input type="button" class="button-54" role="button"  onclick="showContents()" value="돌아가기">
+		</div>	
+
+		</form>
+		</div>
+</div>
+</th:block>
+
+</body>
+<script th:inline="javascript">
+
+$("#multiimage").on("change", function(){
+	
+	//파일 입력창에서 선택한 파일 목록 가져오기
+	var files = $("#multiimage")[0].files;
+	console.log($("#multiimage"));
+	console.log(files);
+	
+	var fileNames = "";
+	
+	if(files.length > 1){//하나 이상의 파일 선택 시
+		fileNames = files[0].name + " 외 "
+			+ (files.length - 1) + "개"
+	}
+	else if(files.length == 1){
+		fileNames = files[0].name;
+	}
+	
+	
+	//fileCheck 부분 변경
+	if(fileNames == ""){//파일 취소 시
+		$("#multifilecheck").val(0);
+	}
+	else {//파일 선택 시
+		$("#multifilecheck").val(1);
+	}
+	console.log($("#multifilecheck").val());
+});
+
+
+function adel(sysname, atpnum){
+var check = confirm("삭제하시겠습니까?");
+	
+	var aobj = {"sysname" : sysname};
+	aobj.atpnum=atpnum;
+	
+	console.log(aobj);
+	
+	if(check){
+		
+		$.ajax({
+			url : "delAimg",
+			type : "post",
+			data : aobj,
+			datatype:"json",
+			success : function(result) {
+				var aList = result.aList;
+				
+				var aimgtag = "";
+					
+				for(var i = 0; i<aList.length; i++){
+					aimgtag +=
+						'<img id="nomalimg" src="/upload/' + aList[i].ai_sysname +'" class="layerkd" onclick="adel(\'' + aList[i].ai_sysname +'\',\'' + atpnum + '\')">';
+				}
+				console.log("안뇽");
+				$("#aimg_legend").html(aimgtag);
+				
+			},
+			error : function(error) {
+				console.log(error);
+			}
+		});
+		
+	}
+	
+}
+
+
+
+$("#solimage").on("change", function(){
+	//파일 입력창에서 선택한 파일 목록 가져오기
+	var files = $("#solimage")[0].files;
+	console.log($("#solimage"));
+	console.log(files);
+	
+	var fileName = "";
+	
+	if(files.length > 1){//하나 이상의 파일 선택 시
+		fileName = files[0].name + " 외 "
+			+ (files.length - 1) + "개"
+	}
+	else if(files.length == 1){
+		fileName = files[0].name;
+	}
+	
+	
+	//fileCheck 부분 변경
+	if(fileName == ""){//파일 취소 시
+		$("#filecheck").val(0);
+	}
+	else {//파일 선택 시
+		$("#filecheck").val(1);
+	}
+	console.log($("#filecheck").val());
+});
+
+
+
+function del(sysname, rpnum) {
+	var check = confirm("삭제하시겠습니까?");
+	
+	var obj = {"sysname" : sysname};
+	obj.rnum=rpnum;
+	
+	console.log(obj);
+	
+	if(check){
+		
+		$.ajax({
+			url : "delRimg",
+			type : "post",
+			data : obj,
+			datatype:"json",
+			success : function(result) {
+				var rList = result.rList;
+				
+				var rimgtag = "";
+					
+				for(var i = 0; i<rList.length; i++){
+					rimgtag +=
+						'<img id="nomalimg" src="/upload/' + rList[i].ri_sysname +'" class="layerkd" onclick="del(\'' + rList[i].ri_sysname +'\',\'' + rpnum + '\')">';
+				}
+				
+				$("#rimg_legend").html(rimgtag);
+				
+			},
+			error : function(error) {
+				console.log(error);
+			}
+		});
+		
+	}
+	
+}
+
+
+
+
+function showContents(){ // 뒤로가기
+	location.href="company_contents?cnum="+[[${cdto.c_pk_cnum}]];
+}
+
+
+
+function solImg(event){ // 단독 이미지 미리보기
+	 var reader = new FileReader();
+	
+	$(".layerSolImg").html("");	
+
+    reader.onload = function(event) {
+      var solimg = document.createElement("img");
+      solimg.setAttribute("src", event.target.result);
+      solimg.setAttribute("class", "layerkd");
+      
+      document.querySelector(".layerSolImg").appendChild(solimg);
+    };
+
+    reader.readAsDataURL(event.target.files[0]);
+}
+
+
+
+function multiImg(event) { // 이미지 미리보기
+	$("#layerFirst").html("");
+	
+	for (var image of event.target.files) {
+	     var reader = new FileReader();
+	     
+	     reader.onload = function(event) {
+	       var img = document.createElement("img");
+	       img.setAttribute("src", event.target.result);
+	       img.setAttribute("class", "layerkd");
+	       
+	       document.querySelector("#layerFirst").appendChild(img);
+	     };
+	     reader.readAsDataURL(image);
+	   }
+  }
+
+
+</script>
+</html>

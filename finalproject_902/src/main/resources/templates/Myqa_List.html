@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" th:href="@{css/header2.css}">
+<link rel="stylesheet" type="text/css" th:href="@{css/Myqa_List.css}">
+<script src="js/jquery-3.6.0.min.js"></script>
+<title>내가한 질문 답변</title>
+<script th:inline="javascript">
+var mdto;
+$(function () {
+	
+	var msg = [[${msg}]];
+	
+	if(msg != null){
+		alert(msg);
+	}
+	
+	$(".M4"). hide();
+		
+	mdto = [[${session.user}]];
+	
+	if(mdto != null){
+		$("#inLogin").show();
+		$("#outLogin").hide();
+		$(".M1").css("display","none");
+	}else{
+		$("#inLogin").hide();
+		$("#outLogin").show();
+		$(".m6").hide();
+		
+	}
+	
+	if(mdto == null){
+		window.history.back();
+	}
+	
+	
+	
+	if(mdto.m_category == "사업자"){
+		$(".M4"). show();
+	}
+		
+});
+   </script>
+</head>
+<body>
+	<header>
+		<div th:include="fragment/header::header"></div>
+	</header>
+	
+	
+	<section>
+	
+       <div class="main_container1">
+         <div class="main_container">
+            <div class="Pic_menu">
+               <!--     
+                <div   class="center"><a th:href="@{Question_List}" class="rara" style="text-decoration: none; color: black;">고객센터</a></div>
+   -->
+                <div  class="m2"><a  th:href="@{Question_List}"  class="rara" style="text-decoration: none;">자주하는 질문</a></div>
+                <div  class="m3"><a  href="/Notice_List"  class="rara" style="text-decoration: none;">공지사항</a></div>
+                <div class="m4"><a  th:href="@{QA_List}"  class="rara" style="text-decoration: none;">Q & A</a></div>
+                <div  class="m5"><a th:href="@{Myqa_List}"  class="rara"  style="text-decoration: none;">내가 한 질문 답변</a></div>
+             </div>
+		<div class="container">
+			<div class="myqa">
+				<p>내가 한 질문 답변</p>
+				<hr>
+				<div class="welcome" id="wel">
+					<img alt="이미지입니다." src="">
+					<p>고객님이 문의하신 내역과 답변을 확인하실 수 있습니다.</p>
+				</div>
+				<div class="board">
+					<table>
+						<thead>
+							<tr>
+								<th class="board_t"><input id="allCheck" type="checkbox"
+									name="allCheck"></th>
+								<th class="board_t">제목</th>
+								<th class="board_t">처리상황</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="qa : ${cList}">
+								<td class="board_d"><input name="RowCheck" type="checkbox"
+									th:value="${qa.co_pk_conum}"></td>
+								<td class="board_d"><a
+									th:href="@{/Myqa(co_pk_conum=${qa.co_pk_conum})}"> <span
+										th:text="${qa.co_title}"></span>
+								</a></td>
+								<td class="board_d" th:text="${qa.co_check}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		</div>
+		</div>
+	<hr class="pag_hr">
+	<div class="btn-area">
+		<div class="delsize">
+			<input type="button" value="선택삭제" onclick="deleteValue();">
+		</div>
+		<div class="paging" th:utext="${paging}"></div>
+	</div>
+	</section>
+</body>
+<script th:inline="javascript">
+$(function(){
+   var chkObj = document.getElementsByName("RowCheck");
+   var rowCnt = chkObj.length;
+   
+   $("input[name='allCheck']").click(function(){
+      var chk_listArr = $("input[name='RowCheck']");
+      for (var i = 0; i<chk_listArr.length; i++) {
+         chk_listArr[i].checked = this.checked;
+      }
+   });
+   $("input[name='RowCheck']").click(function(){
+      if($("input[name='RowCheck']:checked").length == rowCnt) {
+         $("input[name='allCheck']")[0].checked = true;
+      }
+      else {
+         $("input[name='allCheck']")[0].checked = false;
+      }
+   });
+});
+function deleteValue() {
+   var url = "checkDelete";
+   var valueArr = new Array();
+   var list = $("input[name='RowCheck']");
+   for(var i = 0; i < list.length; i++){
+      if(list[i].checked){
+         valueArr.push(list[i].value);
+      }
+   }
+   if(valueArr.length == 0) {
+      alert("선택된 글이 없습니다.");
+   }
+   else {
+         $.ajax({
+            url : url,
+            type : "post",
+            traditional : true,
+            data : {valueArr : valueArr},
+            dataType :"json",
+            success : function(resolut){
+               console.log(resolut);
+               if(resolut.res = "1") {
+                  alert("삭제 성공");
+                  location.replace("Myqa_List")
+               }
+               else {
+                  alert("삭제 실패");
+               }
+            },
+            error : function(error){
+               alert("통신 실패");
+            }
+         });
+      }
+   }
+</script>
+</html>

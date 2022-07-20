@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http:www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+</head>
+<body>
+	<div th:fragment="review">
+      <div><strong>댓글작성</strong></div>
+         <form id="reviewwrite" method="post">
+        
+            <div style="width: 250px; height: 250px; display: inline; float: left;">
+                  <img id="preview-imageFrm" style="width: 250px; height: 250px;" src="">
+             </div>
+            <div style="width: 700px; height: 250px;">
+                    
+                     <div class="star-widget" style="margin-top:30px;">
+						<div class="review_rating">
+							<div class="warning_msg">별점을 선택해 주세요.</div>
+							<div class="rating">
+								<input id="hrate" type="hidden" name="sv_star" value="0">
+								<!-- 해당 별점을 클릭하면 해당 별과 그 왼쪽의 모든 별의 체크박스에 checked 적용 -->
+								<input type="checkbox" name="sv_star" id="rating1" value="1"
+									class="rate_radio" title="1점"> <label for="rating1"></label>
+								<input type="checkbox" name="sv_star" id="rating2" value="2"class="rate_radio" title="2점"> <label for="rating2"></label>
+								<input type="checkbox" name="sv_star" id="rating3" value="3"
+									class="rate_radio" title="3점"> <label for="rating3"></label>
+								<input type="checkbox" name="sv_star" id="rating4" value="4"
+									class="rate_radio" title="4점"> <label for="rating4"></label>
+								<input type="checkbox" name="sv_star" id="rating5" value="5"
+									class="rate_radio" title="5점"> <label for="rating5"></label>
+							</div>
+						</div>
+					</div>
+                   <textarea style="width:300px;height: 100px; margin-bottom: -50px;" th:name="sv_contents" id="inserttitle"></textarea>               
+            </div>
+         <div>
+             <input style="display: inline;float:left" type="file" id="input-imageinsert" name="sv_img">
+             <input type="hidden" id="filecheck" name="FileCheck" value="0">
+          </div>   
+	 <div style="padding-top: 40px;">
+         <button th:onclick="reviewInsert()" class="button-65" type="button">작성</button>
+		<input type="button" id="popCloseBtn" value="나가기">
+     </div>
+      </form>
+      </div>
+</body>
+
+</html>

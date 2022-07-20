@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http:www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>page - 회원가입 폼</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<style type="text/css">
+*{
+	padding: 0;
+	margin: 0;
+}
+a{
+   text-decoration: none;
+}
+
+a:visited{
+   color: black;
+   
+}
+.joinFrm{
+	width: 550px;
+	margin : 0 auto;
+	margin-top: 120px;
+}
+
+table{
+	width : 450px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.frm{
+	width: 100%;
+}
+
+.check{
+	border: 1px solid;
+}
+button{
+	width: 100px;
+	margin: auto;
+	display: block;
+}
+tr{
+	height: 40px;
+}
+input[type=text],input[type=password],input[type=email]{
+	width: 100%;
+	height: 40px;
+	border : 1px solid lightgray;
+	border-radius: 20px;
+	padding-left: 20px;
+}
+input[type=button]{
+	width: 70%;
+	height: 35px;
+	border : 1px solid lightgray;
+	border-radius: 20px;
+	margin-left: 50px;
+}
+input[type=button]:hover {
+	background-color: lightgray;
+}
+
+input[type=button]:active{
+ box-shadow: 1px 1px 0 rgb(0,0,0,0.5);
+    position: relative;
+    top:2px;
+}
+/* CSS */
+.button-48 {
+  appearance: none;
+  background-color: #FFFFFF;
+  border-width: 0;
+  box-sizing: border-box;
+  color: #000000;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Clarkson,Helvetica,sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1em;
+  opacity: 1;
+  outline: 0;
+  padding: 1.5em 2.2em;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  text-rendering: geometricprecision;
+  text-transform: uppercase;
+  transition: opacity 300ms cubic-bezier(.694, 0, 0.335, 1),background-color 100ms cubic-bezier(.694, 0, 0.335, 1),color 100ms cubic-bezier(.694, 0, 0.335, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  white-space: nowrap;
+  width: 200px;
+  margin-left: 175px;
+  margin-top: 20px;
+  
+  
+}
+
+.button-48:before {
+  animation: opacityFallbackOut .5s step-end forwards;
+  backface-visibility: hidden;
+  background-color: #EBEBEB;
+  clip-path: polygon(-1% 0, 0 0, -25% 100%, -1% 100%);
+  content: "";
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  transform: translateZ(0);
+  transition: clip-path .5s cubic-bezier(.165, 0.84, 0.44, 1), -webkit-clip-path .5s cubic-bezier(.165, 0.84, 0.44, 1);
+  width: 100%;
+}
+
+.button-48:hover:before {
+  animation: opacityFallbackIn 0s step-start forwards;
+  clip-path: polygon(0 0, 101% 0, 101% 101%, 0 101%);
+}
+
+.button-48:after {
+  background-color: #FFFFFF;
+}
+
+.button-48 span {
+  z-index: 1;
+  position: relative;
+}
+.glebal{
+  width : 50px;
+  height : 30px;
+  border: 1px solid lightgray;
+}
+#Mcheck{
+	background-color: lightgray;
+}
+</style>
+</head>
+<body>
+<div class="joinFrm">
+<form th:action="@{memberInsert}" method="post" onsubmit="return joincheck()" name="joinFrm">
+<table>
+	<tr>
+		<td colspan="2"><h2><a href="/">쩨주옵서예</a></h2></td>
+	</tr>
+	<tr >
+		<td colspan="2"><span>WELCOME TO JEJU</span></td>
+	</tr>
+	<tr>
+		<td width="70%"><input type="text" class="login-input" id="m_pk_id" title="아이디" name="m_pk_id" autofocus placeholder="아이디"></td>
+		<td width="30%"><input type="button" class="idcheck-btn" value="중복확인" onclick="idCheck()"></td>
+	</tr>
+	<tr>
+		<td><input type="text" class="login-input" id="m_nickname" title="닉네임" name="m_nickname" placeholder="닉네임"></td>
+		<td><input type="button" class="idcheck-btn" value="중복확인" onclick="nickCheck()"></td>
+	</tr>
+
+	<tr>
+		<td colspan="2"><div><br></div></td>
+	</tr>
+	<tr>
+		<td colspan="2"><input type="password" class="frm" id="m_pass" title="비밀번호" name="m_pass" placeholder="비밀번호"></td>
+	</tr>
+	<tr>
+		<td colspan="2"><input type="password" class="frm" id="passcheck" title="비밀번호확인란" placeholder="비밀번호확인"></td>
+	</tr>
+	<tr>
+		<td colspan="2"><span id="passCheck"></span></td>
+	</tr>
+	<tr>
+		<td><input type="text" class="frm" id="name" name="m_name" placeholder="이름"></td>
+		<td>
+		  <input type="radio" id="M" name="m_gender" value="M" checked>
+   		  <span id="Mcheck" class="glebal"><label for="M" onclick="checkgender('m')">남자</label></span>
+    	  <input type="radio" id="F" name="m_gender" value="F">
+      	  <span id="Fcheck" class="glebal"><label for="F" onclick="checkgender('f')">여자</label></span>
+     	</td>
+	</tr>
+	<tr>
+		<td colspan="2"><input type="text" class="frm" id="birth" name="m_birth" placeholder="생년월일"></td>
+	</tr>
+	<tr>
+		<td colspan="2"><input type="text" class="frm" id="addr" title="m_addr" name="m_addr" placeholder="주소"></td>
+	</tr>
+	<tr>
+		<td><input type="text" class="frm" id="m_phone" title="m_phone" name="m_phone" placeholder="휴대폰번호"></td>
+		<td><input type="button" onclick="phoneSend()" value="인증받기발송">
+	</tr>
+	<tr>
+		<td><input type="password" class="frm" id="checkNum" placeholder="인증번호"></td>
+		<td><input type="button" onclick="phoneCheck()" value="인증번호학인">
+	</tr>
+	<tr>
+		<td colspan="2"><input type="email" class="frm" id="m_email" title="m_email" name="m_email" placeholder="이메일"></td>
+	</tr>
+</table>
+<button class="button-48" role="button"><span class="text"> присоединиться </span></button>
+</form>
+</div>
+</body>
+<script th:inline="javascript">
+$("#M").hide();
+$("#F").hide();
+var ckOk = false;
+var nckOk = false;
+var pckOk = false;
+
+
+
+
+function joincheck(){  // 빈칸 체크
+	
+	if(ckOk == false){
+		alert("아이디 중복 체크를 해주세요.");
+		return false;//submit 실행 막기
+	}else if(nckOk == false){
+		alert("닉네임 중복 체크를 해주세요.");
+		return false;
+	}else if(pckOk == false){
+		alert("휴대폰 인증을 해주세요.");
+		return false;
+	}
+
+	
+	//form 태그의 내용 전부 가져오기
+	var frm = document.joinFrm;
+	console.log(frm);
+	
+	var length = frm.length - 1;//submit 버튼 제외
+	console.log(length);
+	
+	for(var i = 0; i < length; i++){
+		if(frm[i].value == "" || frm[i].value == null){
+			alert(frm[i].title + "을(를) 채워주세요");
+			frm[i].focus();
+			return false;
+		}
+	}
+	
+	return true;//모든 칸이 다 채워졌고, 중복 체크도 한 상태
+}
+
+
+
+function checkgender(d) {
+	
+	if(d=="m"){
+		console.log("남자");
+		$("#Mcheck").css("background-color","lightgray");
+		$("#Fcheck").css("background-color","white");
+		
+	} else if (d=="f"){
+		console.log("여자");
+		$("#Fcheck").css("background-color","lightgray");
+		$("#Mcheck").css("background-color","white");
+	}
+}
+
+
+function phoneSend(){
+	var phoneNum = $("#m_phone").val();
+	console.log(phoneNum);
+	
+	var jsonFrm = {"pnum" : phoneNum};
+	console.log(jsonFrm);
+	
+	
+	$.ajax({
+		url : "user",
+		type : "post",  
+		data : jsonFrm,
+		dataType : "json",
+		success : function(result) {
+			console.log(result);
+			alert("인증번호를 발송했습니다.");
+		},
+		error : function(error) {
+			alert("전송실패");
+			console.log(error);
+		}
+	});
+}
+
+
+function phoneCheck(){
+	var checkNum = $("#checkNum").val();
+	console.log(checkNum);
+	
+	var jsonFrm = {"checkNum" : checkNum};
+	
+	$.ajax({
+		url : "confirmFrm",
+		type : "post",
+		data : jsonFrm,
+		dataType : "json",
+		success : function(result) {
+			var msg = result.msg;
+			alert(msg);
+			
+			if(msg == "인증성공"){
+				pckOk = true;
+				console.log(msg);
+				console.log(pckOk);
+
+			}else{
+				pckOk = false;
+			}
+			console.log(msg);
+			
+		},
+		error : function(error) {
+			alert("전송실패");
+			console.log(error);
+		}
+	});
+}
+// id중복 체크
+function idCheck(){
+	var inId = $("#m_pk_id").val();
+	
+	//id 값을 입력했는지 검사.
+	if(inId == ""){//입력을 안했을 경우
+		alert("아이디를 입력하세요.");
+		$("#m_pk_id").focus();
+		return;
+	}
+	
+	var ckObj = {"m_pk_id":inId};
+	console.log(ckObj);
+	
+	//서버로 입력한 id 전송
+	$.ajax({
+		url: "idCheck",
+		type: "post",
+		data: ckObj,
+		datatype:"json",
+		success: function(result){
+			console.log(result.msg);
+			if(result.msg == "ok"){
+				alert("아이디 사용 가능");
+				ckOk = true;
+			}
+			else {
+				alert("사용할 수 없는 아이디");
+				$("#m_pk_id").val("");//입력한 아이디 지우기
+				$("#m_pk_id").focus();//아이디 입력칸 포커스
+				ckOk = false;
+			}
+		},
+		error: function(error){
+			console.log(error);
+			ckOk = false;
+		}
+	});
+}
+// 중복확인 후 id칸 val 변경 시 ckOk = false
+$("#m_pk_id").keydown(function(){
+	ckOk=false;
+});
+
+
+// 닉네임 중복 체크
+function nickCheck(){
+var inNickname = $("#m_nickname").val();
+	
+	//id 값을 입력했는지 검사.
+	if(inNickname == ""){//입력을 안했을 경우
+		alert("닉네임을 입력하세요.");
+		$("#m_nickname").focus();
+		return;
+	}
+	
+	var ckObj = {"m_nickname":inNickname};
+	console.log(ckObj);
+	
+	//서버로 입력한 id 전송
+	$.ajax({
+		url: "nickCheck",
+		type: "post",
+		data: ckObj,
+		datatype:"json",
+		success: function(result){
+			console.log(result.msg);
+			if(result.msg == "ok"){
+				alert("닉네임 사용 가능");
+				nckOk = true;
+			}
+			else {
+				alert("사용할 수 없는 닉네임");
+				$("#m_nickname").val("");//입력한 아이디 지우기
+				$("#m_nickname").focus();//아이디 입력칸 포커스
+				nckOk = false;
+			}
+		},
+		error: function(error){
+			console.log(error);
+			nckOk = false;
+		}
+	});
+}
+</script>
+</html>

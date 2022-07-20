@@ -1,0 +1,135 @@
+<!DOCTYPE heml>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="css/mypageheader.css">
+<link rel="stylesheet" type="text/css" href="css/Favorites_Lodgment.css">
+<title>즐겨찾기</title>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script th:inline="javascript">
+$(function () {
+	
+	var msg = [[${msg}]];
+	
+	if(msg != null){
+		alert(msg);
+	}
+	
+	$(".M4"). hide();
+		
+	mdto = [[${session.user}]];
+	
+	if(mdto != null){
+		$("#inLogin").show();
+		$("#outLogin").hide();
+		$(".M1").css("display","none");
+	}else{
+		$("#inLogin").hide();
+		$("#outLogin").show();
+		
+	}
+	
+	
+	
+	if(mdto.m_category == "사업자"){
+		$(".M4"). show();
+	}
+		
+});
+</script>
+</head>
+<body>
+<header>
+<div th:include="fragment/mypageheader::mypageheader"></div>
+</header>
+<section>
+
+	<div class="scontainer">
+		<div class="scontainer_top">
+			<div class="scontainer_text">
+				<div class="s_t1"><h2>즐겨찾기</h2></div>
+				<div class="s_t2">
+					<div class="s_t2_div">
+						<div class="s_t2_text1"><a href="Favorites_Lodgment" style="text-decoration: none; color: black;">숙박</a></div>
+						<div class="s_t2_text2">|</div>
+						<div class="s_t2_text1"><a href="Favorites_Activity" style="text-decoration: none; color: black;">레저</a></div>
+						<div class="s_t2_text2">|</div>
+						<div class="s_t2_text1"><a href="Favorites_Food" style="text-decoration: none; color: black;">식당</a></div>
+					</div>
+				</div>
+			</div>
+			<div class="scontainer_info">
+				<div class="s_info2">
+					<div class="s_i2_text1"><h3>레저종류</h3></div>
+					<div class="s_i2_text2">:</div>
+					<div class="s_i2_text3">
+						<select class="bigroom_1" id="option" >
+							<option value="전체">전체</option>
+							<option  value="실내스포츠">실내스포츠</option>
+							<option  value="실외스포츠">실외스포츠</option>
+							<option  value="수상">수상</option>
+						</select>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="scontainer_middle">
+		</div>
+		<div class="scontainer_bottom">
+			<div class="s_bottom_div1" style="overflow: auto;">
+					<!-- <div class="s_b_d1"> -->
+					<ul>
+						<li>
+							<div class="s_b_list" th:each="cDto : ${cDto}">
+								<div class="s_b_img_div">
+									<div class="s_b_img"><img th:src="@{/upload/} + ${cDto.c_img}" style="width: 170px; height: 150px"></div>
+								</div>
+								<div class="s_b_cname" th:text="${cDto.c_name}"></div>
+								<div><button type="button" th:onclick="jjimDel([[${cDto.fa_pk_num}]])">찜해제</button></div>
+							</div>
+						</li>
+					</ul>
+			</div>
+		</div>
+	</div>
+	
+	
+</section>
+</body>
+<script th:inline="javascript">
+$("#option").change(function(){
+	var option = $(this).val();
+	
+	console.log(option);
+	location.href="./Favorites_Activity?c_category=레저&c_type=" + option;
+	
+});
+function jjimDel(num){
+	var fnum = {"fa_pk_num" : num};
+	console.log(fnum);
+	
+	$.ajax({
+		url : "jjimDelete",
+		type : "POST",
+		data : fnum,
+		dataType : "JSON",
+		success : function(result){
+			console.log(result.msg);
+			if(result.msg == "ok"){
+				alert("찜해제");
+				location.reload();
+			}
+			else {
+				alert("실패");
+			}
+		},
+		error : function(error){
+			console.log(error.msg);
+			alert("통신실패");
+		}
+	});
+}
+</script>
+</html>

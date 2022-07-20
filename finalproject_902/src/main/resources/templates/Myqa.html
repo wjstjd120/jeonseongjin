@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="../css/header.css">
+    <link rel="stylesheet" type="text/css" href="../css/Myqa.css">
+     <script src="../js/jquery-3.6.0.min.js"></script>
+    <title>내가한 질문 답변</title>
+    <script th:inline="javascript">
+    var mdto;
+    $(function () {
+       var msg = [[${msg}]];
+       
+       if(msg != null){
+          alert(msg);
+       }
+       
+       
+       $(".M4"). hide();
+          
+       mdto = [[${session.user}]];
+       
+       if(mdto != null){
+          $("#inLogin").show();
+          $("#outLogin").hide();
+          $(".M1").css("display","none");
+       }else{
+          $("#inLogin").hide();
+          $("#outLogin").show();
+          
+       }
+       
+       
+       
+       if(mdto.m_category == "사업자"){
+          $(".M4"). show();
+       }
+       
+       
+          
+    });
+   </script>
+   
+</head>
+<body>
+     <div th:include="fragment/header::header"></div>
+   <section>
+      <div class="container">
+         <div class="myqa">
+            <p>내가한 질문 답변</p>
+         </div>
+         <hr id="qaline">
+         <div class="qainfo">
+            <p>Q&A 상담내역</p>
+            <div class="qainfo_my">
+               <table class="content_qa">
+                  <thead>
+                  <tr>
+                     <th class="title_q">제목 <input type="hidden" name="co_pk_conum"  th:value="${coDto.co_pk_conum}"></th>
+                     <td class="info_q">[[${coDto.co_title}]]</td>
+                     <th class="date_q" >작성일자</th>
+                     <td th:text="${#dates.format(coDto.co_date, 'yyyy-MM-dd')}"></td>
+                  </tr>
+                  </thead>
+               </table>
+                     <table class="content_qa" id="content_id">               
+                        <tr>
+                           <th class="title_q">내용</th>
+                           <td th:text="${coDto.co_contents}"></td>
+                        </tr>
+                     </table>
+            </div>
+         </div> <!-- q&a상담내역 본인쪽 end -->
+            <div class="qainfo_ad">
+            <p>문의한 내용 답변보기</p>
+            <div class="qainfo_my">
+               <table class="content_qa">
+                  <thead>
+                  <tr >
+                     <th class="title_q">제목</th>
+                     <td class="info_q" th:text="${plaint.co_title}"></td>
+                     <th class="date_q">작성일자</th>
+                     <td th:text="${#dates.format(plaint.co_re_date, 'yyyy-MM-dd')}"></td>
+                  </tr>
+                  <tr class="contents_a">
+                  <th class="title_q">답변내용</th>
+                     <td th:text="${plaint.co_reply}"></td>
+                  </tr>
+                  </thead>
+               </table>
+            </div>
+         </div><!-- 문의한 내용답변 end -->
+         <p>!답변이 부족하셨다면 챗봇을 통해 관리자와 상담해주세요.!</p>
+         <hr id="qaline">
+            <button onclick="goMyqaList()">목록</button>
+             <input type="button" th:songjan="${coDto.co_pk_conum}" th:onclick="goDel(this.getAttribute('songjan'))" value="삭제">
+      </div> <!-- container end -->
+   </section>
+</body>
+<script th:inline="javascript">
+function goMyqaList(){
+   location.href="/Myqa_List";
+}
+
+function goDel(num) { 
+   if(confirm("삭제 하시겠습니까?")){
+   var conum = {"co_pk_conum" : num};
+   console.log(conum);
+   
+   $.ajax({
+      url : "deleteComplaint",
+      type : "post",
+      data : conum,
+      dataType : "json",
+      success : function(result){
+         console.log(result.res);
+         if(result.res = "삭제 되었습니다.") {
+            alert("삭제 되었습니다.");
+         }
+         else {
+            alert("삭제에 실패하였습니다.");
+         }
+         location.href = "/Myqa_List";
+      },
+      error : function(error) {
+         console.log(error.res);
+      }
+   });
+   }
+   else {
+      
+   }
+   
+}
+
+</script>
+</html>

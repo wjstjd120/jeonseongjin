@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../css/jejuEvent.css">
+    <link rel="stylesheet" type="text/css" href="../css/header.css">
+     <script src="../js/jquery-3.6.0.min.js"></script>
+<title>Document</title>
+<script th:inline="javascript">
+$(function () {
+	
+	var msg = [[${msg}]];
+	
+	if(msg != null){
+		alert(msg);
+	}
+	
+	$(".M4"). hide();
+		
+	mdto = [[${session.user}]];
+	
+	if(mdto != null){
+		$("#inLogin").show();
+		$("#outLogin").hide();
+		$(".M1").css("display","none");
+	}else{
+		$("#inLogin").hide();
+		$("#outLogin").show();
+		
+	}
+	
+	
+	
+	if(mdto.m_category == "사업자"){
+		$(".M4"). show();
+	}
+		
+});
+
+</script>
+</head>
+<body>
+<header>
+	<div th:include="fragment/header::header"></div>
+</header>
+
+	<div class="main_container1">
+	 <div class="plan_menu"><br><br><hr>
+        <span class="pm2" onclick="location.href='/JejuEvent_List'">제주행사</span><hr>
+        <span class="pm3" onclick="location.href='/jejutourList'">제주관광지</span><hr>
+    </div> 
+   			 
+		<div class="main_container">
+			<div id="bottomcon">
+			<input type="hidden" name="e_pk_enum" th:value="${edto.e_pk_enum}">
+			<div class="event_top">
+				<span class="event_title" th:text="${edto.e_title}"></span>
+				<span class="idate" th:text="${#dates.format(edto.e_date, 'yyyy-MM-dd')}"></span>
+			</div>
+				<div class="incon">
+					<div class="inconimg">
+						<img class="img1" th:src="@{/upload/} + ${edto.e_img}" style="width: 100%; height: 900px;">
+						<div th:text="${edto.e_info}"></div>
+					</div>
+				</div>
+				<button class="list" type="button" onclick="location.href='/JejuEvent_List'"> 목록</button>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

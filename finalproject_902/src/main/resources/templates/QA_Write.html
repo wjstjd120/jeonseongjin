@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/qano.css">
+    <link rel="stylesheet" type="text/css" href="css/header.css">
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <title>Q&A 작성 화면</title>
+<script th:inline="javascript">
+var mdto;
+$(function () {
+   var msg = [[${msg}]];
+   
+   if(msg != null){
+      alert(msg);
+   }
+   
+   
+   $(".M4"). hide();
+      
+   mdto = [[${session.user}]];
+   
+   if(mdto != null){
+      $("#inLogin").show();
+      $("#outLogin").hide();
+      $(".M1").css("display","none");
+   }else{
+      $("#inLogin").hide();
+      $("#outLogin").show();
+      
+   }
+   
+   
+   
+   if(mdto.m_category == "사업자"){
+      $(".M4"). show();
+   }
+      
+});
+</script>    
+</head>
+<body>
+ <div th:include="fragment/header::header"></div>
+    <div class="main_container1_qaw">
+      <div class="main_container_qaw">
+         <form action="qawrite" method="post">
+         <div class="qawritefrm">
+             <div class="qawrite">Q&A</div>
+         <textarea class="qatitle" name="co_title" placeholder="제목"></textarea>
+         <textarea class="qacontents" name="co_contents" placeholder="내용"></textarea>
+         </div>
+         <input type="submit" class="qnawrite" value="작성하기">
+         <input type="reset" class="qnacancel" value="취소하기">
+         </form> 
+      </div>
+   </div>
+    
+</body>
+</html>

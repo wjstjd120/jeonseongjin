@@ -1,0 +1,278 @@
+@charset "UTF-8";
+*{
+    padding: 0%;
+    margin: 0%;
+ 
+}
+.header{
+    width: 100%;
+    height: 150px;
+    border: 1px solid;
+    overflow: hidden;
+}
+.member{
+    height: 25px;
+    margin-top: 5px;
+}
+.member>span{
+    float: right;
+    margin-right: 20px;
+    font-size: 13pt;
+}
+.title{
+    height: 80px;
+    font-size: 40pt;
+    text-align: center;
+    width: 100%;
+}
+.menu>span{
+    font-size: 20pt;
+    margin: 0 20px 0 20px;
+}
+.pic_menu{
+    float: left;
+    /*width: 320px;*/
+    width: 16%;
+    height: 1200px;
+    border: 1px solid;
+}
+.center{
+   font-size: 40px;
+   margin-right: 35%;
+   font-weight : bold;
+}
+hr{
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 15px;
+}
+
+.m2{
+    font-size: 20px;
+    font-weight: 800;
+   margin-left: -130px;
+}
+.m3{
+    font-size: 20px;
+    font-weight: 800;
+   margin-left: -190px;
+}
+.m4{
+    font-size: 20px;
+    font-weight: 800;
+   margin-left: -180px;
+}
+.m5{
+    font-size: 20px;
+    font-weight: 800;
+     margin-left: -100px;
+}
+.qna{
+    font-size: 40px;
+    margin-top: 100px;
+    margin-right: 70%;
+    font-weight: 900;
+}
+.qa{
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 30px;
+}
+table{
+    width:75%;
+    border-collapse: collapse;
+    margin-left: 20%;
+}
+th,td {
+    border-bottom: 1px solid black;
+    padding: 15px;
+}
+.line {
+    width: 75%;
+    margin-top: 50px;
+    border-bottom: 1px solid;
+    margin-left: 20%;
+}
+.lastnumber{
+    font-size: 20px;
+    margin: 10px 40px 0 40px;
+    text-align: center;
+    position: relative;
+}
+.writefrm{
+    display: inline-block;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 100px;
+    height: 40px;
+    position: absolute;
+    margin: -35px 0 150px 600px;
+}
+ul{
+    list-style: none;
+}
+li{
+    display: inline-block;
+}
+a{
+    text-decoration: none;
+    padding: 10px;
+}
+.not{
+    font-size: 40px;
+    margin-top: 70px;
+    margin-right: 70%;
+    font-weight: 900;
+}
+.notitle{
+    border: 2px solid black;
+    border-radius: 10px;
+    font-size: 20px;
+    height: 40px;
+    margin-left: 21.4%;
+    margin-right: 5.4%;
+    font-weight: 700;
+}
+.noleft{
+    float: left;
+    margin-left: 10px;
+    padding: 10px;
+}
+.noright{
+    float: right;
+    padding: 10px;
+    margin-right: 10px;
+}
+.noticeno {
+    width: 72%;
+    height: 400px;
+    border: 2px solid;
+    border-radius: 10px;
+    margin-top: 20px;
+    font-size: 20px;
+    text-align: left;
+    padding-left: 20px;
+    padding-top: 10px;
+    font-weight: 700;
+    resize: none;
+    margin-bottom: 20px;
+}
+.noticelist{
+    display: inline-block;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 100px;
+    height: 40px;
+    margin-top: 20px;
+}
+.plan_menu{
+    float: left;
+    /*width: 320px;*/
+    width: 16%;
+    height: 1200px;
+    border: 1px solid;
+}
+.pm1{
+    font-size: 20px;
+    font-weight: 800;
+   margin-left: 10px;
+}
+.pm2{
+    font-size: 20px;
+    font-weight: 800;
+   margin-left: 10px;
+}
+.pm3{
+    font-size: 20px;
+    font-weight: 800;
+   margin-left: 10px;
+}
+.planboard{
+    display: flex;
+    flex-wrap: wrap;
+}
+.pboard{
+    font-size: 40px;
+    margin: 40px 0 10px 40px;
+    font-weight: 900;
+}
+.plantcw{
+    width: 80px;
+    font-size: 17px;
+    font-weight: 600;
+    border: 1px solid;
+    border-radius: 3px;
+    height: 30px;
+    margin-top: 60px;
+    margin-left: 750px;
+}
+.plansearch{
+    width: 200px;
+    height: 25px;
+    margin-top: 61px;
+    margin-left: 10px;
+    border: 1px solid;
+    border-radius: 3px;
+}
+i {
+    margin: 66px 0 0 -30px;
+}
+
+.planimg{
+   border-radius: 10px;
+    width: 300px;
+    height: 300px;
+    margin: 80px 20px 0px 80px;
+}
+.blogtittle{
+   
+    border-radius: 10px;
+    width: 300px;
+    height: 100px;
+    margin-left: -320px;
+    padding: 10px;
+    font-weight: 700;
+    margin-top: 370px;
+    font-size: 20px;
+    text-align: center;
+    
+}
+#con{
+    height: 305px;
+    border: 1px solid;
+    width: 600px;
+    margin-top: 80px;
+    margin-left: 400px;
+}
+.planlastnumber{
+    float: left;
+    font-size: 20px;
+    margin-top: 200px;
+    margin-left:650px;
+}
+li {
+   float: left;
+}
+
+.imglist{
+    width: 300px;
+    height: 200px;
+    border-top-left-radius:15px;
+    border-top-right-radius:15px;
+    float: left;
+}
+span{
+    font-size: 20px;
+    padding: 10px;
+    margin-top: 10px;
+}
+.itemstittle{
+
+    height: 100px;
+    border-bottom-left-radius:15px ;
+    border-bottom-right-radius:15px ;
+    float: left;
+    width:300px;
+}

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http:www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+    <link th:href="@{/css/jejuplanWrite.css}" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<style>
+.planimg {
+	width: 400px;
+	height: 400px;
+}
+</style>
+</head>
+<body>
+</head>
+    <div class="header">
+        <div class="member">
+            <span class="m1">고객센터</span>
+            <span class="m1">로그인</span>
+            <span class="m1">회원가입</span>
+        </div>
+        <div class="title">제주옵서예</div>
+        <div class="menu">
+            <span>숙박</span>
+            <span>레져</span>
+            <span>식당</span>
+            <span>여행정보</span>
+            <span>나의여행</span>
+        </div>
+    </div>
+    <div class="plan_menu"><br><br><hr>
+        <span class="pm1">후기게시판</span><hr>
+        <span class="pm2">제주행사</span><hr>
+        <span  class="pm3">제주관광지</span><hr>
+    </div>
+    <div id="mm">
+        
+    <div id="mainimg">
+  
+         <div id="d">
+          <div id="image_container" >
+        </div>
+         <input type="file"name="b_img" placeholder="사진받기" onchange="imgup(event)" accept="image/*" >
+		 </div>
+	 
+        <div class="mainbar2">
+            <input type="text" class="maintittle"name="b_title" placeholder="제목을 입력하세요.">
+            <input type="text" class="maincost" name="b_cost"placeholder="총경비 입력하세요." onkeyup="inputNumberFormat(this)">
+            <div class="mainroot">경로</div>
+    	</div>
+	    <div id="map"></div>
+	    
+	   	<div id="bigholder">
+		   	<div class="inputholder1">
+		   		<button>삭제</button>
+			    <img id="img1" class="planimg">
+			    <input id="files" type="file" name="file1" onchange="multiImg(event)" multiple>
+			    <h3>글내용</h3>
+			    <textarea name="content1" id="content1" placeholder="내용을 입력하세요."></textarea>
+		   	 </div>
+		</div>
+		<button type="button" th:onclick="inputadd()">추가</button>
+    </div> 
+    
+    <input type="submit" class="insert" value="등록하기" >
+    <input type="button" class="back" value="취소하기" onClick="location.href='jejuplanWrite'">
+    
+    
+   
+   </div>
+		
+  </body>
+<script th:inline="javascript">
+//경비 ,찍어주는 함수
+var addnum = 2; 
+
+function inputNumberFormat(obj) {
+    obj.value = comma(uncomma(obj.value));
+}
+
+function comma(str) {
+    str = String(str);
+    return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+}
+
+function uncomma(str) {
+    str = String(str);
+    return str.replace(/[^\d]+/g, '');
+}
+
+//이미지 미리보기 함수
+function imgup(event) {
+    var reader = new FileReader();
+    
+    reader.onload = function(event) { 
+    	var img = document.createElement("img");
+    	img.setAttribute("src", event.target.result);
+        img.style="height:602px; width: 502px";
+        document.querySelector("#image_container").appendChild(img);
+     
+    };
+    reader.readAsDataURL(event.target.files[0]);
+}
+
+function inputadd(){
+	
+	$("#bigholder").append(
+			"<div class='inputholder" + addnum + "'>"
+	   		+ "<button>삭제</button>"
+		    + "<img id='img" + addnum + "' class='planimg'>"
+		    + "<input id='files' type='file' name='file" + addnum + "' onchange='multiImg(event)' multiple>"
+		    + "<h3>글내용</h3>"
+		    + "<textarea name='content" + addnum + "' id='content" + addnum + "' placeholder='내용을 입력하세요.'></textarea>"
+	   	 	+ "</div>"
+			
+	);
+	
+	addnum + 1;
+}
+
+</script>
+</html>
